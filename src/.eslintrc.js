@@ -1,0 +1,53 @@
+module.exports = {
+  root: true,
+  parserOptions: {
+    ecmaVersion: 7,
+    ecmaFeatures: {
+      impliedStrict: true,
+      jsx: true,
+      experimentalObjectRestSpread: true,
+    },
+    sourceType: 'module',
+  },
+  parser: '@typescript-eslint/parser',
+  env: {
+    node: true,
+    es6: true,
+  },
+  extends: [
+    '@react-native-community',
+    'eslint:recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:import/typescript',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-native/all',
+    'prettier',
+    'prettier/@typescript-eslint',
+    'plugin:react-hooks/recommended',
+  ],
+  plugins: ['@typescript-eslint', 'import', 'react', 'react-native'],
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx', '*.js'],
+      rules: {
+        '@typescript-eslint/no-shadow': ['error'],
+        'no-shadow': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
+        'react-hooks/exhaustive-deps': 'off',
+        '@typescript-eslint/no-empty-interface': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-unused-vars': ['error'],
+        '@typescript-eslint/no-namespace': 'off',
+        'consistent-this': 'off',
+        '@typescript-eslint/no-this-alias': 'off',
+        'react-native/no-color-literals': 'off',
+        'react/prop-types': 'off',
+        'react/react-in-jsx-scope': 'off',
+      },
+    },
+  ],
+};

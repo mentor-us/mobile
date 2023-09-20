@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "jsx": "react",
+      "baseUrl": ".",
+      "experimentalDecorators": true,
+      "module": "ES2022",
+      "paths": {
+        "~/*": ["./src/*"],
+      }
+    }
+  }
+  

@@ -1,0 +1,47 @@
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  /* Recommended React Native TSConfig base */
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    /* Completeness */
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,
+    "useDefineForClassFields": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "module": "es2022",
+    "jsx": "react-native",
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "strict": true,
+    "target": "esnext",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@i18n": ["./src/i18n"],
+      "@asset": ["./src/assets"],
+      "@asset/*": ["./src/assets/*"],
+      "@configuration": ["./src/configuration"],
+      "@configuration/*": ["./src/configuration/*"],
+      "@mobx/*": ["./src/mobx/*"],
+      "@constants/*": ["./src/constants/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ],
+  "include": ["index.js", "src", "test", "scripts", "globals.d.ts"],
+  "typeRoots": ["./src/types"]
+}

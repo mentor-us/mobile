@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg fill="#ffffff" width="800px" height="800px" viewBox="0 0 24 24" id="notification-circle" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color">
+    <path id="secondary" d="M15,17H9a1,1,0,0,0-1,1,4,4,0,0,0,8,0A1,1,0,0,0,15,17Z" style="fill: #fff;"></path>
+    <path id="primary" d="M20.09,13.67,19,12.59V9A7,7,0,0,0,5,9v3.59L3.91,13.67A3.13,3.13,0,0,0,6.12,19H17.88a3.13,3.13,0,0,0,2.21-5.33Z" style="fill: #fff;"></path>
+    <circle id="secondary-2" data-name="secondary" cx="17" cy="6" r="4" style="fill: #f00;"></circle>
+</svg>

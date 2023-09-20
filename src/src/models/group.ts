@@ -1,0 +1,70 @@
+import {RoleType, PermissionType} from "./commonTypes";
+import {MessageModel} from "./message";
+
+export const GROUP_SAMPLE: GroupModel = {
+  id: "",
+  name: "",
+  totalMember: 2,
+  role: "MENTEE",
+  groupCategory: "",
+  pinned: false,
+};
+
+export const GROUP_SAMPLE_MENTOR: GroupModel = {
+  id: "",
+  name: "",
+  totalMember: 2,
+  role: "MENTOR",
+  groupCategory: "",
+};
+
+export interface ShortGroupModel {
+  id: string;
+  name: string;
+}
+
+export interface GroupPermission {
+  uploadImage: boolean;
+  uploadFile: boolean;
+  createMeeting: boolean;
+  createTask: boolean;
+}
+
+export interface GroupModel {
+  id: string;
+  name: string;
+  role: RoleType;
+  totalMember: number;
+  pinned?: boolean;
+  description?: string;
+  groupCategory: string;
+  images?: string[];
+  imageUrl?: string;
+  permissions?: PermissionType[];
+  hasNewMessage?: boolean;
+  newMessage?: string;
+  newMessageId?: string;
+  pinnedMessages?: MessageModel[];
+  type?: "PUBLIC" | "PRIVATE" | "PRIVATE_MESSAGE";
+  channels?: GroupModel[];
+  privates?: GroupModel[];
+  parentId?: string;
+  marked?: boolean;
+}
+
+export interface GroupMemberModel {
+  id: string;
+  email: string;
+  name: string;
+  imageUrl: string;
+  role: RoleType;
+  marked?: boolean;
+}
+
+export const GROUP_MEMBER_SAMPLE: GroupMemberModel = {
+  id: "",
+  email: "",
+  name: "",
+  imageUrl: "",
+  role: "MENTEE",
+};
