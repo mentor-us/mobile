@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
-    "android:prod": "APP_ENV=production npx react-native run-android",
+    "android:dev": "cp ./.env.dev ./.env && npx react-native run-android",
+    "android:prod": "cp ./.env.production ./.env && npx react-native run-android",
+    "android:production": "APP_ENV=production npx react-native run-android",
     "note7": "npx react-native run-android --deviceId=be2f2a9",
     "ios": "npx react-native run-ios",
     "start": "npx react-native start --reset-cache",
@@ -22,7 +24,9 @@
     "test-deep-link_4": "npx uri-scheme open 'https://web-nang-cao-19-3-ymeb.vercel.app/chat?groupId=64357728499a4a65268447d7' --android",
     "test-deep-link-meeting-detail": "npx uri-scheme open 'https://web-nang-cao-19-3-ymeb.vercel.app/meeting?meetingId=644699ff430eda0ea5f47218' --android",
     "test-deep-link-task-detail": "npx uri-scheme open 'https://web-nang-cao-19-3-ymeb.vercel.app/task?taskId=6444f9c46176f7422a6ab519' --android",
-    "build-apk": "cd android && ./gradlew assembleRelease",
+    "build-apk-local": "cd android && ./gradlew assembleRelease",
+    "build-apk-dev": "cp ./.env.dev ./.env && cd android && ./gradlew assembleRelease ",
+    "build-apk-prod": "cp ./.env.production ./.env && cd android && ./gradlew assembleRelease ",
     "get-sh-key": "keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android"
   },
   "dependencies": {
