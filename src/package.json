@@ -25,7 +25,7 @@
     "test-deep-link-task-detail": "npx uri-scheme open 'https://web-nang-cao-19-3-ymeb.vercel.app/task?taskId=6444f9c46176f7422a6ab519' --android",
     "build-apk-local": "cd android && ./gradlew assembleRelease",
     "build-apk-dev": "cp ./.env.dev ./.env && cd android && ./gradlew assembleRelease ",
-    "build-apk-prod": "cp ./.env.production ./.env && cd android && ./gradlew assembleRelease ",
+    "build-apk-prod": "cp ./.env.prod ./.env && cd android && ./gradlew assembleRelease ",
     "get-sh-key": "keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android"
   },
   "dependencies": {
