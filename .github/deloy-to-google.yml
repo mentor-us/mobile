@@ -1,0 +1,42 @@
+name: Deploy to Google Play
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - src
+      - .github/workflows/deloy-to-google.yml
+
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up NodeJS 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://registry.yarnpkg.com'
+
+    - name: Install dependencies
+      run: |
+        yarn install
+
+    - name: Build and sign APK
+      run: | 
+        cd android
+        ./gradlew bundleRelease
+        ./gradlew bundleRelease --no-daemon -PstoreFile=${{ secrets.KEYSTORE_FILE }} -PstorePassword=${{ secrets.KEY_PASSWORD }} -PkeyAlias=${{ secrets.KEY_ALIAS }} -PkeyPassword=${{ secrets.KEY_PASSWORD }}
+
+    # - name: Upload APK to Google Play
+    #   run: |
+    #     fastlane supply --track production --json_key ${{ secrets.GOOGLE_PLAY_JSON_KEY }} --package_name com.example.myapp --apk app-release.aab --skip_upload_metadata --skip_upload_images --skip_upload_screenshots
+
