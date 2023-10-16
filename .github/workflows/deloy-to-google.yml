@@ -32,10 +32,9 @@ jobs:
 
             - name: Build and sign APK
               run: |
+                  cp ./.env.prod ./.env
                   cd android
-                  cp ./.env.prod ./.env
                   ./gradlew bundleRelease
-                  cp ./.env.prod ./.env
                   ./gradlew bundleRelease --no-daemon -PstoreFile=${{ secrets.KEYSTORE_FILE }} -PstorePassword=${{ secrets.KEY_PASSWORD }} -PkeyAlias=${{ secrets.KEY_ALIAS }} -PkeyPassword=${{ secrets.KEY_PASSWORD }}
 
             - name: Upload APK to Google Play
