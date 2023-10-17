@@ -1,4 +1,4 @@
-name: Deploy to Google Play 
+name: Deploy to Google
 
 on:
     push:
@@ -28,14 +28,14 @@ jobs:
 
             - name: Install dependencies
               run: yarn install
-        
+
             - name: Setup Java 17
               uses: actions/setup-java@v3
               with:
-                distribution: 'temurin'
-                java-version: '17'
-                cache: 'gradle'
-                
+                  distribution: "temurin"
+                  java-version: "17"
+                  cache: "gradle"
+
             - name: Build and sign APK
               run: |
                   cp ./.env.prod ./.env
