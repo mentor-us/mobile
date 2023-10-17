@@ -37,6 +37,6 @@ jobs:
                   ./gradlew bundleRelease
                   ./gradlew bundleRelease --no-daemon -PstoreFile=${{ secrets.KEYSTORE_FILE }} -PstorePassword=${{ secrets.KEY_PASSWORD }} -PkeyAlias=${{ secrets.KEY_ALIAS }} -PkeyPassword=${{ secrets.KEY_PASSWORD }}
 
-            - name: Upload APK to Google Play
-              run: |
-                  fastlane supply --track production --json_key ${{ secrets.GOOGLE_PLAY_JSON_KEY }} --package_name com.example.myapp --apk app-release.aab --skip_upload_metadata --skip_upload_images --skip_upload_screenshots
+            # - name: Upload APK to Google Play
+            #   run: |
+            #       fastlane supply --track production --json_key ${{ secrets.GOOGLE_PLAY_JSON_KEY }} --package_name com.example.myapp --apk app-release.aab --skip_upload_metadata --skip_upload_images --skip_upload_screenshots
