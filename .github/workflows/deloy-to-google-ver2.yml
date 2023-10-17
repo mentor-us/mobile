@@ -1,4 +1,4 @@
-name: Deploy to Google ver 2
+name: Deploy to Google ver 1
 
 on:
     push:
