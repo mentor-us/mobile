@@ -6,7 +6,7 @@ on:
             - feature/MU-55-deploy-app-google
         paths:
             - "src"
-            - ".github/workflows/deploy-to-google-ver2.yml"
+            - ".github/workflows/deloy-to-google-ver2.yml"
 
     workflow_dispatch:
 
