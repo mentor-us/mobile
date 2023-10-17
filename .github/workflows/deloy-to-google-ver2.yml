@@ -5,9 +5,9 @@ on:
     branches:
       - develop
       - feature/MU-55-deloy-app-google
-    paths:
-      - src
-      - .github/workflows/deloy-to-google-ver2.yml
+    # paths:
+    #   - src
+    #   - .github/workflows/deloy-to-google-ver2.yml
 
   workflow_dispatch:
 
