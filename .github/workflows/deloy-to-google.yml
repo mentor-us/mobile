@@ -27,15 +27,20 @@ jobs:
                   registry-url: "https://registry.yarnpkg.com"
 
             - name: Install dependencies
-              run: |
-                  yarn install
-
+              run: yarn install
+        
+            - name: Setup Java 17
+              uses: actions/setup-java@v3
+              with:
+                distribution: 'temurin'
+                java-version: '17'
+                cache: 'gradle'
+                
             - name: Build and sign APK
               run: |
                   cp ./.env.prod ./.env
                   cd android
                   ./gradlew bundleRelease
-                  ./gradlew bundleRelease --no-daemon -PstoreFile=${{ secrets.KEYSTORE_FILE }} -PstorePassword=${{ secrets.KEY_PASSWORD }} -PkeyAlias=${{ secrets.KEY_ALIAS }} -PkeyPassword=${{ secrets.KEY_PASSWORD }}
 
             # - name: Upload APK to Google Play
             #   run: |
