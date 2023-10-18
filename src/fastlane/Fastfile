@@ -1,0 +1,9 @@
+default_platform(:android)
+
+platform :android do 
+    desc "Build release for the Android production"
+    lane :release do
+        gradle(task: 'clean', project_dir: './android/')
+        gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
+    end
+end

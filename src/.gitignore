@@ -69,3 +69,5 @@ buck-out/
 # ./yarn.lock
 
 .env
+
+mentorus-mobile.json
