@@ -72,15 +72,29 @@ jobs:
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
 
+      - name: Create Google Services JSON File
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
+        run: echo $GOOGLE_SERVICES_JSON | base64 -di > ./mentorus-mobile.json
+
       - name: Build and sign APK
         run: |
           cp ./.env.prod ./.env
-          cd android
-          ./gradlew assembleRelease --no-daemon
-      
+          bundle exec fastlane android release
+
       - name: Upload APK to Google Play
         run: |
-          bundle exec fastlane supply --json_key_data ${{ secrets.MENTORUS_MOBILE_JSON_KEY }} --package_name com.mentorus --aab android/app/build/outputs/bundle/release/app-release.aab --skip_upload_metadata --skip_upload_images --skip_upload_screenshots
+          bundle exec fastlane android deploy
+          
+      # - name: Build and sign APK
+      #   run: |
+      #     cp ./.env.prod ./.env
+      #     cd android
+      #     ./gradlew assembleRelease --no-daemon
+
+      # - name: Upload APK to Google Play
+      #   run: |
+      #     bundle exec fastlane supply --json_key_data ${{ secrets.MENTORUS_MOBILE_JSON_KEY }} --package_name com.mentorus --aab android/app/build/outputs/bundle/release/app-release.aab --skip_upload_metadata --skip_upload_images --skip_upload_screenshots
 
       # - name: Upload APK to Google Play
       #   run: |

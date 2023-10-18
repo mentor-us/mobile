@@ -6,4 +6,17 @@ platform :android do
         gradle(task: 'clean', project_dir: './android/')
         gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
     end
+
+    desc "Deploy Google Play store"
+    lane :deploy do
+        upload_to_play_store(
+            track: 'production',
+            json_key: "./mentorus-mobile.json",
+            aab: "android/app/build/outputs/bundle/release/app-release.aab",
+            package_name: "com.mentorus",
+            skip_upload_metadata: true,
+            skip_upload_images: true,
+            skip_upload_screenshots: true,
+        )
+    end
 end
