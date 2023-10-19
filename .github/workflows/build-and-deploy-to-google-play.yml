@@ -79,7 +79,7 @@ jobs:
         # env: 
         #   ANDROID_KEYSTORE_PASSWORD: ${{secrets.KEY_PASSWORD }}
         #   ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
-        
+
       - name: Build Android App Bundle Release
         env: 
           ANDROID_KEYSTORE_PASSWORD: ${{secrets.KEY_PASSWORD }}
@@ -87,7 +87,7 @@ jobs:
         run: |
           cp ./.env.prod ./.env
           cd android 
-          gradlew bundleRelease -Pandroid.injected.signing.store.file=app/Mentorus_2023.jks -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$ANDROID_KEYSTORE_ALIAS -Pandroid.injected.signing.key.password=$ANDROID_KEYSTORE_PASSWORD
+          ./gradlew bundleRelease -Pandroid.injected.signing.store.file=app/Mentorus_2023.jks -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$ANDROID_KEYSTORE_ALIAS -Pandroid.injected.signing.key.password=$ANDROID_KEYSTORE_PASSWORD
 
       - name: Upload AAB to Google Play
         run: yarn android:fastlane:uploadRelease
