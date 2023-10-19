@@ -1,6 +1,11 @@
 name: Deploy to Google Play
 
 on:
+  push:
+    branches:
+      - "feature/MU-55-Fix-cicd-deploy-gg-play"
+      - develop
+
   workflow_dispatch: 
 
 jobs:
@@ -13,22 +18,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true 
       
-      - name: Install Fastlane
-        run: |
-          bundle install
-          bundle update fastlane
-
-      - name: Create Google Services JSON File
-        env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
-        run: echo $GOOGLE_SERVICES_JSON | base64 -di > ./android/app/mentorus-mobile.json
-
+      
       - name: Setup Java 11
         uses: actions/setup-java@v3
         with:
@@ -68,15 +59,41 @@ jobs:
 
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install Fastlane
+        run: |
+          bundle install
+          bundle update fastlane 
+
+      - name: Decode Google Services JSON File
+        uses: timheuer/base64-to-file@v1
+        id: service_account_json_file
+        with:
+          fileName: "mentorus-mobile.json"
+          encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
+
+      - name: Decode Keystore File
+        uses: timheuer/base64-to-file@v1
+        id: android_keystore
+        with:
+          fileName: "android_release.jks"
+          encodedString: ${{ secrets.KEYSTORE_FILE }}
       
       - name: Build Android App Bundle Release
-        run: |
-          cp ./.env.prod ./.env
-          bundle exec fastlane android release_aab
+        run: yarn android:fastlane:buildRelease
         env: 
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{secrets.KEY_PASSWORD }}
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
-          
+          ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+
       - name: Upload AAB to Google Play
-        run: bundle exec fastlane android deploy
+        run: yarn android:fastlane:uploadRelease
+        env:
+          PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
         
