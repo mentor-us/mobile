@@ -16,7 +16,7 @@ const HeaderRight = () => {
         <SearchIcon width={20} height={20} />
       </TouchableOpacity> */}
 
-      <TouchableOpacity style={styles.iconButton} onPress={onPressNotification}>
+      <TouchableOpacity testID="noti-btn" style={styles.iconButton} onPress={onPressNotification}>
         <NotificationIcon hasNotification={false} />
       </TouchableOpacity>
     </View>
