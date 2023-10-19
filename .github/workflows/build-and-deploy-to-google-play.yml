@@ -76,7 +76,6 @@ jobs:
         id: service_account_json_file
         with:
           fileName: "mentorus-mobile.json"
-          fileDir: './android/app/'
           encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
 
       - name: Decode Keystore File
