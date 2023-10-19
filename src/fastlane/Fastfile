@@ -7,10 +7,20 @@ platform :android do
             json_key: './android/app/mentorus-mobile.json'
         )
     end
-    desc "Build release for the Android production"
+    desc "Build apk release for the Android production"
     lane :release do
         gradle(task: 'clean', project_dir: './android/')
         gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
+    end
+
+    desc "Build aab release for the Android production"
+    lane :release_aab do
+        gradle(task: 'clean', project_dir: './android/')
+        gradle(
+            task: "bundle",
+            build_type: "Release",
+            project_dir: 'android/',
+            )
     end
 
     desc "Deploy Google Play store"

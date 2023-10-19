@@ -84,7 +84,7 @@ jobs:
       - name: Build and sign APK
         run: |
           cp ./.env.prod ./.env
-          bundle exec fastlane android release
+          bundle exec fastlane android release_aab
 
       - name: Upload APK to Google Play
         run: |
