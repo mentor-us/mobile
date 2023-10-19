@@ -7,8 +7,9 @@ describe("MainPage", () => {
   //   await device.reloadReactNative();
   // });
 
-  it("Should have noti icon in main page", async () => {
+  it.only("Should have noti icon in main page", async () => {
     await expect(element(by.id("noti_btn"))).toBeVisible();
+    await element(by.id("noti_btn")).tap();
   });
 
   // it('should show hello screen after tap', async () => {

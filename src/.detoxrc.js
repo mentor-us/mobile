@@ -4,6 +4,8 @@ module.exports = {
     args: {
       $0: "jest",
       config: "e2e/jest.config.js",
+      watchAll: true,
+      _: ["e2e/*Page.test.js"],
     },
     jest: {
       setupTimeout: 120000,
@@ -57,7 +59,8 @@ module.exports = {
     emulator: {
       type: "android.emulator",
       device: {
-        avdName: "Pixel_6_Pro_API_33",
+        // avdName: "Pixel_2_XL_API_33",
+        avdName: "Pixel_2_XL_API_33",
       },
     },
   },
