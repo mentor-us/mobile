@@ -76,6 +76,9 @@ jobs:
       
       - name: Build Android App Bundle Release
         run: yarn android:fastlane:buildRelease
+        env: 
+          ANDROID_KEYSTORE_PASSWORD: ${{secrets.KEY_PASSWORD }}
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
 
       - name: Upload AAB to Google Play
         run: yarn android:fastlane:uploadRelease
