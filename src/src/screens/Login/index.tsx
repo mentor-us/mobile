@@ -19,8 +19,9 @@ const Login: ScreenProps<"loginScreen"> = () => {
   const [message, setMessage] = useState<string>(TOKEN);
 
   useEffect(() => {
+   
     const {token, emailVerified, error, refreshToken}: any = route.params || {
-      token: "",
+      token: TOKEN,
       emailVerified: false,
       refreshToken: "",
       error: null,
