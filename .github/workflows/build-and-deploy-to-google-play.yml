@@ -73,6 +73,10 @@ jobs:
         run: |
           cp ./.env.prod ./.env
           bundle exec fastlane android release_aab
-
+        env: 
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
+          
       - name: Upload AAB to Google Play
         run: bundle exec fastlane android deploy
+        
