@@ -234,6 +234,12 @@ android {
             //     keyAlias MYAPP_RELEASE_KEY_ALIAS
             //     keyPassword MYAPP_RELEASE_KEY_PASSWORD
             // }
+            storeFile =  (System.getenv("ANDROID_KEYSTORE_FILE") ?: error("Error: No Store File!")).toFile()
+            keyAlias = System.getenv("ANDROID_KEYSTORE_ALIAS") ?: error("Error: No Key Alias!")
+            keyPassword =  System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: error("Error: No Key Password!")
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: error("Error: No Store Key!")
+            enableV1Signing = true
+            enableV2Signing = true
         }
     }
     buildTypes {
