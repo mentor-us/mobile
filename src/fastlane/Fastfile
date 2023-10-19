@@ -21,9 +21,10 @@ platform :android do
             build_type: "Release",
             project_dir: 'android/',
             print_command_output: false,
+            print_command: false,
             properties: {
-                "android.injected.signing.store.file" => "app/Mentorus_2023.jks",
-                "android.injected.signing.store.password" => 123456789,
+                "android.injected.signing.store.file" => ENV['ANDROID_KEYSTORE_FILE'],
+                "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
                 "android.injected.signing.key.alias" => ENV['ANDROID_KEYSTORE_ALIAS'],
                 "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD']
             }
@@ -34,7 +35,7 @@ platform :android do
     lane :deploy do
         upload_to_play_store(
             track: 'production',
-            json_key: 'android/app/mentorus-mobile.json',
+            json_key: ENV['PLAY_STORE_JSON_KEY'],
             aab: "android/app/build/outputs/bundle/release/app-release.aab",
             package_name: "com.mentorus",
             skip_upload_metadata: true,
