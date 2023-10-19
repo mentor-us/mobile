@@ -1,6 +1,6 @@
 {
   "name": "MentorUS",
-  "version": "0.0.1",
+  "version": "1.7.8",
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
@@ -133,6 +133,7 @@
     "metro-react-native-babel-preset": "0.72.3",
     "react-native-dotenv": "^3.4.8",
     "react-native-svg-transformer": "^1.0.0",
+    "react-native-version": "^4.0.0",
     "react-test-renderer": "18.1.0",
     "typescript": "^4.8.2"
   },

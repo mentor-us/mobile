@@ -1,0 +1,44 @@
+default_platform(:android)
+
+platform :android do 
+    desc "Validate Google Play json key"
+    lane :validate_key do
+        validate_play_store_json_key(
+            json_key: './android/app/mentorus-mobile.json'
+        )
+    end
+    desc "Build apk release for the Android production"
+    lane :release do
+        gradle(task: 'clean', project_dir: './android/')
+        gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
+    end
+
+    desc "Build aab release for the Android production"
+    lane :release_aab do
+        gradle(task: 'clean', project_dir: './android/')
+        gradle(
+            task: "bundle",
+            build_type: "Release",
+            project_dir: 'android/',
+                properties: {
+                    "android.injected.signing.store.file" => "android/app/Mentorus_2023.jks",
+                    "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+                    "android.injected.signing.key.alias" => ENV['ANDROID_KEYSTORE_ALIAS'],
+                    "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD']
+                }
+            )
+    end
+
+    desc "Deploy Google Play store"
+    lane :deploy do
+        upload_to_play_store(
+            track: 'production',
+            json_key: 'android/app/mentorus-mobile.json',
+            aab: "android/app/build/outputs/bundle/release/app-release.aab",
+            package_name: "com.mentorus",
+            skip_upload_metadata: true,
+            skip_upload_images: true,
+            skip_upload_screenshots: true,
+        )
+    end
+end
