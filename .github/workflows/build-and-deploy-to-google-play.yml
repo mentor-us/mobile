@@ -63,13 +63,16 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{secrets.KEY_PASSWORD }}
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
           ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+
+      - name: Check release files
+        run: ls -R ./src/android/app/build/outputs/bundle/release
           
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: aab
           path: |
-            ${{ github.workspace }}/android/app/build/outputs/bundle/release
+            ${{ github.workspace }}/src/android/app/build/outputs/bundle/release
   
   deploy_production:
     runs-on: ubuntu-latest
@@ -78,6 +81,12 @@ jobs:
       run:
         working-directory: "./src"
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        id: aab_artifact
+        with:
+          name: aab
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -94,11 +103,6 @@ jobs:
         with:
           fileName: "mentorus-mobile.json"
           encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
-
-      - uses: actions/download-artifact@v3
-        id: aab_artifact
-        with:
-          name: aab
 
       - name: Upload AAB to Google Play Store
         run: yarn android:fastlane:uploadRelease
