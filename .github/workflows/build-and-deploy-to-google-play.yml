@@ -81,3 +81,5 @@ jobs:
         continue-on-error: true
         env:
           PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
+          PLAY_STORE_PACKAGE_NAME: com.mentorus
+          PLAY_STORE_AAB_FILE: android/app/build/outputs/bundle/release/app-release.aab
