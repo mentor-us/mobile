@@ -64,14 +64,11 @@ jobs:
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
           ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
 
-      - name: Check release files
-        run: ls -R ./android/app/build/outputs/bundle/release
-          
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: aab
-          path: android/app/build/outputs/bundle/release/*.aab
+          path: src/android/app/build/outputs/bundle/release/app-release.aab
   
   deploy_production:
     runs-on: ubuntu-latest
