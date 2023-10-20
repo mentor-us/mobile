@@ -1,11 +1,7 @@
 name: Deploy to Google Play
 
 on:
-  push:
-    branches:
-      - "feature/MU-55-Fix-cicd-deploy-gg-play"
-
-  workflow_dispatch: 
+   workflow_dispatch: 
 
 jobs:
   build-and-deploy:
@@ -77,8 +73,8 @@ jobs:
           path: src/android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload AAB to Google Play
+        id: deploy
         run: yarn android:fastlane:uploadRelease
-        continue-on-error: true
         env:
           PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
           PLAY_STORE_PACKAGE_NAME: com.mentorus
