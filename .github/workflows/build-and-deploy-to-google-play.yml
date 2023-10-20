@@ -8,7 +8,7 @@ on:
   workflow_dispatch: 
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,13 +50,6 @@ jobs:
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
 
-      - name: Decode Google Services JSON File
-        uses: timheuer/base64-to-file@v1
-        id: service_account_json_file
-        with:
-          fileName: "mentorus-mobile.json"
-          encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
-
       - name: Decode Keystore File
         uses: timheuer/base64-to-file@v1
         id: android_keystore
@@ -70,9 +63,46 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{secrets.KEY_PASSWORD }}
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
           ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: aab
+          path: |
+            ${{ github.workspace }}/android/app/build/outputs/bundle/release
+  
+  deploy_production:
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: "./src"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # - name: Upload AAB to Google Play
-      #   run: yarn android:fastlane:uploadRelease
-      #   env:
-      #     PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
-        
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: src
+          ruby-version: '3.2'
+          bundler-cache: true
+      
+      - name: Decode Google Services JSON File
+        uses: timheuer/base64-to-file@v1
+        id: service_account_json_file
+        with:
+          fileName: "mentorus-mobile.json"
+          encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
+
+      - uses: actions/download-artifact@v3
+        id: aab_artifact
+        with:
+          name: aab
+
+      - name: Upload AAB to Google Play Store
+        run: yarn android:fastlane:uploadRelease
+        env:
+          PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
+          PLAY_STORE_PACKAGE_NAME: com.mentorus
+          PLAY_STORE_AAB_FILE: ${{steps.aab_artifact.outputs.download-path}}

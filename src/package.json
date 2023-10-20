@@ -28,7 +28,8 @@
     "build-apk-prod": "cp ./.env.prod ./.env && cd android && ./gradlew assembleRelease ",
     "get-sh-key": "keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android",
     "android:fastlane:buildRelease": "cp ./.env.prod ./.env && bundle exec fastlane android release_aab",
-    "android:fastlane:uploadRelease": "bundle exec fastlane android deploy"
+    "android:fastlane:uploadRelease": "bundle exec fastlane android deploy",
+    "android:fastlane:uploadInternal": "bundle exec fastlane android internal"
   },
   "dependencies": {
     "@gorhom/portal": "^1.0.14",
