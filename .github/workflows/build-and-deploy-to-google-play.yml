@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - "feature/MU-55-Fix-cicd-deploy-gg-play"
-      - develop
 
   workflow_dispatch: 
 
@@ -48,27 +47,8 @@ jobs:
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
       
-      - name: Get Cache Gradle Wrapper
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Get Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-
-
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
-
-      # - name: Install Fastlane
-      #   run: |
-      #     bundle install
-      #     bundle update fastlane 
 
       - name: Decode Google Services JSON File
         uses: timheuer/base64-to-file@v1
