@@ -71,8 +71,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: aab
-          path: |
-            ./android/app/build/outputs/bundle/release/app-release.aab
+          path: android/app/build/outputs/bundle/release/*.aab
   
   deploy_production:
     runs-on: ubuntu-latest
