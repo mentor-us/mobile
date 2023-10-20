@@ -8,7 +8,7 @@ on:
   workflow_dispatch: 
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,12 +43,18 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
       
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
+
+      - name: Decode Google Services JSON File
+        uses: timheuer/base64-to-file@v1
+        id: service_account_json_file
+        with:
+          fileName: "mentorus-mobile.json"
+          encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
 
       - name: Decode Keystore File
         uses: timheuer/base64-to-file@v1
@@ -69,40 +75,9 @@ jobs:
         with:
           name: aab
           path: src/android/app/build/outputs/bundle/release/app-release.aab
-  
-  deploy_production:
-    runs-on: ubuntu-latest
-    needs: build
-    defaults:
-      run:
-        working-directory: "./src"
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        id: aab_artifact
-        with:
-          name: aab
 
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          working-directory: src
-          ruby-version: '3.2'
-          bundler-cache: true
-      
-      - name: Decode Google Services JSON File
-        uses: timheuer/base64-to-file@v1
-        id: service_account_json_file
-        with:
-          fileName: "mentorus-mobile.json"
-          encodedString: ${{ secrets.MENTORUS_MOBILE_JSON_KEY }}
-
-      - name: Upload AAB to Google Play Store
+      - name: Upload AAB to Google Play
         run: yarn android:fastlane:uploadRelease
+        continue-on-error: true
         env:
           PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
-          PLAY_STORE_PACKAGE_NAME: com.mentorus
-          PLAY_STORE_AAB_FILE: ${{steps.aab_artifact.outputs.download-path}}/app-release.aab
