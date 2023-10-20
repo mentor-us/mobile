@@ -9,13 +9,11 @@ platform :android do
     end
     desc "Build apk release for the Android production"
     lane :release do
-        gradle(task: 'clean', project_dir: './android/')
         gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
     end
 
     desc "Build aab release for the Android production"
     lane :release_aab do
-        gradle(task: 'clean', project_dir: './android/', print_command: false, print_command_output: false)
         gradle(
             task: "bundle",
             build_type: "Release",
