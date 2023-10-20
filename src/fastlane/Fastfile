@@ -9,33 +9,46 @@ platform :android do
     end
     desc "Build apk release for the Android production"
     lane :release do
-        gradle(task: 'clean', project_dir: './android/')
         gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
     end
 
     desc "Build aab release for the Android production"
     lane :release_aab do
-        gradle(task: 'clean', project_dir: './android/')
         gradle(
             task: "bundle",
             build_type: "Release",
             project_dir: 'android/',
-                properties: {
-                    "android.injected.signing.store.file" => "android/app/Mentorus_2023.jks",
-                    "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
-                    "android.injected.signing.key.alias" => ENV['ANDROID_KEYSTORE_ALIAS'],
-                    "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD']
-                }
-            )
+            print_command_output: false,
+            print_command: false,
+            properties: {
+                "android.injected.signing.store.file" => ENV['ANDROID_KEYSTORE_FILE'],
+                "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+                "android.injected.signing.key.alias" => ENV['ANDROID_KEYSTORE_ALIAS'],
+                "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD']
+            }
+        )
     end
 
-    desc "Deploy Google Play store"
+    desc "Deploy internal Google Play store"
+    lane :internal do
+        upload_to_play_store(
+            track: 'internal',
+            json_key: ENV['PLAY_STORE_JSON_KEY'],
+            aab: ENV['PLAY_STORE_AAB_FILE'],
+            package_name: ENV['PLAY_STORE_PACKAGE_NAME'],
+            skip_upload_metadata: true,
+            skip_upload_images: true,
+            skip_upload_screenshots: true,
+        )
+    end
+
+    desc "Deploy production Google Play store"
     lane :deploy do
         upload_to_play_store(
             track: 'production',
-            json_key: 'android/app/mentorus-mobile.json',
-            aab: "android/app/build/outputs/bundle/release/app-release.aab",
-            package_name: "com.mentorus",
+            json_key: ENV['PLAY_STORE_JSON_KEY'],
+            aab: ENV['PLAY_STORE_AAB_FILE'],
+            package_name: ENV['PLAY_STORE_PACKAGE_NAME'],
             skip_upload_metadata: true,
             skip_upload_images: true,
             skip_upload_screenshots: true,

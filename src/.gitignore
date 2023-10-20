@@ -72,3 +72,5 @@ buck-out/
 .env
 
 mentorus-mobile.json
+
+*.jks
