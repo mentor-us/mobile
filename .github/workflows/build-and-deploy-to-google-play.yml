@@ -65,14 +65,14 @@ jobs:
           ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
 
       - name: Check release files
-        run: ls -R ./src/android/app/build/outputs/bundle/release
+        run: ls -R ./android/app/build/outputs/bundle/release
           
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: aab
           path: |
-            ${{ github.workspace }}/src/android/app/build/outputs/bundle/release
+            ./android/app/build/outputs/bundle/release/app-release.aab
   
   deploy_production:
     runs-on: ubuntu-latest
