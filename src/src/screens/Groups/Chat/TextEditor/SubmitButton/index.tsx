@@ -41,7 +41,7 @@ const SubmitButton = ({onSend}: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View testID="btn-submit-chat" style={styles.container}>
       {state.editing ? (
         <View style={styles.editCtn}>
           <TouchableOpacity style={styles.button} onPress={cancel}>

@@ -11,6 +11,7 @@ export const HeaderBackButton: React.FC<HeaderBackButtonProps> = props => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
+      testID="back-button"
       hitSlop={{top: 10, bottom: 10}}
       onPress={() => navigation.goBack()}
       style={styles.headerLeftContainer}>
