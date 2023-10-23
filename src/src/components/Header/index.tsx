@@ -58,7 +58,7 @@ export const HeaderEditButton = ({onPress}: HeaderRightProps) => {
 
 export const HeaderSubmitButton = ({onPress}: HeaderRightProps) => {
   return (
-    <TouchableOpacity style={styles.headerRightContainer} onPress={onPress}>
+    <TouchableOpacity testID="submit-btn" style={styles.headerRightContainer} onPress={onPress}>
       <CheckGoodIcon />
     </TouchableOpacity>
   );
