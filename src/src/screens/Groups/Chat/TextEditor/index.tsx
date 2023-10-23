@@ -248,6 +248,7 @@ const TextEditor = () => {
             style={styles.richEditorCtn}
             showsVerticalScrollIndicator={false}>
             <RichEditor
+              testID="chatbox"
               containerStyle={{transform: [{rotate: "180deg"}]}}
               ref={RichTextRef}
               onChange={onChangeText}
@@ -269,7 +270,7 @@ const TextEditor = () => {
       </View>
 
       {state.enableRichToolbar && (
-        <View style={styles.richToolBarCtn}>
+        <View testID="action-chat" style={styles.richToolBarCtn}>
           <RichToolbar
             editor={RichTextRef}
             actions={[
