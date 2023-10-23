@@ -270,7 +270,7 @@ const TextEditor = () => {
       </View>
 
       {state.enableRichToolbar && (
-        <View style={styles.richToolBarCtn}>
+        <View testID="action-chat" style={styles.richToolBarCtn}>
           <RichToolbar
             editor={RichTextRef}
             actions={[

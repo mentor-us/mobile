@@ -135,7 +135,7 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
           )}
           {meetingManagement && (
             <>
-              <TouchableOpacity onPress={onCreateMeeting}>
+              <TouchableOpacity testID="clock-icon" onPress={onCreateMeeting}>
                 <ClockIcon width={32} height={32} />
               </TouchableOpacity>
               <SizedBox width={10} />
@@ -143,7 +143,7 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
           )}
           {taskManagement && (
             <>
-              <TouchableOpacity onPress={onCreateTask}>
+              <TouchableOpacity testID="task-icon"  onPress={onCreateTask}>
                 <TaskSquareIcon width={30} height={30} />
               </TouchableOpacity>
               <SizedBox width={10} />
@@ -151,7 +151,7 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
           )}
           {boardManagement && (
             <>
-              <TouchableOpacity onPress={onCreateVoting}>
+              <TouchableOpacity testID="vote-icon"  onPress={onCreateVoting}>
                 <ChartSquareIcon width={32} height={32} />
               </TouchableOpacity>
               <SizedBox width={10} />

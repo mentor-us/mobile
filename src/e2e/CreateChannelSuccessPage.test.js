@@ -23,27 +23,22 @@ describe("CreateChannelSuccessPage", () => {
     await expect(element(by.id("submit-btn"))).toBeVisible();
   });
   it.only("Fill form and submit", async () => {
-    var name = await crypto.randomBytes(10).toString('hex');
+    var name = await crypto.randomBytes(10).toString("hex");
     await expect(
       element(by.type("android.widget.EditText")).atIndex(0),
     ).toBeVisible();
     await element(by.type("android.widget.EditText")).atIndex(0).tap();
-    await element(by.type("android.widget.EditText"))
-      .atIndex(0)
-      .typeText(name);
+    await element(by.type("android.widget.EditText")).atIndex(0).typeText(name);
 
     await expect(
       element(by.type("android.widget.EditText")).atIndex(1),
     ).toBeVisible();
     await element(by.type("android.widget.EditText")).atIndex(1).tap();
-    await element(by.type("android.widget.EditText"))
-      .atIndex(1)
-      .typeText(name);
-    
+    await element(by.type("android.widget.EditText")).atIndex(1).typeText(name);
+
     await element(by.id("submit-btn")).tap();
     await element(by.text(name)).tap();
     // await element(by.id("back-button")).tap();
     await expect(element(by.text(name))).toBeVisible();
-
   });
 });
