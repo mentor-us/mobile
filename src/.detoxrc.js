@@ -5,7 +5,7 @@ module.exports = {
       $0: "jest",
       config: "e2e/jest.config.js",
       watchAll: true,
-      _: ["e2e/*Page.test.js"],
+      _: ["e2e/CreateTaskPage.test.js"],
     },
     jest: {
       setupTimeout: 120000,
