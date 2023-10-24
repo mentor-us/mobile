@@ -38,8 +38,9 @@ const doRefreshToken = async (token: string, refreshToken: string) => {
   const URL = `/api/auth/refresh-token`;
   try {
     const response: AxiosResponse = await axiosClient.post(URL, {
-      accessToken: token,
-      refreshToken: refreshToken,
+      // accessToken: token,
+      // refreshToken: refreshToken,
+      token,
     });
 
     return response;
@@ -61,6 +62,7 @@ axiosClient.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.response.status === 401) {
+
       const token = await AuthApi.getToken();
 
       if (!token) {
@@ -69,17 +71,17 @@ axiosClient.interceptors.response.use(
       }
 
       const refreshToken = await AuthApi.getRefreshToken();
-      const data = await doRefreshToken(token, refreshToken);
-
+      const data:any = await doRefreshToken(token, refreshToken);
+      
       console.log("@DUKE TOKEN REFRESH: ", {token, refreshToken, data});
 
-      if (typeof data == "string" && data) {
+      if ( data && data.accessToken ) {
         console.log("@DUKE: call refresh token: ", data);
 
         StoreInstance.store?.dispatch(
           AuthActions.login({
-            token: data,
-            refreshToken,
+            token: data.accessToken,
+            refreshToken: data.accessToken,
             tokenStatus: "actived",
           }),
         );
