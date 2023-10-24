@@ -4,8 +4,8 @@ describe("join mainpage", () => {
   });
 
   it.only("Click canlendar icon", async () => {
-    await expect(element(by.label("scheduleTab"))).toBeVisible();
-    await element(by.label("scheduleTab")).tap();
+    await expect(element(by.id("scheduleTab"))).toBeVisible();
+    await element(by.id("scheduleTab")).tap();
 
     await expect(element(by.label("Floating Action Button"))).toBeVisible();
     await element(by.label("Floating Action Button")).tap();
