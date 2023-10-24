@@ -184,6 +184,7 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Tạo bình chọn",
+            headerBackTestID: "title-header"
           };
         }}
       />
