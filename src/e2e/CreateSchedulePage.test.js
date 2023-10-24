@@ -30,6 +30,7 @@ describe("CreateSchedulePage", () => {
     await element(by.id("clock-icon")).tap();
   });
   it.only('should have title input and submit button', async()=>{
+    await expect(element(by.text("Lịch hẹn mới"))).toBeVisible();
     await expect(element(by.label("Tiêu đề  *"))).toBeVisible();
     await expect(element(by.label("Mô tả"))).toBeVisible();
     await expect(element(by.id("submit-btn"))).toBeVisible();
