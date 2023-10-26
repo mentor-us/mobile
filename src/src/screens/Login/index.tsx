@@ -49,6 +49,8 @@ const Login: ScreenProps<"loginScreen"> = () => {
 
     if (token) {
       console.log("@DUKE: LOGIN: ", token);
+      console.log("@DUKE: LOGIN: ", token);
+
       dispatcher(
         AuthThunk.login({token, refreshToken, tokenStatus: "actived"}),
       );
