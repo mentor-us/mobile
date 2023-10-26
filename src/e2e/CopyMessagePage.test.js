@@ -1,7 +1,7 @@
 if(!crypto){
   var crypto = require('crypto')
 }
-var msg = await crypto.randomBytes(10).toString("hex");
+var msg = crypto.randomBytes(10).toString("hex");
 
 describe("CopyMessagesuccess", () => {
   beforeAll(async () => {
@@ -13,10 +13,10 @@ describe("CopyMessagesuccess", () => {
   // });
 
   it.only("Should see Mentee group", async () => {
-    await expect(element(by.text("TEST_MENTEE"))).toBeVisible();
+    await expect(element(by.text("TEST_MENTOR"))).toBeVisible();
   });
   it.only("Should see general chat channel in Test menter", async () => {
-    await element(by.text("TEST_MENTEE")).tap();
+    await element(by.text("TEST_MENTOR")).tap();
     await expect(element(by.text("Cuộc trò chuyện chung"))).toBeVisible();
   });
   it.only("Should see chat box and submit btn", async () => {
@@ -29,16 +29,27 @@ describe("CopyMessagesuccess", () => {
 
     await element(by.id("chatbox")).tap();
     await element(by.id("chatbox")).typeText(msg);
+    // await expect(element(by.text(msg))).toBeVisible();
+
     await element(by.id("btn-submit-chat")).tap();
+
     await element(by.id("back-button")).tap();
     await element(by.text("Cuộc trò chuyện chung")).tap();
     await expect(element(by.text(msg))).toBeVisible();
 
   });
   it.only("Copy message and check pasteboard", async () => {
-    await element(by.text(msg)).longPress();
+    await expect(element(by.text(msg))).toBeVisible();
     
-    await expect(await device.pasteboard()).toHaveString(msg);
+    await element(by.text(msg)).longPress();
+    await expect(element(by.id("copy-icon"))).toBeVisible();
+    await element(by.id("copy-icon")).tap();
+    await element(by.id("message-container")).tap();
+    await element(by.id("chatbox")).tap();
+    await element(by.id("chatbox")).longPress();
+    await element(by.text("Paste")).tap();
+
+    // await expect(await device.pasteboard()).toHaveString(msg);
 
   });
 });

@@ -42,7 +42,7 @@ describe("CreateVotePage", () => {
   it.only('create schedule and validate', async()=>{
     var name = await crypto.randomBytes(10).toString("hex");
     await expect(
-      element(by.type("android.widget.EditText")).atIndex(0),
+      element(by.type("android.widget.EditText")).atIndex(0)
     ).toBeVisible();
     await element(by.type("android.widget.EditText")).atIndex(0).tap();
     await element(by.type("android.widget.EditText")).atIndex(0).typeText(name);
@@ -51,14 +51,14 @@ describe("CreateVotePage", () => {
     var indexFirstOption = 2;
 
     await expect(
-      element(by.type("android.widget.EditText")).atIndex(indexFirstOption),
+      element(by.type("android.widget.EditText")).atIndex(indexFirstOption)
     ).toBeVisible();
     await element(by.type("android.widget.EditText")).atIndex(indexFirstOption).tap();
     await element(by.type("android.widget.EditText")).atIndex(indexFirstOption).typeText(option1);
 
 
     await expect(
-      element(by.type("android.widget.EditText")).atIndex(indexFirstOption+1),
+      element(by.type("android.widget.EditText")).atIndex(indexFirstOption+1)
     ).toBeVisible();
     await element(by.type("android.widget.EditText")).atIndex(indexFirstOption+1).tap();
     await element(by.type("android.widget.EditText")).atIndex(indexFirstOption+1).typeText(option2);

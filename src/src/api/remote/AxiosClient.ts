@@ -4,7 +4,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import {AuthApi} from "../local";
-import {BASE_URL} from "@env";
+import {BASE_URL,TOKEN} from "@env";
 import StoreInstance from "~/constants/StorageInstance";
 import {AuthActions} from "~/redux/features/auth/slice";
 import {Alert} from "react-native";
@@ -38,10 +38,10 @@ const doRefreshToken = async (token: string, refreshToken: string) => {
   const URL = `/api/auth/refresh-token`;
   try {
     const response: AxiosResponse = await axiosClient.post(URL, {
-      accessToken: token,
-      refreshToken: refreshToken,
+      token: token 
+      
     });
-
+    console.log(response)
     return response;
   } catch (err) {
     const error = err as AxiosError;
@@ -61,6 +61,7 @@ axiosClient.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.response.status === 401) {
+      await AuthApi.saveToken(TOKEN);
       const token = await AuthApi.getToken();
 
       if (!token) {
@@ -69,17 +70,17 @@ axiosClient.interceptors.response.use(
       }
 
       const refreshToken = await AuthApi.getRefreshToken();
-      const data = await doRefreshToken(token, refreshToken);
+      var data : any = await doRefreshToken(token, refreshToken);
 
       console.log("@DUKE TOKEN REFRESH: ", {token, refreshToken, data});
-
-      if (typeof data == "string" && data) {
+    
+      if (data && data.accessToken) {
         console.log("@DUKE: call refresh token: ", data);
 
         StoreInstance.store?.dispatch(
           AuthActions.login({
-            token: data,
-            refreshToken,
+            token: data.accessToken,
+            refreshToken: data.accessToken,
             tokenStatus: "actived",
           }),
         );
