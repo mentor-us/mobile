@@ -3,7 +3,7 @@ if(!crypto){
 }
 var msg = crypto.randomBytes(10).toString("hex");
 
-describe("PinMessagePage", () => {
+describe("DeleteMessagePage", () => {
   beforeAll(async () => {
     await device.launchApp();
   });
@@ -29,22 +29,27 @@ describe("PinMessagePage", () => {
 
     await element(by.id("chatbox")).tap();
     await element(by.id("chatbox")).typeText(msg);
-    // await expect(element(by.text(msg))).toBeVisible();
+    await element(by.id("chatbox")).tap();
 
-    await element(by.id("btn-submit-chat")).tap();
+    // await expect(element(by.text(msg))).toBeVisible();
+    await expect(element(by.id("btn-send-msg"))).toBeVisible();
+
+    await element(by.id("btn-send-msg")).tap();
 
     await element(by.id("back-button")).tap();
     await element(by.text("Cuộc trò chuyện chung")).tap();
     await expect(element(by.text(msg))).toBeVisible();
 
   });
-  it.only("Delete message and check", async () => {
+  it.only("Pin message and check", async () => {
     await expect(element(by.text(msg))).toBeVisible();
     
     await element(by.text(msg)).longPress();
-    await expect(element(by.id("delete-icon"))).toBeVisible();
-    await element(by.id("delete-icon")).tap();
+    await expect(element(by.id("pin-icon"))).toBeVisible();
+    await element(by.id("pin-icon")).tap();
+    await element(by.id("expand-pin-msg-icon")).tap();
     // await element(by.id("chatbox")).tap();
-    await expect(element(by.text(msg))).not.toBeVisible();
+    await expect(element(by.text(msg).withAncestor(by.id('pinned-msg')))).toBeVisible();
+    // await expect(element(by.text(msg))).toBeVisible();
   });
 });

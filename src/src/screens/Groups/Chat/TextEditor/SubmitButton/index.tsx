@@ -53,7 +53,7 @@ const SubmitButton = ({onSend}: Props) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity onPress={onSend} disabled={!state.sendable}>
+        <TouchableOpacity testID="btn-send-msg" onPress={onSend} disabled={!state.sendable}>
           <SendIcon focused={state.sendable} />
         </TouchableOpacity>
       )}
