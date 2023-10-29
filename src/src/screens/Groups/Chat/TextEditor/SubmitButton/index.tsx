@@ -44,11 +44,11 @@ const SubmitButton = ({onSend}: Props) => {
     <View testID="btn-submit-chat" style={styles.container}>
       {state.editing ? (
         <View style={styles.editCtn}>
-          <TouchableOpacity style={styles.button} onPress={cancel}>
+          <TouchableOpacity testID="edit-close-btn" style={styles.button} onPress={cancel}>
             <CloseFillIcon />
           </TouchableOpacity>
           <SizedBox width={6} />
-          <TouchableOpacity style={styles.button} onPress={updateMessage}>
+          <TouchableOpacity testID="edit-submit-btn"style={styles.button} onPress={updateMessage}>
             <CheckIcon />
           </TouchableOpacity>
         </View>
