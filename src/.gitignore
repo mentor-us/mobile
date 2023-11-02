@@ -56,6 +56,7 @@ buck-out/
 **/fastlane/Preview.html
 **/fastlane/screenshots
 **/fastlane/test_output
+**/fastlane/readme.md
 
 # Bundle artifact
 *.jsbundle
@@ -64,8 +65,12 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-*.lock
+# *.lock
 
-./yarn.lock
+# ./yarn.lock
 
 .env
+
+mentorus-mobile.json
+
+*.jks

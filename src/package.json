@@ -1,6 +1,6 @@
 {
   "name": "MentorUS",
-  "version": "0.0.1",
+  "version": "1.7.8",
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
@@ -28,7 +28,10 @@
     "build-apk-prod": "cp ./.env.prod ./.env && cd android && ./gradlew assembleRelease ",
     "get-sh-key": "keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android",
     "dx:build": "cp ./.env.test ./.env && detox build --configuration android.emu.debug",
-    "dx:test": "detox test --configuration android.emu.debug"
+    "dx:test": "detox test --configuration android.emu.debug",
+    "android:fastlane:buildRelease": "cp ./.env.prod ./.env && bundle exec fastlane android release_aab",
+    "android:fastlane:uploadRelease": "bundle exec fastlane android deploy",
+    "android:fastlane:uploadInternal": "bundle exec fastlane android internal"
   },
   "dependencies": {
     "@gorhom/portal": "^1.0.14",
@@ -137,6 +140,7 @@
     "metro-react-native-babel-preset": "0.72.3",
     "react-native-dotenv": "^3.4.8",
     "react-native-svg-transformer": "^1.0.0",
+    "react-native-version": "^4.0.0",
     "react-test-renderer": "18.1.0",
     "typescript": "^4.8.2"
   },
