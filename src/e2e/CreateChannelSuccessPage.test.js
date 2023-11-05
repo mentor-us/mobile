@@ -14,7 +14,6 @@ describe("CreateChannelSuccessPage", () => {
   it.only("Should see name and description input and submit btn", async () => {
     await element(by.text("Tạo kênh mới")).tap();
     await expect(element(by.label("Tên kênh *"))).toBeVisible();
-    // await expect(element(by.id("name-input"))).toBeVisible();
     await expect(element(by.label("Mô tả"))).toBeVisible();
     await expect(element(by.id("submit-btn"))).toBeVisible();
   });
@@ -34,7 +33,6 @@ describe("CreateChannelSuccessPage", () => {
 
     await element(by.id("submit-btn")).tap();
     await element(by.text(name)).tap();
-    // await element(by.id("back-button")).tap();
     await expect(element(by.text(name))).toBeVisible();
   });
 });
