@@ -4,10 +4,6 @@ describe("CreateChannelSuccessPage", () => {
     await device.launchApp();
   });
 
-  // beforeEach(async () => {
-  //   await device.reloadReactNative();
-  // });
-
   it.only("Should see Mentor group", async () => {
     await expect(element(by.text("TEST_MENTOR"))).toBeVisible();
   });

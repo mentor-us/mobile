@@ -8,7 +8,7 @@ import {useAppDispatch} from "~/redux";
 import {ScreenProps} from "~/types/navigation";
 import {LinkAuthorize} from "~/constants";
 import AuthThunk from "~/redux/features/auth/thunk";
-import {REFRESH_TOKEN, TOKEN, BASE_URL} from "@env";
+import {TOKEN, BASE_URL} from "@env";
 import {Snackbar} from "react-native-paper";
 
 const Login: ScreenProps<"loginScreen"> = () => {
@@ -22,7 +22,7 @@ const Login: ScreenProps<"loginScreen"> = () => {
     const {token, emailVerified, error, refreshToken}: any = route.params || {
       token: TOKEN || "",
       emailVerified: false,
-      refreshToken: REFRESH_TOKEN || "",
+      refreshToken: TOKEN || "",
       error: null,
     };
 

@@ -3,10 +3,6 @@ describe("SendMessagesuccess", () => {
     await device.launchApp();
   });
 
-  // beforeEach(async () => {
-  //   await device.reloadReactNative();
-  // });
-
   it.only("Should see Mentee group", async () => {
     await expect(element(by.text("TEST_MENTEE"))).toBeVisible();
   });
@@ -22,11 +18,10 @@ describe("SendMessagesuccess", () => {
   });
   it.only("Type message and check", async () => {
     await element(by.id("chatbox")).tap();
-    await element(by.id("chatbox")).typeText('passcode');
+    await element(by.id("chatbox")).typeText("passcode");
     await element(by.id("btn-submit-chat")).tap();
     await element(by.id("back-button")).tap();
     await element(by.text("Cuộc trò chuyện chung")).tap();
     await expect(element(by.text("passcode"))).toBeVisible();
-
   });
 });
