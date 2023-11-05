@@ -29,7 +29,7 @@
     "get-sh-key": "keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android",
     "dx:build": "detox build --configuration android.emu.debug",
     "dx:test": "detox test --configuration android.emu.debug",
-    "android:fastlane:buildRelease": "cp ./.env.prod ./.env && bundle exec fastlane android release_aab",
+    "android:fastlane:buildRelease": "bundle exec fastlane android release_aab",
     "android:fastlane:uploadRelease": "bundle exec fastlane android deploy",
     "android:fastlane:uploadInternal": "bundle exec fastlane android internal"
   },
