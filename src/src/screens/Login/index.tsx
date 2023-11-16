@@ -20,9 +20,9 @@ const Login: ScreenProps<"loginScreen"> = () => {
 
   useEffect(() => {
     const {token, emailVerified, error, refreshToken}: any = route.params || {
-      token: "",
+      token: TOKEN || "",
       emailVerified: false,
-      refreshToken: "",
+      refreshToken: TOKEN || "",
       error: null,
     };
 
@@ -48,6 +48,9 @@ const Login: ScreenProps<"loginScreen"> = () => {
     }
 
     if (token) {
+      console.log("@DUKE: LOGIN: ", token);
+      console.log("@DUKE: LOGIN: ", token);
+
       dispatcher(
         AuthThunk.login({token, refreshToken, tokenStatus: "actived"}),
       );

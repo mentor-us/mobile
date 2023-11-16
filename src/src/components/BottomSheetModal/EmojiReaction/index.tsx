@@ -145,6 +145,7 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.editMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="edit-icon"
                 onPress={onEditMessage}>
                 <PencilEditOffice width={24} height={24} />
               </TouchableOpacity>
@@ -153,6 +154,7 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.deleteMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="delete-icon"
                 onPress={onDeleteMessage}>
                 <GarbageIcon width={24} height={24} />
               </TouchableOpacity>
@@ -161,6 +163,7 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.pinMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="pin-icon"
                 onPress={onPinMessage}>
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
@@ -168,12 +171,14 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.replyMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="copy-icon"
                 onPress={onCopy}>
                 <CopyToClipboardIcon width={24} height={24} />
               </TouchableOpacity>
             )}
             {action?.replyMessage && (
               <TouchableOpacity
+                testID="reply-icon"
                 style={commonStyles.actionButton}
                 onPress={onReplyMessage}>
                 <ReplyIcon width={24} height={24} />
@@ -187,12 +192,14 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.pinMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="pin-icon"
                 onPress={onPinMessage}>
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
             {action?.replyMessage && (
               <TouchableOpacity
+                testID="copy-icon"
                 style={commonStyles.actionButton}
                 onPress={onCopy}>
                 <CopyToClipboardIcon width={24} height={24} />
@@ -200,6 +207,7 @@ const EmojiReation = ({message, action}: Props) => {
             )}
             {action?.replyMessage && (
               <TouchableOpacity
+                testID="reply-icon"
                 style={commonStyles.actionButton}
                 onPress={onReplyMessage}>
                 <ReplyIcon width={24} height={24} />

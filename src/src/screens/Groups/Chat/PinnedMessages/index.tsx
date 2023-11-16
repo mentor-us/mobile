@@ -50,6 +50,7 @@ const PinnedMessages = () => {
 
   return (
     <Animated.View
+      testID="pinned-msg"
       style={[styles.container, expanding && styles.expandCtn]}
       layout={CustomLayoutTransition}>
       <View style={[expanding && styles.headerCtn]}>
@@ -59,6 +60,7 @@ const PinnedMessages = () => {
           </Animated.Text>
         )}
         <TouchableOpacity
+          testID="expand-pin-msg-icon"
           style={[styles.moreBtn, expanding && styles.rotate]}
           onPress={expand}>
           <ArrowheadDownIcon />

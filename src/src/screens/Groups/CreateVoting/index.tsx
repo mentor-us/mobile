@@ -234,7 +234,7 @@ const CreateVoting: ScreenProps<"createVoting"> = ({route}) => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btn} onPress={onSubmit}>
+        <TouchableOpacity testID="btn-create-vote" style={styles.btn} onPress={onSubmit}>
           <Text style={styles.textBtn}>Tạo bình chọn</Text>
         </TouchableOpacity>
       </View>

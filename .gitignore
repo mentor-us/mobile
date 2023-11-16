@@ -157,3 +157,4 @@ package-lock.json
 .circleci/generated_config.yml
 
 src/.env
+src/.detoxrc.js

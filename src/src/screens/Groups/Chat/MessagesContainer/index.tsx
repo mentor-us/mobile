@@ -74,6 +74,7 @@ const MessagesContainer = () => {
 
   return (
     <FlatList
+      testID="message-container"
       style={styles.container}
       renderItem={renderItem}
       data={state._messageList}
