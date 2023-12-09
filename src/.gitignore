@@ -38,6 +38,7 @@ android/app/release/
 node_modules/
 npm-debug.log
 yarn-error.log
+.yarn/
 
 # BUCK
 buck-out/
@@ -66,7 +67,6 @@ buck-out/
 /vendor/bundle/
 
 # *.lock
-
 # ./yarn.lock
 
 .env
