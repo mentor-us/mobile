@@ -1,6 +1,5 @@
 import SInfo from "react-native-sensitive-info";
 import {StorageKey} from "~/constants/AppKey";
-import LOG from "~/utils/Logger";
 
 const secureStoreOptions = {
   sharedPreferencesName: StorageKey.sharedPreferencesName,
@@ -11,7 +10,6 @@ export const SecureStore = {
   async saveItem(key: string, value: string): Promise<boolean> {
     try {
       await SInfo.setItem(key, value, secureStoreOptions);
-      LOG.debug(`@SecureStore: saveItem: ${key} - ${value}`);
       return true;
     } catch (error) {
       return false;
@@ -21,7 +19,6 @@ export const SecureStore = {
   async getItem(key: string): Promise<string> {
     try {
       const value = await SInfo.getItem(key, secureStoreOptions);
-      LOG.debug(`@SecureStore: getItem: ${key} - ${value}`);
       return value;
     } catch (error) {
       return "";
