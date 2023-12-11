@@ -10,7 +10,12 @@ import {
   RESULTS,
 } from "react-native-permissions";
 import notifee, {AuthorizationStatus} from "@notifee/react-native";
+import log from "./Logger";
 
+/**
+ * @deprecated
+ * Will be replaced with `Permission`
+ */
 export const handleReadStoragePermission = async (): Promise<boolean> => {
   try {
     const apiLevel = await DeviceInfo.getApiLevel();
@@ -65,6 +70,10 @@ export const handleReadStoragePermission = async (): Promise<boolean> => {
   }
 };
 
+/**
+ * @deprecated
+ * Will be replaced with `Permission`
+ */
 export const handleWriteStoragePermission = async (): Promise<boolean> => {
   // Function to check the platform
   // If Platform is Android then check for permissions.
@@ -95,6 +104,10 @@ export const handleWriteStoragePermission = async (): Promise<boolean> => {
   return false;
 };
 
+/**
+ * @deprecated
+ * Will be replaced with `Permission`
+ */
 export const handleUseCameraPermission = async (): Promise<boolean> => {
   try {
     const result = await check(
@@ -133,6 +146,10 @@ export const handleUseCameraPermission = async (): Promise<boolean> => {
   }
 };
 
+/**
+ * @deprecated
+ * Will be replaced with `Permission`
+ */
 export const handleNotificationPermission = async (): Promise<boolean> => {
   try {
     if (Platform.OS === "ios") {
@@ -150,11 +167,15 @@ export const handleNotificationPermission = async (): Promise<boolean> => {
     const permission = await requestNotifications([]);
     return permission.status === "granted" || permission.status === "limited";
   } catch (error) {
-    console.log("Error on handleNotificationPermission: ", error);
+    log.error("@handleNotificationPermission", error);
     return false;
   }
 };
 
+/**
+ * @deprecated
+ * Will be replaced with `Permission`
+ */
 export const checkPermissionNotification = async () => {
   try {
     if (Platform.OS === "ios") {
