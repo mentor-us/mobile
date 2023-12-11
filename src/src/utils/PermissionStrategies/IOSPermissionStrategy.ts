@@ -8,7 +8,7 @@ import {
   request,
 } from "react-native-permissions";
 import {Alert} from "react-native";
-import log from "../Logger";
+import LOG from "../Logger";
 
 /**
  * IOSPermissionStrategy
@@ -19,7 +19,7 @@ import log from "../Logger";
  */
 export class IOSPermissionStrategy implements PermissionStrategy {
   constructor() {
-    log.info("@IOSPermissionStrategy: constructor");
+    LOG.debug("@IOSPermissionStrategy: constructor");
   }
 
   async handleReadStoragePermission(): Promise<boolean> {
@@ -54,7 +54,7 @@ export class IOSPermissionStrategy implements PermissionStrategy {
         isPhotoPermissionResultGranted || isPhotoPermissionResultGrantedLimited
       );
     } catch (error) {
-      log.error(IOSPermissionStrategy.name, (error as Error).message);
+      LOG.error(IOSPermissionStrategy.name, (error as Error).message);
       return false;
     }
   }
@@ -96,7 +96,7 @@ export class IOSPermissionStrategy implements PermissionStrategy {
         requestCameraResult === RESULTS.LIMITED
       );
     } catch (error) {
-      log.error(IOSPermissionStrategy.name, (error as Error).message);
+      LOG.error(IOSPermissionStrategy.name, (error as Error).message);
       return false;
     }
   }

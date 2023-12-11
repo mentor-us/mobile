@@ -10,7 +10,7 @@ import {
   RESULTS,
 } from "react-native-permissions";
 import notifee, {AuthorizationStatus} from "@notifee/react-native";
-import log from "./Logger";
+import LOG from "./Logger";
 
 /**
  * @deprecated
@@ -167,7 +167,7 @@ export const handleNotificationPermission = async (): Promise<boolean> => {
     const permission = await requestNotifications([]);
     return permission.status === "granted" || permission.status === "limited";
   } catch (error) {
-    log.error("@handleNotificationPermission", error);
+    LOG.error("@handleNotificationPermission", error);
     return false;
   }
 };

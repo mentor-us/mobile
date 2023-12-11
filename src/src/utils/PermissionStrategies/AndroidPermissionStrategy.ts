@@ -10,7 +10,7 @@ import {
   requestNotifications,
 } from "react-native-permissions";
 import {Alert} from "react-native";
-import log from "../Logger";
+import LOG from "../Logger";
 
 /**
  * AndroidPermissionStrategy
@@ -21,7 +21,7 @@ import log from "../Logger";
  */
 export class AndroidPermissionStrategy implements PermissionStrategy {
   constructor() {
-    log.info("@AndroidPermissionStrategy: constructor");
+    LOG.debug("@AndroidPermissionStrategy: constructor");
   }
 
   async handleReadStoragePermission(): Promise<boolean> {
@@ -75,7 +75,7 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
 
       return isMediaRequestGranted || isMediaRequestLimited;
     } catch (error) {
-      log.error(AndroidPermissionStrategy.name, (error as Error).message);
+      LOG.error(AndroidPermissionStrategy.name, (error as Error).message);
       return false;
     }
   }
@@ -97,7 +97,7 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
         Alert.alert("Error", "Write Storage Permission Not Granted");
       }
     } catch (error) {
-      log.error(AndroidPermissionStrategy.name, (error as Error).message);
+      LOG.error(AndroidPermissionStrategy.name, (error as Error).message);
       // To handle permission related exception
       Alert.alert("Write External Storage", (error as Error).message);
     }
@@ -138,7 +138,7 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
         requestCameraResult === RESULTS.LIMITED
       );
     } catch (error) {
-      log.error(AndroidPermissionStrategy.name, (error as Error).message);
+      LOG.error(AndroidPermissionStrategy.name, (error as Error).message);
       return false;
     }
   }
@@ -152,7 +152,7 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
         permission.status === RESULTS.LIMITED
       );
     } catch (error) {
-      log.error(AndroidPermissionStrategy.name, (error as Error).message);
+      LOG.error(AndroidPermissionStrategy.name, (error as Error).message);
       return false;
     }
   }
@@ -165,7 +165,7 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
         permission.status === RESULTS.LIMITED
       );
     } catch (error) {
-      log.error(AndroidPermissionStrategy.name, (error as Error).message);
+      LOG.error(AndroidPermissionStrategy.name, (error as Error).message);
       return false;
     }
   }
