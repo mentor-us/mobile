@@ -1,11 +1,12 @@
-import {combineReducers, Reducer} from "redux";
+import { combineReducers, Reducer } from "redux";
 
 import userReducer from "./features/user/slice";
-import {RootState} from "./store";
+import { RootState } from "./store";
 import authReducer from "./features/auth/slice";
 import eventReducer from "./features/event/slice";
 
 export const combinedReducer = combineReducers({
+  /** @deprecated */
   auth: authReducer,
   user: userReducer,
   event: eventReducer,

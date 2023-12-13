@@ -72,6 +72,9 @@ export const AuthExtraReducer = (
     );
 };
 
+/**
+ * @deprecated will be removed in the future - use 'authStore' instead
+ */
 const AuthThunk = {
   login,
   logout,
