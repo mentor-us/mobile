@@ -1,5 +1,5 @@
 import SInfo from "react-native-sensitive-info";
-import {StorageKey} from "~/constants/AppKey";
+import { StorageKey } from "~/constants/AppKey";
 
 const secureStoreOptions = {
   sharedPreferencesName: StorageKey.sharedPreferencesName,
@@ -49,6 +49,10 @@ export const SecureStore = {
 
   async getToken(): Promise<string> {
     return await SecureStore.getItem(StorageKey.token);
+  },
+
+  async removeToken(): Promise<boolean> {
+    return await SecureStore.deleteItem(StorageKey.token);
   },
 
   async saveRefreshToken(refreshToken: string): Promise<boolean> {
