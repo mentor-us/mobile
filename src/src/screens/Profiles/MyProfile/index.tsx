@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { DefaultUserAvatar, DefaultWallPaperGroup } from "~/assets/images";
 import styles, { AVATAR_SIZE } from "./styles";
-import { CameraIcon } from "~/assets/svgs";
+import { CameraIcon, GoogleLogo, MicrosoftLogo } from "~/assets/svgs";
 import GlobalStyles, { LayoutDimensions } from "~/constants/GlobalStyles";
 import InfoItem from "./InfoItem";
 import { InfoItemModel } from "./index.props";
@@ -32,6 +32,7 @@ import { useCurrentUser } from "~/app/server/users/queries";
 import Permission from "~/utils/PermissionStrategies";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
+import AccountReferenceButton from "~/components/AccountReferenceButton";
 
 const MyProfile = () => {
   const { authStore } = useMobxStore();
@@ -175,6 +176,33 @@ const MyProfile = () => {
           {infoItems.map(item => {
             return <InfoItem data={item} key={item.type} />;
           })}
+          <Text
+            style={{
+              ...styles.infoText,
+              textAlign: "center",
+              marginBottom: 8,
+            }}>
+            Liên kết tài khoản
+          </Text>
+          {/* <SizedBox width={LayoutDimensions.Small} /> */}
+
+          <View
+            style={{
+              ...styles.referenceAccountContainer,
+              alignItems: "center",
+              justifyContent: "space-around",
+              marginBottom: 32,
+            }}>
+            <AccountReferenceButton
+              provider="google"
+              callbackUrl="https://google.com"
+            />
+            {/* <SizedBox width={LayoutDimensions.Small} /> */}
+            <AccountReferenceButton
+              provider="microsoft"
+              callbackUrl="https://google.com"
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -89,6 +89,11 @@ const styles = StyleSheet.create({
     color: Color.white,
     fontSize: FontSize.large,
   },
+  referenceAccountContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
 });
 
 export default styles;

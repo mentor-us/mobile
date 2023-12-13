@@ -1,9 +1,10 @@
-import {StyleSheet} from "react-native";
-import {Color} from "./Color";
+import { StyleSheet } from "react-native";
+import { Color } from "./Color";
 
 export const LayoutDimensions = {
   XSmall: 4,
   Small: 8,
+  XMedium: 12,
   Medium: 16,
   Large: 24,
   XLarge: 32,

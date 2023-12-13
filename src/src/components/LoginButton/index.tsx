@@ -1,16 +1,16 @@
-import {TouchableOpacity, Text, StyleSheet} from "react-native";
-import React, {memo, useCallback} from "react";
-import {GoogleLogo, MicrosoftLogo} from "~/assets/svgs";
-import {screenWidth} from "~/constants";
-import {useMemo} from "react";
-import {Color} from "~/constants/Color";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import React, { memo, useCallback } from "react";
+import { GoogleLogo, MicrosoftLogo } from "~/assets/svgs";
+import { screenWidth } from "~/constants";
+import { useMemo } from "react";
+import { Color } from "~/constants/Color";
 
 interface Props {
   onPress: () => void;
   type: "google" | "microsoft" | undefined;
 }
 
-const LoginButton = ({onPress, type}: Props) => {
+const LoginButton = ({ onPress, type }: Props) => {
   const renderLogo = useCallback(
     type => {
       switch (type) {
