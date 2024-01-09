@@ -73,6 +73,7 @@ const TimelineEvent = () => {
           viewMode={state.calendarMode as CalendarViewMode}
           allowPinchToZoom
           locale="vi"
+          timeZone="Asia/Ho_Chi_Minh"
           isShowHeader
           events={state.events}
           maxTimeIntervalHeight={300}
