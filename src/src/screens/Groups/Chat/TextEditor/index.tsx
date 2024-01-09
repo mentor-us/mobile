@@ -5,32 +5,36 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
-import React, {useContext, useEffect} from "react";
-import {actions, RichEditor, RichToolbar} from "react-native-pell-rich-editor";
+import React, { useContext, useEffect } from "react";
+import {
+  actions,
+  RichEditor,
+  RichToolbar,
+} from "react-native-pell-rich-editor";
 import styles from "./styles";
 
-import {observer} from "mobx-react-lite";
-import {ArrowDownCircleIcon, MediaIcon} from "~/assets/svgs";
+import { observer } from "mobx-react-lite";
+import { ArrowDownCircleIcon, MediaIcon } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import GlobalStyles from "~/constants/GlobalStyles";
-import {runWithLayoutAnimation} from "~/hooks/LayoutAnimation";
-import {useAppDispatch, useAppSelector} from "~/redux";
-import {SocketContext} from "~/context/socket";
+import { runWithLayoutAnimation } from "~/hooks/LayoutAnimation";
+import { useAppDispatch, useAppSelector } from "~/redux";
+import { SocketContext } from "~/context/socket";
 import Actions from "./Actions";
-import {useChatScreenState} from "~/context/chat";
-import {handleReadStoragePermission} from "~/utils/Permission";
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
-import {StorageMediaAttachemt} from "~/models/media";
+import { useChatScreenState } from "~/context/chat";
+import { handleReadStoragePermission } from "~/utils/Permission";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { StorageMediaAttachemt } from "~/models/media";
 import uuid from "react-native-uuid";
 import SubmitButton from "./SubmitButton";
-import {RichTextRef} from "./index.props";
+import { RichTextRef } from "./index.props";
 import Animated, {
   withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import {useUpdateQueryGroupList} from "~/screens/Home/queries";
-import {EventActions} from "~/redux/features/event/slice";
+import { useUpdateQueryGroupList } from "~/screens/Home/queries";
+import { EventActions } from "~/redux/features/event/slice";
 import ReplyAction from "./ReplyAction";
 
 const TextEditor = () => {
@@ -179,10 +183,10 @@ const TextEditor = () => {
     "worklet";
     return {
       animations: {
-        originX: withTiming(values.targetOriginX, {duration: 70}),
+        originX: withTiming(values.targetOriginX, { duration: 70 }),
         originY: withDelay(
           70,
-          withTiming(values.targetOriginY, {duration: 70}),
+          withTiming(values.targetOriginY, { duration: 70 }),
         ),
         width: withSpring(values.targetWidth),
         height: withSpring(values.targetHeight),
@@ -234,7 +238,7 @@ const TextEditor = () => {
       <ReplyAction />
       <View style={styles.inputTextContainer}>
         {/*  */}
-        <View style={[GlobalStyles.horizontalFlexEnd, {maxHeight: 120}]}>
+        <View style={[GlobalStyles.horizontalFlexEnd, { maxHeight: 120 }]}>
           <SizedBox width={4} />
           {!state.isKeyboardVisible && (
             <View>
@@ -249,7 +253,7 @@ const TextEditor = () => {
             showsVerticalScrollIndicator={false}>
             <RichEditor
               testID="chatbox"
-              containerStyle={{transform: [{rotate: "180deg"}]}}
+              containerStyle={{ transform: [{ rotate: "180deg" }] }}
               ref={RichTextRef}
               onChange={onChangeText}
               placeholder={"Soạn tin nhắn..."}

@@ -1,24 +1,24 @@
-import {useNavigation} from "@react-navigation/native";
-import React, {useEffect, useState} from "react";
-import {ActivityIndicator, Text, View} from "react-native";
-import {ScreenProps} from "~/types/navigation";
-import {StackNavigationOptions} from "@react-navigation/stack";
-import {Color} from "~/constants/Color";
-import {HeaderBackButton} from "~/components/Header";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
+import { ScreenProps } from "~/types/navigation";
+import { StackNavigationOptions } from "@react-navigation/stack";
+import { Color } from "~/constants/Color";
+import { HeaderBackButton } from "~/components/Header";
 import HeaderTitle from "./HeaderTitle";
 import HeaderRight from "./HeaderRight";
 import styles from "./styles";
 import MessagesContainer from "./MessagesContainer";
-import {ChatScreenState} from "~/mobx/chat";
+import { ChatScreenState } from "~/mobx/chat";
 import ChatScreenProvider from "~/context/chat";
-import {observer} from "mobx-react-lite";
-import {GROUP_SAMPLE, GroupModel} from "~/models/group";
+import { observer } from "mobx-react-lite";
+import { GROUP_SAMPLE, GroupModel } from "~/models/group";
 import TextEditor from "./TextEditor";
 import GroupService from "~/services/group";
-import {useAppSelector} from "~/redux";
+import { useAppSelector } from "~/redux";
 import PinnedMessages from "./PinnedMessages";
 
-const Chat: ScreenProps<"chat"> = ({route}) => {
+const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data
   const groupId: string = route.params.groupId;
   const type: any = route.params.type;
@@ -28,7 +28,7 @@ const Chat: ScreenProps<"chat"> = ({route}) => {
   // State
   const [loading, setLoading] = useState<boolean>(true);
   const [state, setState] = useState(() => {
-    return new ChatScreenState({groupId, currentUser});
+    return new ChatScreenState({ groupId, currentUser });
   });
 
   // Action
@@ -64,7 +64,7 @@ const Chat: ScreenProps<"chat"> = ({route}) => {
   // SIDE EFFECT
   useEffect(() => {
     fetchGroup();
-    setState(new ChatScreenState({groupId, currentUser}));
+    setState(new ChatScreenState({ groupId, currentUser }));
   }, [groupId]);
 
   if (!state._groupDetail) {
@@ -91,7 +91,7 @@ const Chat: ScreenProps<"chat"> = ({route}) => {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        <Text style={{color: Color.black}}>
+        <Text style={{ color: Color.black }}>
           Bạn không được quyền truy cập vào kênh.
         </Text>
       </View>

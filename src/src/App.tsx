@@ -14,6 +14,7 @@ import { MobxProvider, rootMobxStore } from "./mobx/store";
 import { StatusBar } from "react-native";
 import { Color } from "./constants/Color";
 import NetworkSnackbar from "./components/NetworkSnackbar";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 const styles = StyleSheet.create({
   root: {
@@ -40,21 +41,23 @@ const App = () => {
     <GestureHandlerRootView style={styles.root}>
       <SocketContext.Provider value={socket}>
         <QueryClientProvider client={queryClient}>
-          <Provider store={store}>
-            <CalendarProvider date="dd-MM-yyyy">
-              <MobxProvider value={rootMobxStore}>
-                <StatusBar
-                  animated={true}
-                  backgroundColor={Color.primary}
-                  showHideTransition={"fade"}
-                  barStyle={"light-content"}
-                  hidden={false}
-                />
-                <RootNavigator />
-                <NetworkSnackbar isSubscribed />
-              </MobxProvider>
-            </CalendarProvider>
-          </Provider>
+          <RootSiblingParent>
+            <Provider store={store}>
+              <CalendarProvider date="dd-MM-yyyy">
+                <MobxProvider value={rootMobxStore}>
+                  <StatusBar
+                    animated={true}
+                    backgroundColor={Color.primary}
+                    showHideTransition={"fade"}
+                    barStyle={"light-content"}
+                    hidden={false}
+                  />
+                  <RootNavigator />
+                  <NetworkSnackbar isSubscribed />
+                </MobxProvider>
+              </CalendarProvider>
+            </Provider>
+          </RootSiblingParent>
         </QueryClientProvider>
       </SocketContext.Provider>
     </GestureHandlerRootView>

@@ -1,30 +1,26 @@
-import {Alert, DeviceEventEmitter, FlatList} from "react-native";
-import React, {useCallback, useEffect, useState} from "react";
+import { Alert, DeviceEventEmitter, FlatList } from "react-native";
+import React, { useCallback, useEffect } from "react";
 import styles from "./styles";
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
-import {MessageModel} from "~/models/message";
+import { MessageModel } from "~/models/message";
 import MessageItem from "./MessageItem";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import {useChatScreenState} from "~/context/chat";
+import { useChatScreenState } from "~/context/chat";
 import ListFooter from "./ListFooter";
 import SizedBox from "~/components/SizedBox";
-import {Vote} from "~/models/vote";
+import { Vote } from "~/models/vote";
 import { RefreshTaskDetailEvent } from "~/models/events/refresh-task-detail";
 
 const MessagesContainer = () => {
-
   const state = useChatScreenState();
 
-  /* UI state */
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const renderItem = useCallback(({item}: {item: MessageModel}) => {
+  const renderItem = useCallback(({ item }: { item: MessageModel }) => {
     return <MessageItem message={item} />;
   }, []);
 
   const renderFooter = useCallback(() => {
-    return <ListFooter type={state._groupDetail.type}/>;
+    return <ListFooter type={state._groupDetail.type} />;
   }, [state.loadingMoreMessage]);
 
   useEffect(() => {
@@ -47,13 +43,12 @@ const MessagesContainer = () => {
 
     const updateMeeting = DeviceEventEmitter.addListener(
       EventEmitterNames.refreshMeetingDetail,
-      ({status, message}:  {status: boolean; message: string}) => {
-      },
+      ({ status, message }: { status: boolean; message: string }) => {},
     );
 
     const updateTaskStatus = DeviceEventEmitter.addListener(
       EventEmitterNames.refreshTaskStatus,
-      ({taskId, newStatus} : RefreshTaskDetailEvent) => {
+      ({ taskId, newStatus }: RefreshTaskDetailEvent) => {
         state.updateTaskStatus(taskId, newStatus);
       },
     );
