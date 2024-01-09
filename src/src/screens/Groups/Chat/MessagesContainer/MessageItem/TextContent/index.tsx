@@ -1,39 +1,44 @@
-import {Alert, DeviceEventEmitter, Image, Text, TouchableOpacity, View} from "react-native";
-import React, {useCallback, useMemo} from "react";
+import {
+  DeviceEventEmitter,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useCallback, useMemo } from "react";
 import TextFormatRenderer from "~/components/TextFormatRenderer";
-import {commonStyles, ownerStyle, otherStyle} from "./styles";
-import {DefaultUserAvatar} from "~/assets/images";
-import {useNavigation} from "@react-navigation/native";
+import { commonStyles, ownerStyle, otherStyle } from "./styles";
+import { DefaultUserAvatar } from "~/assets/images";
+import { useNavigation } from "@react-navigation/native";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
-import {Gesture, GestureDetector} from "react-native-gesture-handler";
-import {MessageModel, ReplyMessageModel} from "~/models/message";
-import {useAppSelector} from "~/redux";
-import Animated, {withTiming} from "react-native-reanimated";
-import {EntryAnimationsValues} from "react-native-reanimated";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { MessageModel, ReplyMessageModel } from "~/models/message";
+import { useAppSelector } from "~/redux";
+import Animated, { withTiming } from "react-native-reanimated";
+import { EntryAnimationsValues } from "react-native-reanimated";
 import TotalEmojiReacted from "~/components/TotalEmojiReacted";
-import {EmoijType} from "~/constants/Emoijs";
+import { EmoijType } from "~/constants/Emoijs";
 
 import _ from "lodash";
-import {observer} from "mobx-react-lite";
-import {useChatScreenState} from "~/context/chat";
+import { observer } from "mobx-react-lite";
+import { useChatScreenState } from "~/context/chat";
 import GroupApi from "~/api/remote/GroupApi";
-import {useUpdateQueryGroupList} from "~/screens/Home/queries";
+import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 
 interface Props {
   message: MessageModel;
 }
 
-const TextContent = ({message}: Props) => {
+const TextContent = ({ message }: Props) => {
   const userData = useAppSelector(state => state.user.data);
   const state = useChatScreenState();
   const navigation = useNavigation();
   const queryAction = useUpdateQueryGroupList();
 
-  if (message.reply) {}
   const isOwner = useMemo(() => {
     return userData.id === message.sender.id;
   }, [message.sender.id]);
@@ -45,8 +50,8 @@ const TextContent = ({message}: Props) => {
   const entering = (targetValues: EntryAnimationsValues) => {
     "worklet";
     const animations = {
-      originY: withTiming(targetValues.targetOriginY, {duration: 369}),
-      opacity: withTiming(1, {duration: 369}),
+      originY: withTiming(targetValues.targetOriginY, { duration: 369 }),
+      opacity: withTiming(1, { duration: 369 }),
     };
     const initialValues = {
       originY: 200,
@@ -62,7 +67,10 @@ const TextContent = ({message}: Props) => {
     const groupId = !state._groupDetail.parentId
       ? state._groupDetail.id
       : state._groupDetail.parentId;
-    navigation.navigate("otherProfile", {userId: message.sender.id, groupId: groupId});
+    navigation.navigate("otherProfile", {
+      userId: message.sender.id,
+      groupId: groupId,
+    });
   }, [message.sender.id]);
 
   const reactEmojiAction = (emoji: EmoijType) => {
@@ -98,7 +106,7 @@ const TextContent = ({message}: Props) => {
       await GroupApi.pinMessage(state._groupDetail.id, message.id);
 
       const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
-      const sanitizedContent = message.content?.replace(regex , ' ');
+      const sanitizedContent = message.content?.replace(regex, " ");
       // const newMessage = `${state._currentUser.name} đã ghim tin nhắn "${sanitizedContent}"`;
       // queryAction.updateGroupNewMessage(
       //   state._groupDetail.id,
@@ -127,7 +135,7 @@ const TextContent = ({message}: Props) => {
       if (message.status == "DELETED") return;
       BottomSheetModalRef.current?.show(
         "emoji_reaction",
-        {...message, totalReaction: message.totalReaction} as MessageModel,
+        { ...message, totalReaction: message.totalReaction } as MessageModel,
         {
           reactEmojiAction: reactEmojiAction,
           deleteEmoji: deleteEmoji,
@@ -144,18 +152,21 @@ const TextContent = ({message}: Props) => {
 
   return (
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
+      {/* User Avatar */}
       {!isOwner && (
         <TouchableOpacity onPress={onPressAvatar}>
           <Image
             source={
               message.sender.imageUrl
-                ? {uri: message.sender.imageUrl}
+                ? { uri: message.sender.imageUrl }
                 : DefaultUserAvatar
             }
             style={commonStyles.avatar}
           />
         </TouchableOpacity>
       )}
+
+      {/* Message Content */}
       <GestureDetector gesture={composed}>
         <TouchableOpacity
           style={[commonStyles.container, styles.container]}
