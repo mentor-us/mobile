@@ -1,6 +1,15 @@
 import {StyleSheet} from "react-native";
 import {Color} from "./Color";
 
+export const LayoutDimensions = {
+  XSmall: 4,
+  Small: 8,
+  Medium: 16,
+  Large: 24,
+  XLarge: 32,
+  XXLarge: 40,
+};
+
 const GlobalStyles = StyleSheet.create({
   absoluteFullFit: {
     bottom: 0,

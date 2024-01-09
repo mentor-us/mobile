@@ -29,4 +29,8 @@ const authSlice = createSlice({
 export const AuthActions = authSlice.actions;
 
 const authReducer = authSlice.reducer;
+
+/**
+ * @deprecated will be removed in the future - use 'authStore' instead
+ */
 export default authReducer;
