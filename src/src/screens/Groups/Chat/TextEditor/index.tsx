@@ -22,7 +22,6 @@ import { useAppDispatch, useAppSelector } from "~/redux";
 import { SocketContext } from "~/context/socket";
 import Actions from "./Actions";
 import { useChatScreenState } from "~/context/chat";
-import { handleReadStoragePermission } from "~/utils/Permission";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StorageMediaAttachemt } from "~/models/media";
 import uuid from "react-native-uuid";
@@ -38,6 +37,7 @@ import { EventActions } from "~/redux/features/event/slice";
 import ReplyAction from "./ReplyAction";
 import LOG from "~/utils/Logger";
 import Helper from "~/utils/Helper";
+import Permission from "~/utils/PermissionStrategies";
 
 const TextEditor = () => {
   // const richText = useRef<any>();
@@ -165,7 +165,7 @@ const TextEditor = () => {
 
   const onChooseImage = async () => {
     try {
-      const hasPermission = await handleReadStoragePermission();
+      const hasPermission = await Permission.handleReadStoragePermission();
       if (hasPermission) {
         BottomSheetModalRef.current?.show("gallery", true, {
           run: submitImage,
