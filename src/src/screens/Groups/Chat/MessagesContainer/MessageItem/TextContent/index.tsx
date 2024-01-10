@@ -38,9 +38,7 @@ const TextContent = ({ message }: Props) => {
   const state = useChatScreenState();
   const navigation = useNavigation();
   const queryAction = useUpdateQueryGroupList();
-
-  if (message.reply) {
-  }
+  
   const isOwner = useMemo(() => {
     return userData.id === message.sender.id;
   }, [message.sender.id]);
@@ -155,6 +153,7 @@ const TextContent = ({ message }: Props) => {
 
   return (
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
+      {/* User Avatar */}
       {!isOwner && (
         <TouchableOpacity onPress={onPressAvatar}>
           <Image
@@ -167,6 +166,8 @@ const TextContent = ({ message }: Props) => {
           />
         </TouchableOpacity>
       )}
+
+      {/* Message Content */}
       <GestureDetector gesture={composed}>
         <TouchableOpacity
           style={[commonStyles.container, styles.container]}

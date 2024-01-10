@@ -1,14 +1,14 @@
-import {View} from "react-native";
-import React, {forwardRef, useImperativeHandle, useState} from "react";
-import {BottomSheetRef, ModalType} from "./index.props";
+import { View } from "react-native";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { BottomSheetRef, ModalType } from "./index.props";
 import Modal from "react-native-modal";
 import styles from "./styles";
 import EmojiReaction from "./EmojiReaction";
-import {screenHeight, screenWidth} from "~/constants";
+import { screenHeight, screenWidth } from "~/constants";
 import Gallery from "./Gallery";
 import ImageSliderShow from "./ImageSliderShow";
 import UserReacted from "./UserReacted";
-import {ChoiceResultList} from "./ChoiceResultList";
+import { ChoiceResultList } from "./ChoiceResultList";
 import StatusBox from "./StatusBox";
 import GroupChatThreads from "./GroupChatThreads";
 
@@ -16,7 +16,7 @@ const BottomSheetModal = (_, ref) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [modalType, setModalType] = useState<ModalType | undefined>(undefined);
   const [data, setData] = useState<any>();
-  const [action, setAction] = useState<any>({run: () => {}});
+  const [action, setAction] = useState<any>({ run: () => {} });
 
   const show = (type: ModalType, data: any, action: any) => {
     setModalType(type);
@@ -47,7 +47,7 @@ const BottomSheetModal = (_, ref) => {
       case "user_reacted":
         return <UserReacted reactions={data} />;
       case "choice_result":
-        return <ChoiceResultList choice={data.choice} groupId={data.groupId}/>;
+        return <ChoiceResultList choice={data.choice} groupId={data.groupId} />;
       case "status_box":
         return <StatusBox taskId={data} />;
       case "group_chat_threads":

@@ -105,6 +105,11 @@ export default class Helper {
       "",
     );
   };
+  
+  static extractTextOnlyFromHTML = (htmlInput?: string): string => {
+    // Remove all html tag
+    return htmlInput?.replace(/<[^>]*>/gim, "") ?? "";
+  };
 
   // TIME HELPER
   static formatTimeNumber = (value: number): string => {
