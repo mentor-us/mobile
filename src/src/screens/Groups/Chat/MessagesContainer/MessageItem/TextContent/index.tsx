@@ -38,7 +38,7 @@ const TextContent = ({ message }: Props) => {
   const state = useChatScreenState();
   const navigation = useNavigation();
   const queryAction = useUpdateQueryGroupList();
-
+  
   const isOwner = useMemo(() => {
     return userData.id === message.sender.id;
   }, [message.sender.id]);
@@ -149,6 +149,7 @@ const TextContent = ({ message }: Props) => {
     .minDuration(200);
 
   const composed = Gesture.Simultaneous(longPressGesture);
+  const trimmedContent = Helper.trimHTMLContent(message.content ?? "");
 
   return (
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
@@ -192,12 +193,12 @@ const TextContent = ({ message }: Props) => {
 
           {message.status == "DELETED" ? (
             <TextFormatRenderer
-              text={message.content || ""}
+              text={trimmedContent}
               style={commonStyles.dimmedText}
             />
           ) : (
             <TextFormatRenderer
-              text={message.content || ""}
+              text={trimmedContent}
               style={commonStyles.text}
               isFullDetail
             />

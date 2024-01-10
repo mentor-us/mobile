@@ -95,6 +95,17 @@ export default class Helper {
       .replace(/\n/, "");
   };
 
+  static trimHTMLContent = (htmlInput: string) => {
+    // Clear on start and end of html
+    // <div><br></div>
+    // <div>    </div>
+    // <div>&nbsp;</div>
+    return htmlInput.replace(
+      /^(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+|(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+$/g,
+      "",
+    );
+  };
+  
   static extractTextOnlyFromHTML = (htmlInput?: string): string => {
     // Remove all html tag
     return htmlInput?.replace(/<[^>]*>/gim, "") ?? "";

@@ -37,6 +37,7 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     initHeader(data);
     setLoading(false);
   };
+
   const initHeader = (data: GroupModel) => {
     if (!data) {
       return;

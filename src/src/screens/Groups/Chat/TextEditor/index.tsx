@@ -22,7 +22,6 @@ import { useAppDispatch, useAppSelector } from "~/redux";
 import { SocketContext } from "~/context/socket";
 import Actions from "./Actions";
 import { useChatScreenState } from "~/context/chat";
-import { handleReadStoragePermission } from "~/utils/Permission";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StorageMediaAttachemt } from "~/models/media";
 import uuid from "react-native-uuid";
@@ -36,6 +35,9 @@ import Animated, {
 import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import { EventActions } from "~/redux/features/event/slice";
 import ReplyAction from "./ReplyAction";
+import LOG from "~/utils/Logger";
+import Helper from "~/utils/Helper";
+import Permission from "~/utils/PermissionStrategies";
 
 const TextEditor = () => {
   // const richText = useRef<any>();
@@ -76,14 +78,14 @@ const TextEditor = () => {
 
     // update message
     socket.on("update_message", response => {
-      console.log("@DUKE_UPDATE MESS: ", response);
+      LOG.info("@DUKE_UPDATE MESS: ", response);
 
       if (response?.action && response?.action == "delete") {
         state.deleteMessage(response.messageId);
       }
 
       if (response?.action && response?.action == "update") {
-        console.log("@DUKE_UPDATE MESS: ", response);
+        LOG.info("@DUKE_UPDATE MESS: ", response);
 
         state.updateMessage(response.messageId, response.newContent);
       }
@@ -97,10 +99,7 @@ const TextEditor = () => {
 
     // listen remove emoji
     socket.on("receive_remove_react_message", response => {
-      console.log(
-        "@DUKE: receive_remove_react_message",
-        response.totalReaction,
-      );
+      LOG.info("@DUKE: receive_remove_react_message", response.totalReaction);
       state.receiveRemoveReact(response);
     });
 
@@ -133,27 +132,29 @@ const TextEditor = () => {
 
   const onSend = async () => {
     try {
-      const newText = await RichTextRef.current.getContentHtml();
-      const mess = {
+      const htmlContent = await RichTextRef?.current?.getContentHtml();
+
+      const message = {
         id: `${uuid.v4().toString()}`,
-        content: newText,
+        content: Helper.trimHTMLContent(htmlContent ?? ""),
         groupId: state._groupDetail.id,
         senderId: currentUser.id,
         createdDate: new Date(),
         type: "TEXT",
         reply: state.replying?.id,
       };
-      socket.emit("send_message", mess);
-      state.sendTextMessage(mess);
+
+      socket.emit("send_message", message);
+      state.sendTextMessage(message);
 
       const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
       updateLastMessage(
-        `${currentUser.name}: ${mess.content?.replace(regex, "")}`,
+        `${currentUser.name}: ${message.content?.replace(regex, "")}`,
       );
 
-      RichTextRef.current.setContentHTML("");
+      RichTextRef?.current?.setContentHTML("");
     } catch (error) {
-      console.log("@ERROR_AT_CHAT_SCREEN: ", error);
+      LOG.error(TextEditor.name, error);
     }
   };
 
@@ -164,14 +165,17 @@ const TextEditor = () => {
 
   const onChooseImage = async () => {
     try {
-      const hasPermission = await handleReadStoragePermission();
+      const hasPermission = await Permission.handleReadStoragePermission();
       if (hasPermission) {
         BottomSheetModalRef.current?.show("gallery", true, {
           run: submitImage,
         });
       }
     } catch (error) {
-      console.log("@ERROR_PERMISSION: handleReadStoragePermission");
+      LOG.error(
+        TextEditor.name,
+        "@ERROR_PERMISSION: handleReadStoragePermission",
+      );
     }
   };
 
@@ -201,7 +205,6 @@ const TextEditor = () => {
   };
 
   // <============== SIDE EFFECT  ==============>
-
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",

@@ -1,5 +1,10 @@
-import {logger, consoleTransport} from "react-native-logs";
-import {InteractionManager} from "react-native";
+import {
+  logger,
+  consoleTransport,
+  fileAsyncTransport,
+} from "react-native-logs";
+import { InteractionManager } from "react-native";
+import RNFS from "react-native-fs";
 
 const defaultConfig = {
   levels: {
@@ -8,8 +13,8 @@ const defaultConfig = {
     warn: 2,
     error: 3,
   },
+  transport: __DEV__ ? consoleTransport : fileAsyncTransport,
   severity: __DEV__ ? "debug" : "error",
-  transport: consoleTransport,
   transportOptions: {
     colors: {
       debug: "cyan",
@@ -17,6 +22,8 @@ const defaultConfig = {
       warn: "yellowBright",
       error: "redBright",
     },
+    FS: RNFS,
+    fileName: `logs_{date-today}`,
   },
   async: true,
   dateFormat: "time",
