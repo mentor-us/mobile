@@ -253,7 +253,6 @@ const FormMeeting = () => {
           state.setMeetingTime(date);
           state.setDatePickerStatus("hide");
           Keyboard.dismiss();
-          LOG.error(state.toTime);
         }}
         onCancel={() => {
           state.setDatePickerStatus("hide");
