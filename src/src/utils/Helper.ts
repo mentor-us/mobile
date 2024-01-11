@@ -1,15 +1,15 @@
-import {Dimensions, Platform, ScaledSize} from "react-native";
+import { Dimensions, Platform, ScaledSize } from "react-native";
 import RNFS from "react-native-fs";
-import {decode} from "html-entities";
-import {TimeMeetingModel} from "~/models/meeting";
-import {StorageMediaAttachemt} from "~/models/media";
+import { decode } from "html-entities";
+import { TimeMeetingModel } from "~/models/meeting";
+import { StorageMediaAttachemt } from "~/models/media";
 import moment from "moment";
-import {EmoijType, TotalReaction} from "~/constants/Emoijs";
+import { EmoijType, TotalReaction } from "~/constants/Emoijs";
 import _ from "lodash";
-import {EmojiModel} from "~/constants/Emoijs";
-import {Reaction} from "~/models/reaction";
-import {ShortProfileUserModel} from "~/models/user";
-import {MyMarkedDate, MyMarkingProps, ScheduleModel} from "~/models/schedule";
+import { EmojiModel } from "~/constants/Emoijs";
+import { Reaction } from "~/models/reaction";
+import { ShortProfileUserModel } from "~/models/user";
+import { MyMarkedDate, MyMarkingProps, ScheduleModel } from "~/models/schedule";
 
 const MOV_REG = RegExp(/(.*).mov/i);
 export default class Helper {
@@ -29,7 +29,7 @@ export default class Helper {
   ) {
     const widthDesign = 375;
 
-    const {width} = config?.dimensions ?? Dimensions.get("window");
+    const { width } = config?.dimensions ?? Dimensions.get("window");
 
     const result = (pixel / widthDesign) * width;
 
@@ -94,6 +94,23 @@ export default class Helper {
       .replace(/<img (.*?)\/>/g, "")
       .replace(/\n/, "");
   };
+
+  static trimHTMLContent = (htmlInput: string) => {
+    // Clear on start and end of html
+    // <div><br></div>
+    // <div>    </div>
+    // <div>&nbsp;</div>
+    return htmlInput.replace(
+      /^(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+|(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+$/g,
+      "",
+    );
+  };
+  
+  static extractTextOnlyFromHTML = (htmlInput?: string): string => {
+    // Remove all html tag
+    return htmlInput?.replace(/<[^>]*>/gim, "") ?? "";
+  };
+
   // TIME HELPER
   static formatTimeNumber = (value: number): string => {
     return value > 9 ? `${value}` : `0${value}`;
@@ -252,7 +269,7 @@ export default class Helper {
 
   static async formatFilePath(file: StorageMediaAttachemt) {
     if (Platform.OS === "android") {
-      return {formattedName: file.filename, formattedPath: file.path};
+      return { formattedName: file.filename, formattedPath: file.path };
     }
     let formattedName = file.filename;
     let formattedPath = file.path;
@@ -288,7 +305,7 @@ export default class Helper {
       formattedPath = `file://${destination}`;
     }
 
-    return {formattedName, formattedPath};
+    return { formattedName, formattedPath };
   }
 
   static convertStringToDuration(inputstring) {
@@ -327,9 +344,12 @@ export default class Helper {
 
     const index = cloneRaw.data.findIndex(item => item.id === emoji);
     if (index > -1) {
-      cloneRaw.data[index] = {id: emoji, total: cloneRaw.data[index].total + 1};
+      cloneRaw.data[index] = {
+        id: emoji,
+        total: cloneRaw.data[index].total + 1,
+      };
     } else {
-      cloneRaw.data.push({id: emoji, total: 1});
+      cloneRaw.data.push({ id: emoji, total: 1 });
     }
 
     if (isOwnReaction) {
@@ -339,9 +359,9 @@ export default class Helper {
           cloneRaw.ownerReacted,
           item => item.id == emoji,
         );
-        cloneRaw.ownerReacted.unshift({...temp[0], total: temp[0].total + 1});
+        cloneRaw.ownerReacted.unshift({ ...temp[0], total: temp[0].total + 1 });
       } else {
-        cloneRaw.ownerReacted.unshift({id: emoji, total: 1});
+        cloneRaw.ownerReacted.unshift({ id: emoji, total: 1 });
       }
     }
 
@@ -392,9 +412,9 @@ export default class Helper {
       const newData: EmojiModel[] = _.cloneDeep(cloneRaw[index].data);
 
       if (ind > -1) {
-        newData[ind] = {id: emoji, total: newData[ind].total + 1};
+        newData[ind] = { id: emoji, total: newData[ind].total + 1 };
       } else {
-        newData.push({id: emoji, total: 1});
+        newData.push({ id: emoji, total: 1 });
       }
 
       cloneRaw[index] = {
@@ -408,7 +428,7 @@ export default class Helper {
         ...userData,
         userId: userData.id,
         total: 1,
-        data: [{id: emoji, total: 1}],
+        data: [{ id: emoji, total: 1 }],
       });
     }
 
@@ -456,8 +476,8 @@ export default class Helper {
       maxH = 4 in arguments ? arguments[3] : 10,
       ratiosW = new Array(maxW).join(",").split(","),
       ratiosH = new Array(maxH).join(",").split(","),
-      ratiosT: {[key: number]: boolean} = {},
-      ratios: {[key: string]: number} = {};
+      ratiosT: { [key: number]: boolean } = {},
+      ratios: { [key: string]: number } = {};
 
     let match: RatioImage | undefined;
 
