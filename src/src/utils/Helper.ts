@@ -100,12 +100,11 @@ export default class Helper {
     // <div><br></div>
     // <div>    </div>
     // <div>&nbsp;</div>
-    return htmlInput.replace(
-      /^(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+|(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+$/g,
-      "",
-    );
+    return htmlInput
+      .replace(/(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+$/g, "")
+      .replace(/^(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+/g, "");
   };
-  
+
   static extractTextOnlyFromHTML = (htmlInput?: string): string => {
     // Remove all html tag
     return htmlInput?.replace(/<[^>]*>/gim, "") ?? "";

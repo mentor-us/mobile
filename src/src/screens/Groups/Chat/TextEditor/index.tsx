@@ -237,7 +237,7 @@ const TextEditor = () => {
   }, [state._groupDetail]);
 
   return (
-    <Animated.View style={[styles.container]} layout={CustomLayoutTransition}>
+    <Animated.View style={styles.container} layout={CustomLayoutTransition}>
       <ReplyAction />
       <View style={styles.inputTextContainer}>
         {/*  */}
