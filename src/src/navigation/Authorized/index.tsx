@@ -38,6 +38,7 @@ import ImportFAQ from "~/screens/Groups/GroupFAQ/ImportFAQ";
 import Test from "~/screens/Test";
 import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
+import ForwardMessage from "~/screens/Groups/ForwardMessage";
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
 
 const Authorized = () => {
@@ -264,6 +265,17 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Chi tiết công việc",
+          };
+        }}
+      />
+      <AuthorizedStack.Screen
+        name="forwardMessage"
+        component={ForwardMessage}
+        options={({}) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: "Chuyển tiếp tin nhắn",
           };
         }}
       />

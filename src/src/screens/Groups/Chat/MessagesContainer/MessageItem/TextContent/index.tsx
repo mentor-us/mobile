@@ -15,7 +15,7 @@ import Helper from "~/utils/Helper";
 
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { MessageModel, ReplyMessageModel } from "~/models/message";
+import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
 import { useAppSelector } from "~/redux";
 import Animated, { withTiming } from "react-native-reanimated";
 import { EntryAnimationsValues } from "react-native-reanimated";
@@ -124,7 +124,11 @@ const TextContent = ({ message }: Props) => {
   const replyMessage = (message: ReplyMessageModel) => {
     state.setReplying(message);
   };
-
+  const forwardMessage = (message: ForwardMessageModel) => {
+    // state.setReplying(message);
+    navigation.navigate("forwardMessage", {message: message.content, messageID: message.id});
+    
+  };
   const showUserReacted = useCallback(() => {
     BottomSheetModalRef.current?.show("user_reacted", message.reactions);
   }, [message.reactions]);
@@ -143,6 +147,7 @@ const TextContent = ({ message }: Props) => {
           deleteMessage: deleteMessage,
           pinMessage: pinMessage,
           replyMessage: replyMessage,
+          forwardMessage: forwardMessage
         },
       );
     })

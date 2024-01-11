@@ -38,6 +38,7 @@ export namespace MentorUsRoutes {
     // task
     createTask: {groupId: string; taskId?: string};
     taskDetail: {taskId: string};
+    forwardMessage: {message: string, messageID: string, groupId?: string};
     taskAssignees: {taskId: string; groupId: string};
 
     // Profile

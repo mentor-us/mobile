@@ -48,6 +48,10 @@ export interface ReplyMessageModel {
   senderName: string;
   content: string;
 }
+export interface ForwardMessageModel {
+  id: string;
+  content: string;
+}
 
 export interface MessageModel {
   id: string;

@@ -108,6 +108,7 @@ import FocusIcon from "./_raw/focus-icon.svg";
 import RefreshIcon from "./_raw/refresh-icon.svg";
 import ReplyIcon from "./_raw/reply-icon.svg";
 import CopyToClipboardIcon from "./_raw/clipboard-icon.svg";
+import ForwardMessageIcon from "./_raw/forward-svgrepo-com.svg";
 import Hashtag from "./_raw/hashtag.svg";
 import AddNode from "./_raw/add-node.svg";
 
@@ -210,6 +211,7 @@ export {
   RefreshIcon,
   ReplyIcon,
   CopyToClipboardIcon,
+  ForwardMessageIcon,
   Hashtag,
   AddNode,
   
