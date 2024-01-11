@@ -1,15 +1,15 @@
-import {MeetingMobx} from "globals";
-import {action, computed, flow, makeAutoObservable} from "mobx";
+import { MeetingMobx } from "globals";
+import { action, computed, flow, makeAutoObservable } from "mobx";
 import MeetingApi from "~/api/remote/Meeting";
-import {CheckBoxType} from "~/models/commonTypes";
-import {GroupModel, GROUP_SAMPLE} from "~/models/group";
+import { CheckBoxType } from "~/models/commonTypes";
+import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import {
   Attendee,
   AttendeeCheckList,
   MeetingModel,
   MeetingRepeatedTypeKeys,
 } from "~/models/meeting";
-import {UserProfileModel, USER_PROFILE_SAMPLE} from "~/models/user";
+import { UserProfileModel, USER_PROFILE_SAMPLE } from "~/models/user";
 import GroupService from "~/services/group";
 import MeetingServices from "~/services/meeting";
 import Helper from "~/utils/Helper";
@@ -49,9 +49,9 @@ export class CreateMeetingScreenState {
   attendees: AttendeeCheckList = {
     checkedAll: "checked",
     data: [
-      {id: "1", name: "Lê Văn Định", status: "checked"},
-      {id: "2", name: "Trầm Hữu Đức", status: "checked"},
-      {id: "3", name: "Nguyễn Nhật Duy", status: "checked"},
+      { id: "1", name: "Lê Văn Định", status: "checked" },
+      { id: "2", name: "Trầm Hữu Đức", status: "checked" },
+      { id: "3", name: "Nguyễn Nhật Duy", status: "checked" },
     ],
     totalChecked: 3,
   };
@@ -208,7 +208,7 @@ export class CreateMeetingScreenState {
 
   @action
   setAttendees(data: AttendeeCheckList) {
-    this.attendees = {...data};
+    this.attendees = { ...data };
   }
 
   @action
