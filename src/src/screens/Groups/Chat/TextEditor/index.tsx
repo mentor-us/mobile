@@ -5,7 +5,7 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   actions,
   RichEditor,
@@ -38,9 +38,16 @@ import ReplyAction from "./ReplyAction";
 import LOG from "~/utils/Logger";
 import Helper from "~/utils/Helper";
 import Permission from "~/utils/PermissionStrategies";
+import MentionListPopup from "../MentionListPopup";
+import { GroupMemberModel } from "~/models/group";
+
+const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)/gim;
 
 const TextEditor = () => {
   // const richText = useRef<any>();
+  const [openMention, setOpenMention] = useState<boolean>(false);
+  const [searchMentionName, setSearchMentionName] = useState<string>("");
+
   const state = useChatScreenState();
   const queryAction = useUpdateQueryGroupList();
   const currentUser = useAppSelector(state => state.user.data);
@@ -179,7 +186,67 @@ const TextEditor = () => {
     }
   };
 
-  const onChangeText = (text: string) => {
+  const mentionBuilder = (member: GroupMemberModel) => {
+    return `<span><mention class="mention" data-user-id='${member.id}'>@${member.name}</mention>&nbsp;</span>`;
+  };
+
+  const insertMention = async (member: GroupMemberModel) => {
+    const text = await RichTextRef?.current?.getContentHtml();
+    RichTextRef?.current?.setContentHTML(
+      text?.replace(mentionRegex, mentionBuilder(member)) ?? "",
+    );
+
+    const placeCaretAtEnd =
+      'function placeCaretAtEnd(el) {\
+          el.focus();\
+          if (typeof window.getSelection != "undefined"\
+                  && typeof document.createRange != "undefined") {\
+              var range = document.createRange();\
+              range.selectNodeContents(el);\
+              range.collapse(false);\
+              var sel = window.getSelection();\
+              sel.removeAllRanges();\
+              sel.addRange(range);\
+          } else if (typeof document.body.createTextRange != "undefined") {\
+              var textRange = document.body.createTextRange();\
+              textRange.moveToElementText(el);\
+              textRange.collapse(false);\
+              textRange.select();\
+          }\
+      } \
+      placeCaretAtEnd($("#editor").content)';
+
+    RichTextRef?.current?.commandDOM(placeCaretAtEnd);
+  };
+
+  const extractMention = (text: string): string => {
+    const extractMention = text.match(mentionRegex);
+    return extractMention && extractMention.length !== 0
+      ? extractMention[0]
+      : "";
+  };
+
+  const onChooseMention = async (member: GroupMemberModel) => {
+    await insertMention(member);
+    setOpenMention(false);
+    setSearchMentionName("");
+  };
+
+  const onChangeText = async (text: string) => {
+    if (!text || text === "<div><br></div>") {
+      RichTextRef?.current?.setContentHTML("");
+      state.setSendable(false);
+      return;
+    }
+    const mention = extractMention(text);
+    if (mention) {
+      setOpenMention(true);
+      setSearchMentionName(mention.replace("@", ""));
+    } else if (openMention) {
+      setOpenMention(false);
+      setSearchMentionName("");
+    }
+
     state.setSendable(Boolean(text));
   };
 
@@ -236,65 +303,82 @@ const TextEditor = () => {
     };
   }, [state._groupDetail]);
 
+  const isPrivateGroup = state._groupDetail?.type == "PRIVATE_MESSAGE";
+
   return (
     <Animated.View style={[styles.container]} layout={CustomLayoutTransition}>
       <ReplyAction />
-      <View style={styles.inputTextContainer}>
-        {/*  */}
-        <View style={[GlobalStyles.horizontalFlexEnd, { maxHeight: 120 }]}>
-          <SizedBox width={4} />
-          {!state.isKeyboardVisible && (
-            <View>
-              <TouchableOpacity onPress={onChooseImage}>
-                <MediaIcon width={30} height={30} />
-              </TouchableOpacity>
-              <SizedBox height={4} />
-            </View>
-          )}
-          <ScrollView
-            style={styles.richEditorCtn}
-            showsVerticalScrollIndicator={false}>
-            <RichEditor
-              testID="chatbox"
-              containerStyle={{ transform: [{ rotate: "180deg" }] }}
-              ref={RichTextRef}
-              onChange={onChangeText}
-              placeholder={"Soạn tin nhắn..."}
-            />
-          </ScrollView>
-          {!state.isKeyboardVisible && <SubmitButton onSend={onSend} />}
-        </View>
 
-        {!state.isKeyboardVisible || state.enableRichToolbar ? (
-          <></>
-        ) : (
-          <Actions
-            onSend={onSend}
+      {/* Member List */}
+      <View>
+        {!isPrivateGroup && (
+          <MentionListPopup
             groupId={state._groupDetail.id}
-            onChooseImage={onChooseImage}
+            searchName={searchMentionName}
+            height={150}
+            isShow={openMention}
+            onChoose={onChooseMention}
           />
         )}
-      </View>
+        <View style={styles.inputTextContainer}>
+          {/*  */}
+          <View style={[GlobalStyles.horizontalCenter, { maxHeight: 120 }]}>
+            <SizedBox width={4} />
+            {!state.isKeyboardVisible && (
+              <View>
+                <TouchableOpacity onPress={onChooseImage}>
+                  <MediaIcon width={30} height={30} />
+                </TouchableOpacity>
+              </View>
+            )}
+            <ScrollView
+              style={styles.richEditorCtn}
+              showsVerticalScrollIndicator={false}>
+              <RichEditor
+                testID="chatbox"
+                editorStyle={{
+                  cssText: ".mention { color: blue;}",
+                }}
+                containerStyle={{ transform: [{ rotate: "180deg" }] }}
+                ref={RichTextRef}
+                onChange={onChangeText}
+                onBlur={() => setOpenMention(false)}
+                pasteAsPlainText={true}
+                placeholder={"Soạn tin nhắn..."}
+              />
+            </ScrollView>
+            {!state.isKeyboardVisible && <SubmitButton onSend={onSend} />}
+          </View>
 
-      {state.enableRichToolbar && (
-        <View testID="action-chat" style={styles.richToolBarCtn}>
-          <RichToolbar
-            editor={RichTextRef}
-            actions={[
-              actions.setBold,
-              actions.setItalic,
-              actions.setUnderline,
-              actions.insertBulletsList,
-              actions.indent,
-              actions.outdent,
-            ]}
-          />
-          <TouchableOpacity onPress={hideRichToolbar}>
-            <ArrowDownCircleIcon />
-          </TouchableOpacity>
+          {state.isKeyboardVisible && !state.enableRichToolbar && (
+            <Actions
+              onSend={onSend}
+              groupId={state._groupDetail.id}
+              onChooseImage={onChooseImage}
+            />
+          )}
         </View>
-      )}
-      {Platform.OS === "ios" && <SizedBox height={state.keyboardHeight} />}
+
+        {state.enableRichToolbar && (
+          <View testID="action-chat" style={styles.richToolBarCtn}>
+            <RichToolbar
+              editor={RichTextRef}
+              actions={[
+                actions.setBold,
+                actions.setItalic,
+                actions.setUnderline,
+                actions.insertBulletsList,
+                actions.indent,
+                actions.outdent,
+              ]}
+            />
+            <TouchableOpacity onPress={hideRichToolbar}>
+              <ArrowDownCircleIcon />
+            </TouchableOpacity>
+          </View>
+        )}
+        {Platform.OS === "ios" && <SizedBox height={state.keyboardHeight} />}
+      </View>
     </Animated.View>
   );
 };

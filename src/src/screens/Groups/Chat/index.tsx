@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { ScreenProps } from "~/types/navigation";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import { Color } from "~/constants/Color";
@@ -17,6 +17,7 @@ import TextEditor from "./TextEditor";
 import GroupService from "~/services/group";
 import { useAppSelector } from "~/redux";
 import PinnedMessages from "./PinnedMessages";
+import { RichTextRef } from "./TextEditor/index.props";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data
@@ -111,7 +112,12 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
 const Container = observer(() => {
   return (
     <View style={styles.container}>
-      <MessagesContainer />
+      <Pressable
+        style={{ flex: 1 }}
+        onPress={() => RichTextRef.current?.dismissKeyboard()}>
+        <MessagesContainer />
+      </Pressable>
+
       <TextEditor />
       <PinnedMessages />
     </View>
