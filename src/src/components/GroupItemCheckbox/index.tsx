@@ -1,18 +1,18 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, InputAccessoryView } from "react-native";
 import React, { useState } from "react";
 import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import styles from "./styles";
 import { Color } from "~/constants/Color";
 import GroupAvatar from "./GroupAvatar";
 
-import CheckBox from '@react-native-community/checkbox';
+import CheckBox from "@react-native-community/checkbox";
+import { CheckBoxActiveIcon, CheckBoxInactiveIcon } from "~/assets/svgs";
 interface Props {
   group?: GroupModel;
-  onPress?: () => void;
+  onPress?: (id: string) => void;
   backgroudColor?: string;
   showMessage?: boolean;
 }
-
 
 export default function GroupItemCheckbox({
   group = GROUP_SAMPLE,
@@ -23,10 +23,14 @@ export default function GroupItemCheckbox({
   const [checked, setChecked] = React.useState(false);
   const handlePress = () => {
     //toggle checkbox
-    setChecked(!checked);
-    onPress;
+    toggleCheckBox();
+    if (onPress) {
+      onPress(group?.id);
+    }
   };
-
+  const toggleCheckBox = () => {
+    setChecked(!checked);
+  };
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
       <View style={[styles.infoCtn]}>
@@ -42,12 +46,20 @@ export default function GroupItemCheckbox({
                 ]}>
                 {group.name}
               </Text>
-
-              {/* <CheckBox
-                disabled={false}
-                value={checked}
-                onValueChange={(newValue) => setChecked(newValue)}
-              /> */}
+              <Text
+                style={[
+                  styles.textInfo,
+                  { textAlign: "right",textAlignVertical:"center", marginRight: 5 },
+                ]}>
+                {group.name}
+              </Text>
+              <TouchableOpacity onPress={handlePress}>
+                {checked ? (
+                  <CheckBoxActiveIcon width={24} height={24} />
+                ) : (
+                  <CheckBoxInactiveIcon width={24} height={24} />
+                )}
+              </TouchableOpacity>
             </View>
           </View>
         </View>

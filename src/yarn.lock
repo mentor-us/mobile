@@ -8562,13 +8562,6 @@ react-native-calendars@^1.1298.0:
   optionalDependencies:
     moment "^2.29.4"
 
-react-native-check-box@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/react-native-check-box/-/react-native-check-box-2.1.7.tgz#f349d3505a13c15d19949ec4cec40c7adc4f3626"
-  integrity sha512-dPVOoz4jKs2je2HSHp7+XJXNyZFq8Kij7IHutigrQKzB550Dko6ZAQu/1mG1FzdUMFxxkZ2nX59KmbR0Co0T8Q==
-  dependencies:
-    prop-types "^15.5.7"
-
 react-native-codegen@^0.70.5:
   version "0.70.7"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.70.7.tgz#8f6b47a88740ae703209d57b7605538d86dacfa6"
@@ -8801,11 +8794,6 @@ react-native-root-toast@^3.5.1:
     deprecated-react-native-prop-types "^2.3.0"
     prop-types "^15.5.10"
     react-native-root-siblings "^4.0.0"
-
-react-native-rounded-checkbox@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/react-native-rounded-checkbox/-/react-native-rounded-checkbox-0.3.3.tgz#05a753180604db61a074b2ef1ae7446347c3df8c"
-  integrity sha512-CR2C21SxPyR1D4HbX+z3/fn0Bf1AqTrn4bN+fR4wZ+c9/GHgBBz8whLsckz+7kxHqjFqGXwyFiuB7CQapO4TnQ==
 
 react-native-safe-area-context@4.4.1:
   version "4.4.1"

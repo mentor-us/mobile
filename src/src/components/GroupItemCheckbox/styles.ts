@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
     marginLeft: 1,
+    gap: 5
   },
   descCtn: {
     flexDirection: "row",
@@ -49,6 +50,11 @@ const styles = StyleSheet.create({
   textInfo: {
     fontSize: FontSize.small,
     color: Color.text[4],
+    flex: 1,
+  },
+  textHint: {
+    fontSize: FontSize.smallest,
+    color: Color.gray[1],
     flex: 1,
   },
   displayName: {

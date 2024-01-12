@@ -111,6 +111,8 @@ import CopyToClipboardIcon from "./_raw/clipboard-icon.svg";
 import ForwardMessageIcon from "./_raw/forward-svgrepo-com.svg";
 import Hashtag from "./_raw/hashtag.svg";
 import AddNode from "./_raw/add-node.svg";
+import CheckBoxInactiveIcon from "./_raw/checkbox-blank-circle-svgrepo-com.svg";
+import CheckBoxActiveIcon from "./_raw/checkbox-circle-svgrepo-com.svg";
 
 // Custom icon
 import HomeIcon from "./HomeIcon";
@@ -214,7 +216,8 @@ export {
   ForwardMessageIcon,
   Hashtag,
   AddNode,
-  
+  CheckBoxInactiveIcon,
+  CheckBoxActiveIcon,
 
   // custom
   HomeIcon,
