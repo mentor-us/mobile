@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 import DatePicker from "react-native-date-picker";
 import ModalDropdown from "react-native-modal-dropdown";
 import styles from "./styles";
@@ -23,14 +23,15 @@ import {
 } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import GlobalStyles from "~/constants/GlobalStyles";
-import {MeetingRepeatedOptions} from "~/models/meeting";
-import {observer} from "mobx-react-lite";
-import {useCreateMeetingScreenState} from "~/context/meeting";
+import { MeetingRepeatedOptions } from "~/models/meeting";
+import { observer } from "mobx-react-lite";
+import { useCreateMeetingScreenState } from "~/context/meeting";
 import MUITextInput from "~/components/MUITextInput";
 import MeetingApi from "~/api/remote/Meeting";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Helper from "~/utils/Helper";
 import EventEmitterNames from "~/constants/EventEmitterNames";
+import LOG from "~/utils/Logger";
 
 interface DatePickerToolModel {
   title: string;
@@ -67,7 +68,7 @@ const FormMeeting = () => {
 
   const deleteMeeting = async () => {
     Alert.alert("Cảnh báo", "Bạn có chắc muốn xóa lịch hẹn này?", [
-      {text: "Hủy"},
+      { text: "Hủy" },
       {
         text: "Xác nhận",
         onPress: async () => {
@@ -97,7 +98,7 @@ const FormMeeting = () => {
         {/* Group Name - Select Group */}
         <TouchableOpacity
           disabled={true}
-          style={[GlobalStyles.flexRow, {justifyContent: "space-between"}]}>
+          style={[GlobalStyles.flexRow, { justifyContent: "space-between" }]}>
           <Text
             style={styles.groupName}>{`Nhóm: ${state.groupData.name}`}</Text>
           {/* <EditIcon /> */}
@@ -110,7 +111,7 @@ const FormMeeting = () => {
           </View>
           <SizedBox width={16} />
           <MUITextInput
-            label="Tiêu đề  *"
+            label="Tiêu đề *"
             keyboardType={"default"}
             value={state.title}
             onChangeText={text => {
@@ -141,19 +142,20 @@ const FormMeeting = () => {
         <View style={styles.fieldContainer}>
           <ClockGrayIcon width={24} height={24} />
           <SizedBox width={16} />
-          <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <MUITextInput
               label="Từ"
               onFocus={() => state.setDatePickerStatus("from")}
               value={state.fromTime}
-              containerStyle={{flex: 1}}
+              containerStyle={{ flex: 1 }}
             />
             <SizedBox width={16} />
             <MUITextInput
               label="Đến"
               onFocus={() => state.setDatePickerStatus("to")}
               value={state.toTime}
-              containerStyle={{flex: 1}}
+              containerStyle={{ flex: 1 }}
               errorText={state.toTimeError}
             />
             <SizedBox width={16} />
@@ -161,7 +163,7 @@ const FormMeeting = () => {
               label="Ngày"
               onFocus={() => state.setDatePickerStatus("date")}
               value={state.date}
-              containerStyle={{flex: 3}}
+              containerStyle={{ flex: 3 }}
             />
           </View>
         </View>
@@ -239,7 +241,13 @@ const FormMeeting = () => {
         open={state.datePickerStatus !== "hide"}
         title={datePickerTool[state.datePickerStatus].title}
         date={
-          new Date(Helper.createDateTime(`${state.fromTime} - ${state.date}`))
+          state.datePickerStatus === "from"
+            ? new Date(
+                Helper.createDateTime(`${state.fromTime} - ${state.date}`),
+              )
+            : new Date(
+                Helper.createDateTime(`${state.toTime} - ${state.date}`),
+              )
         }
         onConfirm={date => {
           state.setMeetingTime(date);

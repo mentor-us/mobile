@@ -306,7 +306,7 @@ const TextEditor = () => {
   const isPrivateGroup = state._groupDetail?.type == "PRIVATE_MESSAGE";
 
   return (
-    <Animated.View style={[styles.container]} layout={CustomLayoutTransition}>
+    <Animated.View style={styles.container} layout={CustomLayoutTransition}>
       <ReplyAction />
 
       {/* Member List */}
