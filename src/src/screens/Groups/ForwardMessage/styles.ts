@@ -36,6 +36,45 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
+  dimmedText: {
+    color: Color.text[4],
+    fontStyle: "italic",
+  },
+  reviewMessageContainer: {
+    flexDirection:'column',
+    paddingHorizontal:12,
+    paddingVertical:10,
+    maxHeight: "50%",
+    // flex: 1
+  },
+  messageContainer: {
+    marginTop: 5,
+    backgroundColor: Color.white,
+    // maxWidth: screenWidth*0.95,
+    // minWidth: screenWidth*0.95,
+    maxHeight: "100%",
+    padding: 8,
+    borderRadius: 8,
+    borderWidth: 0.5,
+    borderTopLeftRadius: 0,
+    borderColor: "#ccc",
+  },
+  textInfo: {
+    fontSize: FontSize.small,
+    color: Color.text[4],
+  },
+  textHint: {
+    fontSize: FontSize.smallest,
+    color: Color.gray[1],
+  },
+  displayName: {
+    fontSize: FontSize.larger,
+    color: Color.text[0],
+  },
+  
+  boldText: {
+    fontWeight: "400",
+  },
 });
 
 export default styles;

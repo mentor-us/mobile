@@ -51,6 +51,7 @@ export interface ReplyMessageModel {
 export interface ForwardMessageModel {
   id: string;
   content: string;
+  type: MessageType;
 }
 
 export interface MessageModel {

@@ -98,6 +98,7 @@ const EmojiReation = ({ message, action }: Props) => {
     action.forwardMessage({
       id: message.id,
       content: message.content,
+      type: message.type
     } as ForwardMessageModel);
     BottomSheetModalRef.current?.hide();
     // RichTextRef?.current?.focusContentEditor();

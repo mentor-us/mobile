@@ -1,5 +1,6 @@
 import {StackScreenProps} from "@react-navigation/stack";
 import {RoleType} from "~/models/commonTypes";
+import { MessageType } from "~/models/message";
 
 export namespace MentorUsRoutes {
   // @UnAuthorized
@@ -38,7 +39,7 @@ export namespace MentorUsRoutes {
     // task
     createTask: {groupId: string; taskId?: string};
     taskDetail: {taskId: string};
-    forwardMessage: {message: string, messageID: string, groupId?: string};
+    forwardMessage: {message: string, messageID: string,messageType: MessageType, groupId?: string};
     taskAssignees: {taskId: string; groupId: string};
 
     // Profile
