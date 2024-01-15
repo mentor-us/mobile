@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,9 +17,11 @@ import TextFormatRenderer from "~/components/TextFormatRenderer";
 import Helper from "~/utils/Helper";
 import { Gesture, GestureDetector, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import clip from "text-clipper";
+import MUITextInput from "~/components/MUITextInput";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannel, setListChannel] = useState<string[]>([]);
+  const comment = useRef<string>("");
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
@@ -112,6 +114,18 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
       </View>
       {/* <Text>{trimmedContent}</Text> */}
       <Text>Nhận xét: </Text>
+      <MUITextInput
+          label="Thêm Nhận xét"
+          keyboardType={"default"}
+          value={comment.current}
+          onChangeText={text => {
+            comment.current = text;
+          }}
+          multiline
+          numberOfLines={2}
+          errorText={"Lỗi"}
+          style={{textAlignVertical: "top"}}
+          />
       <Text>Search: </Text>
       <FlatList
         data={!data.data ? [] : data.data.pages.flat()}
