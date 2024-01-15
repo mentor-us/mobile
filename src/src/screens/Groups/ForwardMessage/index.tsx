@@ -24,15 +24,32 @@ import clip from "text-clipper";
 import MUITextInput from "~/components/MUITextInput";
 import SizedBox from "~/components/SizedBox";
 import { MarkTitleIcon, PencilBlack, PencilEditOffice, SearchBlackIcon, SearchIcon } from "~/assets/svgs";
+import { useQuery } from "@tanstack/react-query";
+import GroupService from "~/services/group";
+import ListFooter from "~/screens/Home/General/ListFooter";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannel, setListChannel] = useState<string[]>([]);
   const comment = useRef<string>("");
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [search, setSearch] = useState<string>('')
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
-  const data = useQueryGroupList();
+  // const data = useQueryGroupList();
+  const {data,isLoading , error} = useQuery({
+    queryKey: ['channels',search],
+    queryFn: ()=>{
+      console.log("call service search")
+      console.log(search)
+      // GroupService.all(
+      //   "",
+      //   1,
+      //   10
+      // )
+      return []
+    }
+  })
   const navigation = useNavigation();
   const onPress = id => {
     setListChannel(pre => {
@@ -50,14 +67,21 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
       </View>
     );
   }, []);
+  // const onRefresh = () => {
+  //   // data.refetch();
+  // };
   const onRefresh = () => {
-    data.refetch();
+    console.log("")
+    // data.refetch();
+    // fetchHomePageData();
+    // dispatcher(UserThunks.getCurrentUser());
   };
-  const onEndReached = () => {
-    if (data.hasNextPage) {
-      data.fetchNextPage();
-    }
-  };
+  // const onEndReached = () => {
+  //   if (data.hasNextPage) {
+  //     data.fetchNextPage();
+  //   }
+  // };
+
   const handleSubmit = () => {};
   const headerRight = useCallback(listChannel => {
     if (!listChannel.length) return;
@@ -104,9 +128,8 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      console.log(searchTerm)
       // Send Axios request here
-      console.log("Call axios")
+      setSearch(searchTerm)
     }, 3000)
 
     return () => clearTimeout(delayDebounceFn)
@@ -168,7 +191,13 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           style={{ textAlignVertical: "top" }}
         />
       </View>
-      <FlatList
+      {/* {
+        true ? 
+        <ListFooter onRefresh={onRefresh} loading={true} />
+        :
+        <></>
+      } */}
+      {/* <FlatList
         data={!data.data ? [] : data.data.pages.flat()}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
@@ -179,9 +208,12 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         }}
         refreshing={data.isFetching}
         onEndReachedThreshold={0.5}
-        onRefresh={onRefresh}
+        // onRefresh={onRefresh}
         onEndReached={onEndReached}
-      />
+      /> */}
+      {
+        data
+      }
     </SafeAreaView>
   );
 };
