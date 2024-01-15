@@ -15,13 +15,20 @@ import { StackNavigationOptions } from "@react-navigation/stack";
 import TextContent from "../Chat/MessagesContainer/MessageItem/TextContent";
 import TextFormatRenderer from "~/components/TextFormatRenderer";
 import Helper from "~/utils/Helper";
-import { Gesture, GestureDetector, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import clip from "text-clipper";
 import MUITextInput from "~/components/MUITextInput";
+import SizedBox from "~/components/SizedBox";
+import { MarkTitleIcon, PencilBlack, PencilEditOffice, SearchBlackIcon, SearchIcon } from "~/assets/svgs";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannel, setListChannel] = useState<string[]>([]);
   const comment = useRef<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
@@ -76,30 +83,40 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   }, [listChannel]);
   const composed = Gesture.Simultaneous();
 
-  const trimmedContent = Helper.trimHTMLContent(message ?? "").replace(/<div><br><\/div>/g, '');
+  const trimmedContent = Helper.trimHTMLContent(message ?? "").replace(
+    /<div><br><\/div>/g,
+    "",
+  );
   function getContentOfNLines(inputString: string, n: number): string[] {
     const divRegex = /<div>(.*?)<\/div>/g;
     let lines: string[] = [];
     let match: RegExpExecArray | null;
-  
+
     // Find all matches using the regex
     while ((match = divRegex.exec(inputString)) !== null) {
       lines.push(match[1]);
     }
-  
+
     // Return the first n lines
     return lines.slice(0, n);
   }
   const result = getContentOfNLines(trimmedContent, 6);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      console.log(searchTerm)
+      // Send Axios request here
+      console.log("Call axios")
+    }, 3000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchTerm])
   return (
     <SafeAreaView>
       <View style={[styles.reviewMessageContainer]}>
-        <Text style={[
-            styles.textInfo,
-            styles.displayName,
-            styles.boldText,
-          ]}>Xem trước tin nhắn</Text>
+        <Text style={[styles.textInfo, styles.displayName, styles.boldText]}>
+          Xem trước tin nhắn
+        </Text>
         {messageType == "TEXT" && (
           <GestureDetector gesture={composed}>
             <TouchableWithoutFeedback style={[styles.messageContainer]}>
@@ -113,8 +130,13 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         )}
       </View>
       {/* <Text>{trimmedContent}</Text> */}
-      <Text>Nhận xét: </Text>
-      <MUITextInput
+      <View style={styles.fieldContainer}>
+        <View>
+          <SizedBox height={16} />
+          <PencilBlack width={24} height={24} />
+        </View>
+        <SizedBox width={16} />
+        <MUITextInput
           label="Thêm Nhận xét"
           keyboardType={"default"}
           value={comment.current}
@@ -123,10 +145,29 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           }}
           multiline
           numberOfLines={2}
-          errorText={"Lỗi"}
-          style={{textAlignVertical: "top"}}
-          />
-      <Text>Search: </Text>
+          errorText={""}
+          style={{ textAlignVertical: "top" }}
+        />
+      </View>
+      <View style={styles.fieldContainer}>
+        <View>
+          <SizedBox height={16} />
+          <SearchBlackIcon width={24} height={24} />
+        </View>
+        <SizedBox width={16} />
+        <MUITextInput
+          label="Tìm kiếm kênh"
+          keyboardType={"default"}
+          value={searchTerm}
+          onChangeText={text => {
+            setSearchTerm(text)
+          }}
+          multiline
+          numberOfLines={2}
+          errorText={""}
+          style={{ textAlignVertical: "top" }}
+        />
+      </View>
       <FlatList
         data={!data.data ? [] : data.data.pages.flat()}
         renderItem={renderItem}

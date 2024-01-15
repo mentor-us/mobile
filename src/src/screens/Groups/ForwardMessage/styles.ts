@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     // flex: 1,
   },
+  fieldContainer: {
+    width: "90%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
   itemCtn: {
     paddingHorizontal: 12,
     paddingVertical: 6,
