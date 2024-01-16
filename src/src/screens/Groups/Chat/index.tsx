@@ -112,11 +112,7 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
 const Container = observer(() => {
   return (
     <View style={styles.container}>
-      <Pressable
-        style={{ flex: 1 }}
-        onPress={() => RichTextRef.current?.dismissKeyboard()}>
-        <MessagesContainer />
-      </Pressable>
+      <MessagesContainer />
 
       <TextEditor />
       <PinnedMessages />

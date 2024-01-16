@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
   ScrollView,
@@ -187,43 +188,51 @@ const TextEditor = () => {
   };
 
   const mentionBuilder = (member: GroupMemberModel) => {
-    return `<span><mention class="mention" data-user-id='${member.id}'>@${member.name}</mention>&nbsp;</span>`;
+    // <span>&nbsp;</span>
+    return `<div class="mention" contenteditable="false" data-user-id="${member.id}">@${member.name}</div><div>&nbsp;</div>`;
   };
 
   const insertMention = async (member: GroupMemberModel) => {
-    const text = await RichTextRef?.current?.getContentHtml();
-    RichTextRef?.current?.setContentHTML(
-      text?.replace(mentionRegex, mentionBuilder(member)) ?? "",
-    );
-
-    const placeCaretAtEnd =
-      'function placeCaretAtEnd(el) {\
-          el.focus();\
-          if (typeof window.getSelection != "undefined"\
-                  && typeof document.createRange != "undefined") {\
-              var range = document.createRange();\
-              range.selectNodeContents(el);\
-              range.collapse(false);\
-              var sel = window.getSelection();\
-              sel.removeAllRanges();\
-              sel.addRange(range);\
-          } else if (typeof document.body.createTextRange != "undefined") {\
-              var textRange = document.body.createTextRange();\
-              textRange.moveToElementText(el);\
-              textRange.collapse(false);\
-              textRange.select();\
-          }\
-      } \
-      placeCaretAtEnd($("#editor").content)';
-
-    RichTextRef?.current?.commandDOM(placeCaretAtEnd);
+    // RichTextRef?.current?.insertHTML(mentionBuilder(member));
+    // const placeCaretAtEnd =
+    //   'function placeCaretAtEnd(el) {\
+    //       el.focus();\
+    //       if (typeof window.getSelection != "undefined"\
+    //               && typeof document.createRange != "undefined") {\
+    //           var range = document.createRange();\
+    //           range.selectNodeContents(el);\
+    //           range.collapse(false);\
+    //           var sel = window.getSelection();\
+    //           sel.removeAllRanges();\
+    //           sel.addRange(range);\
+    //       } else if (typeof document.body.createTextRange != "undefined") {\
+    //           var textRange = document.body.createTextRange();\
+    //           textRange.moveToElementText(el);\
+    //           textRange.collapse(false);\
+    //           textRange.select();\
+    //       }\
+    //   } \
+    //   placeCaretAtEnd($("#content"))';
+    // RichTextRef?.current?.commandDOM(placeCaretAtEnd);
+    // RichTextRef?.current?.insertHTML(mentionBuilder(member));
+    // RichTextRef?.current?.insertHTML("<div>&nbsp; ádasdas</div>");
+    // const text = await RichTextRef?.current?.getContentHtml();
+    // RichTextRef?.current?.commandDOM(
+    //   `$('#content').innerHTML='${text?.replace(mentionRegex, "")}'`,
+    // );
+    // RichTextRef?.current?.insertText("ádsa dsas");
+    // RichTextRef?.current?.commandDOM(
+    //   `$("#content > div").contenteditable=true;`,
+    // );
+    // LOG.error("insertMention");
+    // RichTextRef?.current?.commandDOM("console.log($('#editor').innerHTML)");
+    // RichTextRef?.current?.focusContentEditor();
+    // RichTextRef?.current?.insertHTML("<span>&nbsp;</span>");
   };
 
   const extractMention = (text: string): string => {
-    const extractMention = text.match(mentionRegex);
-    return extractMention && extractMention.length !== 0
-      ? extractMention[0]
-      : "";
+    const mentionList = text.match(mentionRegex);
+    return mentionList && mentionList.length !== 0 ? mentionList[0] : "";
   };
 
   const onChooseMention = async (member: GroupMemberModel) => {
@@ -232,12 +241,77 @@ const TextEditor = () => {
     setSearchMentionName("");
   };
 
+  const getStringBeforeCaret = async () => {
+    const buaFunc =
+      '\
+      function getHtmlBeforeCaret(containerEl) {\
+        var range = window.getSelection().getRangeAt(0),\
+          preCaretRange = range.cloneRange(),\
+          caretPosition,\
+          tmp = document.createElement("div");\
+        preCaretRange.selectNodeContents(containerEl);\
+        preCaretRange.setEnd(range.endContainer, range.endOffset);\
+        tmp.appendChild(preCaretRange.cloneContents());\
+        caretPosition = tmp.innerHTML.length;\
+        console.log("DEV", tmp.innerHTML);\
+        return tmp.innerHTML;\
+      }\
+      function isMeetMentionTag(html) {\
+        return html.includes("<mention");\
+      } \
+      function clearMentionOnBackspace(el) {\
+        const html = getHtmlBeforeCaret(el);\
+        console.log(html);\
+      }\
+      clearMentionOnBackspace($("#content"));';
+
+    RichTextRef?.current?.commandDOM(buaFunc);
+  };
+
+  const test = () => {
+    const cmd =
+      '\
+    function test() {\
+        var sel = rangy.getSelection(); \
+    if (sel.rangeCount === 0) {\
+        return;\
+    }\
+    var selRange = sel.getRangeAt(0);\
+    console.log(!selRange.collapsed);\
+    if (!selRange.collapsed) {\
+      return;\
+    }\
+    console.log(selRange.startContainer.previousSibling.contenteditable);\
+    var nonEditable = selRange.startContainer.previousSibling;\
+    if (!nonEditable) {\
+        return;\
+    }\
+    var range = rangy.createRange();\
+    range.collapseAfter(nonEditable);\
+    if (selRange.compareBoundaryPoints(range.START_TO_END, range) == -1) {\
+        return;\
+    }\
+    range.setEnd(selRange.startContainer, selRange.startOffset);\
+    if (range.toString() === "") {\
+        selRange.collapseBefore(nonEditable);\
+        nonEditable.parentNode.removeChild(nonEditable);\
+        sel.setSingleRange(selRange);\
+        \
+        return false;\
+    }\
+      } rangy.init(); test();';
+    RichTextRef?.current?.commandDOM(cmd);
+  };
+
   const onChangeText = async (text: string) => {
+    LOG.debug(TextEditor.name, "onChangeText", text);
+    test();
     if (!text || text === "<div><br></div>") {
-      RichTextRef?.current?.setContentHTML("");
+      // RichTextRef?.current?.setContentHTML("");
       state.setSendable(false);
       return;
     }
+
     const mention = extractMention(text);
     if (mention) {
       setOpenMention(true);
@@ -303,7 +377,7 @@ const TextEditor = () => {
     };
   }, [state._groupDetail]);
 
-  const isPrivateGroup = state._groupDetail?.type == "PRIVATE_MESSAGE";
+  const isPrivateGroup = state._groupDetail?.type === "PRIVATE_MESSAGE";
 
   return (
     <Animated.View style={styles.container} layout={CustomLayoutTransition}>
@@ -336,15 +410,50 @@ const TextEditor = () => {
               showsVerticalScrollIndicator={false}>
               <RichEditor
                 testID="chatbox"
-                editorStyle={{
-                  cssText: ".mention { color: blue;}",
+                editorInitializedCallback={() => {
+                  RichTextRef?.current?.commandDOM(
+                    `\
+                    var script = document.createElement('script');\
+                    script.src="https://cdnjs.cloudflare.com/ajax/libs/rangy/1.3.1/rangy-core.min.js";\
+                    script.integrity="sha512-ZCkgV0SdoJJvBjlkwMpNZFSQzDWtB2ftYwOJQqwQUaXjfVLeUrxIfPMCxSaxVCXfFL82ccmjn6TTbkXjL3w2pA==";
+                    script.crossOrigin="anonymous";\
+                    script.referrerpolicy="no-referrer";\
+                    document.head.appendChild(script);
+                    `,
+                  );
                 }}
+                editorStyle={{
+                  cssText:
+                    ".mention {\
+                      display: inline-block;\
+                      color: #0000EE;\
+                      border-radius: 5px;\
+                      padding: 2px 5px;\
+                    }\
+                    .mention:hover {\
+                      background-color: #ccc;\
+                    }",
+                }}
+                initialContentHTML='<div contenteditable="true">"Hello "
+    <button contenteditable="false" data-id="147" id="nonEditable">@John Smith</button>
+    " "</div>'
                 containerStyle={{ transform: [{ rotate: "180deg" }] }}
                 ref={RichTextRef}
                 onChange={onChangeText}
                 onBlur={() => setOpenMention(false)}
                 pasteAsPlainText={true}
                 placeholder={"Soạn tin nhắn..."}
+                onInput={data => {
+                  // console.log("@DUKE: onInput", data);
+                  if (data?.inputType === "deleteContentBackward") {
+                    // const command = `function removeMention() {\
+                    //   const nodes = $('#content').querySelectorAll(".mention");\
+                    //   if (nodes.length > 0) {\
+                    //     nodes[nodes.length - 1].remove();\
+                    //   }\
+                    // } removeMention();`;
+                  }
+                }}
               />
             </ScrollView>
             {!state.isKeyboardVisible && <SubmitButton onSend={onSend} />}
