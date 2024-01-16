@@ -240,6 +240,7 @@ const FormMeeting = () => {
         modal
         open={state.datePickerStatus !== "hide"}
         title={datePickerTool[state.datePickerStatus].title}
+        minimumDate={new Date()}
         date={
           state.datePickerStatus === "from"
             ? new Date(
