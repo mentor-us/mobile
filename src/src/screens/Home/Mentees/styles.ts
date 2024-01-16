@@ -4,7 +4,7 @@ import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Color.gray[0],
+    backgroundColor: Color.white,
     flex: 1,
   },
   headerCtn: {
