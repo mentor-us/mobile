@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   infoCtn: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 4,
+    padding: 5,
     flex: 1,
   },
   avatarCtn: {

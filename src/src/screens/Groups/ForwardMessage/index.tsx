@@ -36,20 +36,8 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
-  // const data = useQueryGroupList();
-  const {data,isLoading , error} = useQuery({
-    queryKey: ['channels',search],
-    queryFn: ()=>{
-      console.log("call service search")
-      console.log(search)
-      // GroupService.all(
-      //   "",
-      //   1,
-      //   10
-      // )
-      return []
-    }
-  })
+  const data = useQueryGroupList();
+
   const navigation = useNavigation();
   const onPress = id => {
     setListChannel(pre => {
@@ -67,20 +55,15 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
       </View>
     );
   }, []);
-  // const onRefresh = () => {
-  //   // data.refetch();
-  // };
   const onRefresh = () => {
-    console.log("")
     // data.refetch();
-    // fetchHomePageData();
-    // dispatcher(UserThunks.getCurrentUser());
   };
-  // const onEndReached = () => {
-  //   if (data.hasNextPage) {
-  //     data.fetchNextPage();
-  //   }
-  // };
+
+  const onEndReached = () => {
+    if (data.hasNextPage) {
+      data.fetchNextPage();
+    }
+  };
 
   const handleSubmit = () => {};
   const headerRight = useCallback(listChannel => {
@@ -135,7 +118,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return () => clearTimeout(delayDebounceFn)
   }, [searchTerm])
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[]}>
       <View style={[styles.reviewMessageContainer]}>
         <Text style={[styles.textInfo, styles.displayName, styles.boldText]}>
           Xem trước tin nhắn
@@ -153,7 +136,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         )}
       </View>
       {/* <Text>{trimmedContent}</Text> */}
-      <View style={styles.fieldContainer}>
+      <View style={[styles.fieldContainer,styles.paddingItem,{width:"100%",borderRadius: 5}]}>
         <View>
           <SizedBox height={16} />
           <PencilBlack width={24} height={24} />
@@ -172,48 +155,45 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           style={{ textAlignVertical: "top" }}
         />
       </View>
-      <View style={styles.fieldContainer}>
-        <View>
-          <SizedBox height={16} />
-          <SearchBlackIcon width={24} height={24} />
+        <View style={[styles.fieldContainer,styles.paddingItem,{width:"100%",marginTop:10}]}>
+          <View>
+            <SizedBox height={16} />
+            <SearchBlackIcon width={24} height={24} />
+          </View>
+          <SizedBox width={16} />
+          <MUITextInput
+            label="Tìm kiếm kênh"
+            keyboardType={"default"}
+            value={searchTerm}
+            onChangeText={text => {
+              setSearchTerm(text)
+            }}
+            multiline
+            numberOfLines={2}
+            errorText={""}
+            style={{ textAlignVertical: "top",width:"100%" }}
+          />
         </View>
-        <SizedBox width={16} />
-        <MUITextInput
-          label="Tìm kiếm kênh"
-          keyboardType={"default"}
-          value={searchTerm}
-          onChangeText={text => {
-            setSearchTerm(text)
-          }}
-          multiline
-          numberOfLines={2}
-          errorText={""}
-          style={{ textAlignVertical: "top" }}
-        />
-      </View>
+        
       {/* {
         true ? 
         <ListFooter onRefresh={onRefresh} loading={true} />
         :
         <></>
       } */}
-      {/* <FlatList
+      <FlatList
         data={!data.data ? [] : data.data.pages.flat()}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        style={styles.container}
+        style={[styles.container,{marginTop: 10,}]}
         keyExtractor={item => `recent-group-${item.id}`}
-        ItemSeparatorComponent={() => {
-          return <Line />;
-        }}
+        
         refreshing={data.isFetching}
         onEndReachedThreshold={0.5}
         // onRefresh={onRefresh}
         onEndReached={onEndReached}
-      /> */}
-      {
-        data
-      }
+      />
+     
     </SafeAreaView>
   );
 };

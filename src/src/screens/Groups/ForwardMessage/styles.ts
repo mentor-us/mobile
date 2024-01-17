@@ -5,7 +5,7 @@ import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Color.white,
+    backgroundColor: Color.transparent,
     // flex: 1,
   },
   fieldContainer: {
@@ -13,9 +13,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  paddingItem:{
+    paddingTop: 0,
+    paddingBottom: 5,
+    paddingHorizontal: 15,
+  },
   itemCtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
   },
   pinned: {
     backgroundColor: Color.gray[0],

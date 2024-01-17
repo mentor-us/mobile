@@ -33,7 +33,7 @@ export default function GroupItemCheckbox({
   };
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
-      <View style={[styles.infoCtn]}>
+      <View style={[styles.infoCtn,{backgroundColor:"lightgray",borderRadius:10}]}>
         <GroupAvatar role={group.role} avatar={group.imageUrl} />
         <View style={styles.flexRowBetween}>
           <View style={[styles.detailCtn]}>
