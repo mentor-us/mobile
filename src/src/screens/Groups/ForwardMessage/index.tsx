@@ -23,24 +23,42 @@ import {
 import clip from "text-clipper";
 import MUITextInput from "~/components/MUITextInput";
 import SizedBox from "~/components/SizedBox";
-import { MarkTitleIcon, PencilBlack, PencilEditOffice, SearchBlackIcon, SearchIcon } from "~/assets/svgs";
+import {
+  MarkTitleIcon,
+  PencilBlack,
+  PencilEditOffice,
+  SearchBlackIcon,
+  SearchIcon,
+} from "~/assets/svgs";
 import { useQuery } from "@tanstack/react-query";
 import GroupService from "~/services/group";
 import ListFooter from "~/screens/Home/General/ListFooter";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
-  const [listChannel, setListChannel] = useState<string[]>([]);
+  const [listChannelId, setListChannelId] = useState<string[]>([]);
+  // Todo change GroupModel to Channel Model
+  const [listChannelChoosen, setListChannelChoosen] = useState<GroupModel[]>(
+    [],
+  );
   const comment = useRef<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [search, setSearch] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
   const data = useQueryGroupList();
 
   const navigation = useNavigation();
-  const onPress = id => {
-    setListChannel(pre => {
+  const onPress = group => {
+    var id = group.id;
+    setListChannelChoosen(pre => {
+      if (!pre.filter(item => item.id == group.id).length) {
+        return [...pre, group];
+      } else {
+        return pre.filter(item => item.id != group.id);
+      }
+    });
+    setListChannelId(pre => {
       if (!pre.includes(id)) {
         return [...pre, id];
       } else {
@@ -48,6 +66,19 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
       }
     });
   };
+  const renderListHeader = () => {
+    if (listChannelChoosen.length == 0) {
+      return <></>;
+    }
+    return listChannelChoosen.map(item => {
+      return (
+        <View style={[styles.itemCtn]}>
+          <GroupItemCheckbox onPress={onPress} group={item} initState={true} />
+        </View>
+      );
+    });
+  };
+
   const renderItem = useCallback(({ item }: { item: GroupModel }) => {
     return (
       <View style={[styles.itemCtn]}>
@@ -55,6 +86,9 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
       </View>
     );
   }, []);
+  const filterDataQuery = !data.data
+    ? []
+    : data.data.pages.flat().filter(item => !listChannelId.includes(item.id));
   const onRefresh = () => {
     // data.refetch();
   };
@@ -65,29 +99,36 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     }
   };
 
-  const handleSubmit = () => {};
-  const headerRight = useCallback(listChannel => {
-    if (!listChannel.length) return;
+  const handleSubmit = listChannelId => {
+    console.log("handleSubmit");
+    console.log(messageID);
+    console.log(listChannelId);
+  };
+  const headerRight = useCallback(listChannelId => {
+    if (!listChannelId.length) return;
 
-    return <HeaderSubmitButton onPress={handleSubmit} />;
+    return <HeaderSubmitButton onPress={() => handleSubmit(listChannelId)} />;
   }, []);
 
   const headerLeft = useCallback(() => {
     return <HeaderCloseButton canGoBack />;
   }, []);
 
-  const setHeaderRight = listChannel => {
+  const setHeaderRight = listChannelId => {
     const title = "Chuyển tiếp tin nhắn";
     navigation.setOptions({
-      headerRight: () => headerRight(listChannel),
+      headerRight: () => headerRight(listChannelId),
       headerLeft,
       title: title,
     } as StackNavigationOptions);
   };
 
   useEffect(() => {
-    setHeaderRight(listChannel);
-  }, [listChannel]);
+    setHeaderRight(listChannelId);
+  }, [listChannelId]);
+  useEffect(() => {
+    // console.log(listChannelChoosen)
+  }, [listChannelChoosen]);
   const composed = Gesture.Simultaneous();
 
   const trimmedContent = Helper.trimHTMLContent(message ?? "").replace(
@@ -112,11 +153,11 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      setSearch(searchTerm)
-    }, 3000)
+      setSearch(searchTerm);
+    }, 3000);
 
-    return () => clearTimeout(delayDebounceFn)
-  }, [searchTerm])
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
   return (
     <SafeAreaView style={[]}>
       <View style={[styles.reviewMessageContainer]}>
@@ -136,7 +177,12 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         )}
       </View>
       {/* <Text>{trimmedContent}</Text> */}
-      <View style={[styles.fieldContainer,styles.paddingItem,{width:"100%",borderRadius: 5}]}>
+      <View
+        style={[
+          styles.fieldContainer,
+          styles.paddingItem,
+          { width: "100%", borderRadius: 5 },
+        ]}>
         <View>
           <SizedBox height={16} />
           <PencilBlack width={24} height={24} />
@@ -155,26 +201,31 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           style={{ textAlignVertical: "top" }}
         />
       </View>
-        <View style={[styles.fieldContainer,styles.paddingItem,{width:"100%",marginTop:10}]}>
-          <View>
-            <SizedBox height={16} />
-            <SearchBlackIcon width={24} height={24} />
-          </View>
-          <SizedBox width={16} />
-          <MUITextInput
-            label="Tìm kiếm kênh"
-            keyboardType={"default"}
-            value={searchTerm}
-            onChangeText={text => {
-              setSearchTerm(text)
-            }}
-            multiline
-            numberOfLines={2}
-            errorText={""}
-            style={{ textAlignVertical: "top",width:"100%" }}
-          />
+      <View
+        style={[
+          styles.fieldContainer,
+          styles.paddingItem,
+          { width: "100%", marginTop: 10 },
+        ]}>
+        <View>
+          <SizedBox height={16} />
+          <SearchBlackIcon width={24} height={24} />
         </View>
-        
+        <SizedBox width={16} />
+        <MUITextInput
+          label="Tìm kiếm kênh"
+          keyboardType={"default"}
+          value={searchTerm}
+          onChangeText={text => {
+            setSearchTerm(text);
+          }}
+          multiline
+          numberOfLines={2}
+          errorText={""}
+          style={{ textAlignVertical: "top", width: "100%" }}
+        />
+      </View>
+
       {/* {
         true ? 
         <ListFooter onRefresh={onRefresh} loading={true} />
@@ -182,18 +233,17 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         <></>
       } */}
       <FlatList
-        data={!data.data ? [] : data.data.pages.flat()}
+        data={filterDataQuery}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        style={[styles.container,{marginTop: 10,}]}
+        style={[styles.container, { marginTop: 10 }]}
         keyExtractor={item => `recent-group-${item.id}`}
-        
+        ListHeaderComponent={renderListHeader}
         refreshing={data.isFetching}
         onEndReachedThreshold={0.5}
         // onRefresh={onRefresh}
         onEndReached={onEndReached}
       />
-     
     </SafeAreaView>
   );
 };

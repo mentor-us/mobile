@@ -9,9 +9,10 @@ import CheckBox from "@react-native-community/checkbox";
 import { CheckBoxActiveIcon, CheckBoxInactiveIcon } from "~/assets/svgs";
 interface Props {
   group?: GroupModel;
-  onPress?: (id: string) => void;
+  onPress?: (group: GroupModel) => void;
   backgroudColor?: string;
   showMessage?: boolean;
+  initState?: boolean;
 }
 
 export default function GroupItemCheckbox({
@@ -19,13 +20,14 @@ export default function GroupItemCheckbox({
   onPress,
   backgroudColor = Color.white,
   showMessage = true,
+  initState
 }: Props) {
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState<boolean>(initState||false);
   const handlePress = () => {
     //toggle checkbox
     toggleCheckBox();
     if (onPress) {
-      onPress(group?.id);
+      onPress(group);
     }
   };
   const toggleCheckBox = () => {
