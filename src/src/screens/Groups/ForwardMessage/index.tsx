@@ -3,7 +3,7 @@ import { FlatList, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GroupItem from "~/components/GroupItem";
-import { GroupModel } from "~/models/group";
+import { GroupChannel, GroupModel } from "~/models/group";
 import { useQueryGroupList } from "~/screens/Home/queries";
 import { ScreenProps } from "~/types/navigation";
 import styles from "./styles";
@@ -33,6 +33,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import GroupService from "~/services/group";
 import ListFooter from "~/screens/Home/General/ListFooter";
+import ChannelService from "~/services/channel";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannelId, setListChannelId] = useState<string[]>([]);
@@ -123,12 +124,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     } as StackNavigationOptions);
   };
 
-  useEffect(() => {
-    setHeaderRight(listChannelId);
-  }, [listChannelId]);
-  useEffect(() => {
-    // console.log(listChannelChoosen)
-  }, [listChannelChoosen]);
+  
   const composed = Gesture.Simultaneous();
 
   const trimmedContent = Helper.trimHTMLContent(message ?? "").replace(
@@ -151,13 +147,30 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const result = getContentOfNLines(trimmedContent, 6);
 
   useEffect(() => {
+    setHeaderRight(listChannelId);
+  }, [listChannelId]);
+  
+  useEffect(() => {
+    // console.log(listChannelChoosen)
+  }, [listChannelChoosen]);
+
+  useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
       setSearch(searchTerm);
-    }, 3000);
+    }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
+
+  useEffect(() => {
+    var fecthData = async () => {
+      const channel: GroupChannel[] = await ChannelService.search(search);
+      console.log(channel);
+    };
+    fecthData();
+  }, [search]);
+
   return (
     <SafeAreaView style={[]}>
       <View style={[styles.reviewMessageContainer]}>
