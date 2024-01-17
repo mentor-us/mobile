@@ -1,5 +1,5 @@
-import {action, flow, makeAutoObservable} from "mobx";
-import {MessageModel, ReplyMessageModel} from "~/models/message";
+import { action, flow, makeAutoObservable } from "mobx";
+import { MessageModel, ReplyMessageModel } from "~/models/message";
 import uuid from "react-native-uuid";
 import MessageServices from "~/services/messages";
 import {
@@ -8,19 +8,20 @@ import {
   USER_PROFILE_SAMPLE,
 } from "~/models/user";
 import GroupApi from "~/api/remote/GroupApi";
-import {GroupModel, GROUP_SAMPLE} from "~/models/group";
-import {INIT_TOTAL_REACTION, TotalReaction} from "~/constants/Emoijs";
-import {FileModel, StorageMediaAttachemt} from "~/models/media";
+import { GroupModel, GROUP_SAMPLE } from "~/models/group";
+import { INIT_TOTAL_REACTION, TotalReaction } from "~/constants/Emoijs";
+import { FileModel, StorageMediaAttachemt } from "~/models/media";
 import ToolApi from "~/api/remote/ToolApi";
 import Helper from "~/utils/Helper";
-import {Reaction} from "~/models/reaction";
-import {MediaAttachment} from "~/models/media";
-import {Vote} from "~/models/vote";
+import { Reaction } from "~/models/reaction";
+import { MediaAttachment } from "~/models/media";
+import { Vote } from "~/models/vote";
 import VoteService from "~/services/vote";
-import {Alert} from "react-native";
-import {TaskModel, TaskStatusType} from "~/models/task";
+import { Alert } from "react-native";
+import { TaskModel, TaskStatusType } from "~/models/task";
 import TaskServices from "~/services/task";
 import MeetingServices from "~/services/meeting";
+import LOG from "~/utils/Logger";
 
 interface Props {
   groupId: string;
@@ -241,7 +242,7 @@ export class ChatScreenState {
       type: "IMAGE",
       totalReaction: INIT_TOTAL_REACTION,
       images: selectedMedia.map(item => {
-        return {type: "IMAGE", url: item.path, isLoading: true};
+        return { type: "IMAGE", url: item.path, isLoading: true };
       }),
       reactions: [],
     };
@@ -260,7 +261,7 @@ export class ChatScreenState {
       sender: sender,
       type: "FILE",
       totalReaction: INIT_TOTAL_REACTION,
-      file: {...item, url: item.path, uploadStatus: "Uploading"},
+      file: { ...item, url: item.path, uploadStatus: "Uploading" },
       reactions: [],
     };
     this._messageList = [mess, ...this._messageList];
@@ -399,7 +400,7 @@ export class ChatScreenState {
       if (item.reply && item.reply.id == messageId) {
         return {
           ...item,
-          reply: {...item.reply, content: newContent},
+          reply: { ...item.reply, content: newContent },
         };
       }
       return item;
@@ -418,7 +419,9 @@ export class ChatScreenState {
   }
 
   @action
-  addPinnedMessage(message: MessageModel): boolean {
+  async addPinnedMessage(message: MessageModel): Promise<boolean> {
+    await this.getPinnedMessages(this._groupDetail.id);
+
     const pinnedMessages: MessageModel[] = this._groupDetail.pinnedMessages
       ? this._groupDetail.pinnedMessages
       : [];
@@ -430,7 +433,7 @@ export class ChatScreenState {
       return false;
     }
 
-    if (pinnedMessages.length == 5) {
+    if (pinnedMessages.length === 5) {
       Alert.alert("Thông báo", "Bạn chỉ có thể ghim tối đa 5 tin nhắn!");
       return false;
     }
@@ -556,5 +559,12 @@ export class ChatScreenState {
     } catch (error) {
       console.log("@ERROR Upload file failed");
     }
+  }
+  @flow
+  private async getPinnedMessages(groupId: string) {
+    try {
+      const pinnedMessages = await GroupApi.getPinnedMessages(groupId);
+      this.setGroupDetail({ ...this._groupDetail, pinnedMessages });
+    } catch (error) {}
   }
 }
