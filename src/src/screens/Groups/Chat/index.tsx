@@ -19,7 +19,6 @@ import PinnedMessages from "./PinnedMessages";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
 import { useGetMessages } from "~/app/server/messages/queries";
-import LOG from "~/utils/Logger";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data
@@ -38,7 +37,6 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     groupId,
     0,
   );
-  LOG.info(isSuccess);
 
   // State
   const [state] = useState(() => {
