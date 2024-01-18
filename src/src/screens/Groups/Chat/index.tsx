@@ -18,6 +18,8 @@ import { useAppSelector } from "~/redux";
 import PinnedMessages from "./PinnedMessages";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
+import { useGetMessages } from "~/app/server/messages/queries";
+import LOG from "~/utils/Logger";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data
@@ -27,10 +29,16 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
   const navigation = useNavigation();
   const {
     data: groupDetail,
-    isLoading,
+    isLoading: isGroupDetailLoading,
     isError,
     isSuccess,
   } = useGetGroupDetail(groupId);
+  const { data: messages, isLoading: isMessageLoading } = useGetMessages(
+    currentUser.id,
+    groupId,
+    0,
+  );
+  LOG.info(isSuccess);
 
   // State
   const [state] = useState(() => {
@@ -57,26 +65,22 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     } as Partial<StackNavigationOptions>);
   };
 
-  // SIDE EFFECT
-  // useEffect(() => {
-  //   console.log(groupId);
-  //   fetchGroup();
-  //   // setState(new ChatScreenState({ groupId, currentUser }));
-  //   state.fetchNewGroup(groupId);
-  // }, [groupId]);
-
   useEffect(() => {
     if (isSuccess && groupDetail) {
       initHeader(groupDetail);
-      state.setInitLoading(true);
       state.setNewGroupDetail(groupDetail);
-      state.setMessageList([]);
-      state.fetchListMessage(groupDetail.id);
-      state.setInitLoading(false);
+      // // Loading 1 page message with react query
+      if (messages && messages.length > 0) {
+        state.setMessageList([...messages]);
+        state.setPage(state.page + 1);
+      } else {
+        state.setMessageList([]);
+        state.setPage(-1);
+      }
     }
-  }, [groupDetail, groupId]);
+  }, [groupDetail, messages, groupId]);
 
-  if (isLoading || state.initLoading) {
+  if (isGroupDetailLoading || isMessageLoading) {
     return (
       <View
         style={{
@@ -119,21 +123,15 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     );
   }
 
-  const Container = observer(() => {
-    return (
+  return (
+    <ChatScreenProvider
+      state={state}
+      key={`chat-screen-${route.params.groupId}`}>
       <View style={styles.container}>
         <MessagesContainer groupType={groupDetail?.type} />
         <TextEditor />
         <PinnedMessages />
       </View>
-    );
-  });
-
-  return (
-    <ChatScreenProvider
-      state={state}
-      key={`chat-screen-${route.params.groupId}`}>
-      <Container />
     </ChatScreenProvider>
   );
 };

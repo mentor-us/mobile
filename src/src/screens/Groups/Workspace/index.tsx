@@ -29,7 +29,7 @@ import ErrorMessage from "~/components/ErrorMessage";
 const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   // Needed data
   const groupId = route.params.groupId;
-  const currentUser = useAppSelector(state => state.user.data);
+  // const currentUser = useAppSelector(state => state.user.data);
   const navigation = useNavigation();
   const {
     data: workspace,

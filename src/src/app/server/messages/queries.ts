@@ -11,4 +11,6 @@ export const useGetMessages = (
     queryKey: ["messages", groupId, page],
     queryFn: () => MessageServices.getMessages(userId, groupId, page, size),
     keepPreviousData: true,
+    staleTime: 0,
+    cacheTime: 60000, // 1 min
   });
