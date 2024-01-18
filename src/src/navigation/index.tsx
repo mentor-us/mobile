@@ -14,6 +14,7 @@ import RNBootSplash from "react-native-bootsplash";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import { SecureStore } from "~/api/local/SecureStore";
+import LOG from "~/utils/Logger";
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +51,7 @@ const RootNavigator = () => {
         if (res.isError && res.error instanceof AxiosError) {
           const resStatus = res.error.response?.status;
           if (resStatus === 401) {
+            authStore.restoreToken(null);
             authStore.setError("Phiên đăng nhập đã hết hạn");
             return;
           }
@@ -83,7 +85,7 @@ const RootNavigator = () => {
       onReady={() => RNBootSplash.hide()}
       linking={navigationLinking}
       fallback={<LoadingFullSreen />}>
-      {authStore.userToken === null ? (
+      {!authStore.userToken  ? (
         <UnAuthorizedStack />
       ) : (
         <>
