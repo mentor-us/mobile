@@ -34,11 +34,12 @@ import { useQuery } from "@tanstack/react-query";
 import GroupService from "~/services/group";
 import ListFooter from "~/screens/Home/General/ListFooter";
 import ChannelService from "~/services/channel";
+import { useQueryChannelList } from "~/queries/channels";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannelId, setListChannelId] = useState<string[]>([]);
   // Todo change GroupModel to Channel Model
-  const [listChannelChoosen, setListChannelChoosen] = useState<GroupModel[]>(
+  const [listChannelChoosen, setListChannelChoosen] = useState<GroupChannel[]>(
     [],
   );
   const comment = useRef<string>("");
@@ -47,7 +48,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
-  const data = useQueryGroupList();
+  const data = useQueryChannelList(search);
 
   const navigation = useNavigation();
   const onPress = group => {
@@ -74,16 +75,16 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return listChannelChoosen.map(item => {
       return (
         <View style={[styles.itemCtn]}>
-          <GroupItemCheckbox onPress={onPress} group={item} initState={true} />
+          <GroupItemCheckbox onPress={onPress} channel={item} initState={true} />
         </View>
       );
     });
   };
 
-  const renderItem = useCallback(({ item }: { item: GroupModel }) => {
+  const renderItem = useCallback(({ item }: { item: GroupChannel }) => {
     return (
       <View style={[styles.itemCtn]}>
-        <GroupItemCheckbox onPress={onPress} group={item} />
+        <GroupItemCheckbox onPress={onPress} channel={item} />
       </View>
     );
   }, []);
@@ -149,7 +150,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   useEffect(() => {
     setHeaderRight(listChannelId);
   }, [listChannelId]);
-  
+
   useEffect(() => {
     // console.log(listChannelChoosen)
   }, [listChannelChoosen]);
@@ -157,18 +158,20 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      setSearch(searchTerm);
+      if(search!=searchTerm){
+        setSearch(searchTerm);
+      }
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
   useEffect(() => {
-    var fecthData = async () => {
-      const channel: GroupChannel[] = await ChannelService.search(search);
-      console.log(channel);
-    };
-    fecthData();
+    // var fecthData = async () => {
+    //   const channel: GroupChannel[] = await ChannelService.search(search);
+    //   console.log(channel);
+    // };
+    // fecthData();
   }, [search]);
 
   return (

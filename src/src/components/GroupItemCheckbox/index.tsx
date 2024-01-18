@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, InputAccessoryView } from "react-native";
 import React, { useState } from "react";
-import { GroupModel, GROUP_SAMPLE } from "~/models/group";
+import { GroupChannel, GROUP_SAMPLE, GROUP_CHANNEL_SAMPLE } from "~/models/group";
 import styles from "./styles";
 import { Color } from "~/constants/Color";
 import GroupAvatar from "./GroupAvatar";
@@ -8,15 +8,15 @@ import GroupAvatar from "./GroupAvatar";
 import CheckBox from "@react-native-community/checkbox";
 import { CheckBoxActiveIcon, CheckBoxInactiveIcon } from "~/assets/svgs";
 interface Props {
-  group?: GroupModel;
-  onPress?: (group: GroupModel) => void;
+  channel?: GroupChannel;
+  onPress?: (channel: GroupChannel) => void;
   backgroudColor?: string;
   showMessage?: boolean;
   initState?: boolean;
 }
 
 export default function GroupItemCheckbox({
-  group = GROUP_SAMPLE,
+  channel = GROUP_CHANNEL_SAMPLE,
   onPress,
   backgroudColor = Color.white,
   showMessage = true,
@@ -27,7 +27,7 @@ export default function GroupItemCheckbox({
     //toggle checkbox
     toggleCheckBox();
     if (onPress) {
-      onPress(group);
+      onPress(channel);
     }
   };
   const toggleCheckBox = () => {
@@ -36,7 +36,9 @@ export default function GroupItemCheckbox({
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
       <View style={[styles.infoCtn,{backgroundColor:"lightgray",borderRadius:10}]}>
-        <GroupAvatar role={group.role} avatar={group.imageUrl} />
+        {
+          channel?.group && <GroupAvatar role={channel?.group?.role|| "MENTEE"} avatar={channel?.group?.imageUrl} />
+        }
         <View style={styles.flexRowBetween}>
           <View style={[styles.detailCtn]}>
             <View style={styles.categoryCtn}>
@@ -44,16 +46,16 @@ export default function GroupItemCheckbox({
                 style={[
                   styles.textInfo,
                   styles.displayName,
-                  group.hasNewMessage && styles.boldText,
+                  styles.boldText,
                 ]}>
-                {group.name}
+                {channel.name}
               </Text>
               <Text
                 style={[
                   styles.textInfo,
                   { textAlign: "right",textAlignVertical:"center", marginRight: 5 },
                 ]}>
-                {group.name}
+                {channel.name}
               </Text>
               <TouchableOpacity onPress={handlePress}>
                 {checked ? (

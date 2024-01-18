@@ -76,8 +76,9 @@ export interface GroupChannel {
 	description	: string
   type?: "PUBLIC" | "PRIVATE" | "PRIVATE_MESSAGE";
   hasNewMessage?: boolean;
-  imageUrl?: string;
+  // imageUrl?: string;
   parentId?: string;
+  group?: GroupModel;
 }
 export interface GroupChannelSearchInput {
   type?: string; 
@@ -85,3 +86,9 @@ export interface GroupChannelSearchInput {
   pageSize?: number;
   query?: string;
 }
+
+export const GROUP_CHANNEL_SAMPLE: GroupChannel = {
+  id: "",
+  name: "",
+	description	: "",
+};

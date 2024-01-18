@@ -1,5 +1,4 @@
 import ChanelApi from "~/api/remote/ChannelsApi";
-import GroupApi from "~/api/remote/GroupApi";
 import {GroupMemberModel, GroupModel,GroupChannel, GROUP_SAMPLE} from "~/models/group";
 import {ShortMedia, ShortMediaList} from "~/models/media";
 import Helper from "~/utils/Helper";
