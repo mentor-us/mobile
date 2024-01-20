@@ -1,18 +1,17 @@
-import {FC, memo, useEffect, useState} from "react";
-import {Image, LayoutRectangle, StyleProp, View, ViewStyle} from "react-native";
+import { FC, memo, useEffect, useState } from "react";
+import { Image, LayoutRectangle, StyleProp, ViewStyle } from "react-native";
 
 import ImageCacheHelper from "~/utils/ImageCache";
 import Helper from "~/utils/Helper";
 
-import {GridImageSke} from "../SkeletonTemplate/GridImageSke";
+import { GridImageSke } from "../SkeletonTemplate/GridImageSke";
 
 import SingleThumbnail from "../SingleThumbnail";
 
 import GridThumbnail1x1 from "./GridThumbnail1x1";
 import GridThumbnail2x1 from "./GridThumbnail2x1";
 import GridThumbnail2x3 from "./GridThumbnail2x3";
-import {IBaseGridThumbnail, ThumbnailPressFunction} from "./type";
-import ImageBase64Api from "~/api/local/ImageBase64Api";
+import { IBaseGridThumbnail, ThumbnailPressFunction } from "./type";
 
 interface Props extends Omit<IBaseGridThumbnail, "layoutFirst" | "ratioFirst"> {
   onPressItem?: ThumbnailPressFunction;
@@ -132,7 +131,7 @@ const GridThumbnail: FC<Props> = ({
       //   .finally(() => {
       //     setIsLoading(false);
       //   });
-      setLayoutImage({height: 100, width: 100});
+      setLayoutImage({ height: 100, width: 100 });
 
       setTimeout(() => {
         setIsLoading(false);
@@ -141,7 +140,7 @@ const GridThumbnail: FC<Props> = ({
 
     if (mediaData?.[0]?.type === "IMAGE" && mediaData[0].assetLocal) {
       const dataSource = Image.resolveAssetSource(mediaData[0].assetLocal);
-      setLayoutImage({height: dataSource.height, width: dataSource.width});
+      setLayoutImage({ height: dataSource.height, width: dataSource.width });
     }
   }, [mediaData]);
 

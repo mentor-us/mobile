@@ -1,5 +1,5 @@
-import {StyleSheet} from "react-native";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   infoCtn: {
     flex: 1,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
     borderRadius: 8,
   },
-  dowloadBtn: {
+  downloadBtn: {
     padding: 8,
     borderRadius: 20,
     backgroundColor: Color.gray[0],
