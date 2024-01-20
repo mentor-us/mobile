@@ -1,8 +1,11 @@
-import React, {useCallback, useEffect} from "react";
-import {MentorUsRoutes} from "~/types/navigation";
-import {createStackNavigator, TransitionPresets} from "@react-navigation/stack";
+import React, { useCallback, useEffect } from "react";
+import { MentorUsRoutes } from "~/types/navigation";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 import BottomTab from "./BottomTab";
-import {Color} from "~/constants/Color";
+import { Color } from "~/constants/Color";
 import OtherProfile from "~/screens/Profiles/OtherProfile";
 import Chat from "~/screens/Groups/Chat";
 import CreateVoting from "~/screens/Groups/CreateVoting";
@@ -18,13 +21,13 @@ import NotificationList from "~/screens/Notifications/NotificationList";
 import NotificationDetail from "~/screens/Notifications/NotificationDetail";
 import GroupSchedule from "~/screens/Groups/GroupSchedule";
 import GroupAttendees from "~/screens/Groups/GroupAttendees";
-import {HeaderBackButton, HeaderCloseButton} from "~/components/Header";
+import { HeaderBackButton } from "~/components/Header";
 import MeetingAttendees from "~/screens/Schedules/Meeting/MeetingAttendees";
 import TaskAssignees from "~/screens/Schedules/Tasks/TaskAssignees";
-import {useAppSelector} from "~/redux";
+import { useAppSelector } from "~/redux";
 import messaging from "@react-native-firebase/messaging";
 import NotificationApi from "~/api/remote/NotificationApi";
-import {handleNotificationPermission} from "~/utils/Permission";
+import PermissionStrategy from "~/utils/PermissionStrategies";
 import {
   useListenNotification,
   useNotificationService,
@@ -35,7 +38,6 @@ import FaqDetail from "~/screens/Groups/GroupFAQ/FAQDetail";
 import CreateFaq from "~/screens/Groups/GroupFAQ/CreateFAQ";
 import SelectGroup from "~/screens/Groups/GroupFAQ/SelectGroup";
 import ImportFAQ from "~/screens/Groups/GroupFAQ/ImportFAQ";
-import Test from "~/screens/Test";
 import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
@@ -46,7 +48,7 @@ const Authorized = () => {
   const userData = useAppSelector(state => state.user.data);
 
   const registerToken = useCallback(async () => {
-    const authStatus = await handleNotificationPermission();
+    const authStatus = await PermissionStrategy.handleNotificationPermission();
     // console.log("@DUKE requestPermission: ", authStatus);
 
     // Register the device with FCM
@@ -71,7 +73,7 @@ const Authorized = () => {
       initialRouteName="bottomTab"
       screenOptions={{
         headerShown: true,
-        headerStyle: {backgroundColor: Color.primary},
+        headerStyle: { backgroundColor: Color.primary },
         headerTintColor: Color.white,
         headerTitleAlign: "center",
         headerBackTitleVisible: false,
@@ -85,7 +87,7 @@ const Authorized = () => {
       <AuthorizedStack.Screen
         name="bottomTab"
         component={BottomTab}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       {/* Group */}
       <AuthorizedStack.Screen
@@ -184,7 +186,7 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Tạo bình chọn",
-            headerBackTestID: "title-header"
+            headerBackTestID: "title-header",
           };
         }}
       />
