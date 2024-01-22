@@ -40,6 +40,8 @@ const FileItem = ({
   sender,
   onRemove = () => {},
 }: Props) => {
+  const [isDownloading, setIsDownloading] = React.useState(false);
+
   const renderIcon = (fileName: string) => {
     const ext = Helper.getFileExtention(fileName);
 
@@ -86,6 +88,7 @@ const FileItem = ({
   };
 
   const download = useCallback(async () => {
+    setIsDownloading(true);
     // Get today's date to add the time suffix in filename
     try {
       const isHasPermission = await Permission.handleWriteStoragePermission();
@@ -120,6 +123,8 @@ const FileItem = ({
       }
     } catch (error) {
       LOG.error(File.name, error);
+    } finally {
+      setIsDownloading(false);
     }
     // await Linking.openURL(
     //   "https://drive.google.com/uc?export=download&id=1gXFeRrveO9fRgnkSIDVWNNLlxkV0iuq_",
@@ -128,7 +133,7 @@ const FileItem = ({
 
   return (
     <View style={containerStyle}>
-      <View style={[styles.fileItemContainer]}>
+      <View style={styles.fileItemContainer}>
         <View style={styles.rowCtn}>
           {renderIcon(file.filename)}
 
@@ -148,7 +153,11 @@ const FileItem = ({
 
             {file.uploadStatus === "Success" && (
               <TouchableOpacity style={styles.dowloadBtn} onPress={download}>
-                <DownloadIcon />
+                {isDownloading ? (
+                  <ActivityIndicator size={"small"} color={Color.primary} />
+                ) : (
+                  <DownloadIcon />
+                )}
               </TouchableOpacity>
             )}
           </View>
