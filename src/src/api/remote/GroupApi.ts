@@ -1,5 +1,5 @@
-import {AxiosError, AxiosResponse} from "axios";
-import {GroupModel, GROUP_SAMPLE} from "~/models/group";
+import { AxiosError, AxiosResponse } from "axios";
+import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import axiosClient from "./AxiosClient";
 
 const GroupApi = {

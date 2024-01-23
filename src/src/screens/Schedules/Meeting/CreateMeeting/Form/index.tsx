@@ -40,6 +40,7 @@ interface DatePickerToolModel {
 
 const FormMeeting = () => {
   const state = useCreateMeetingScreenState();
+
   const navigation = useNavigation();
   const datePickerTool = useMemo(() => {
     return {
@@ -249,6 +250,7 @@ const FormMeeting = () => {
               )
             : new Date(Helper.createDateTime(`${state.toTime} - ${state.date}`))
         }
+        maximumDate={new Date(state.groupData?.timeEnd || new Date())}
         onConfirm={date => {
           state.setMeetingTime(date);
           state.setDatePickerStatus("hide");
