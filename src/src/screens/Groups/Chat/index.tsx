@@ -14,9 +14,11 @@ import ChatScreenProvider from "~/context/chat";
 import { observer } from "mobx-react-lite";
 import { GROUP_SAMPLE, GroupModel } from "~/models/group";
 import TextEditor from "./TextEditor";
-import GroupService from "~/services/group";
 import { useAppSelector } from "~/redux";
 import PinnedMessages from "./PinnedMessages";
+import { useGetGroupDetail } from "~/app/server/groups/queries";
+import ErrorMessage from "~/components/ErrorMessage";
+import { useGetMessages } from "~/app/server/messages/queries";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data
@@ -24,26 +26,25 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
   const type: any = route.params.type;
   const currentUser = useAppSelector(state => state.user.data);
   const navigation = useNavigation();
+  const {
+    data: groupDetail,
+    isLoading: isGroupDetailLoading,
+    isError,
+    isSuccess,
+  } = useGetGroupDetail(groupId);
+  const { data: messages, isLoading: isMessageLoading } = useGetMessages(
+    currentUser.id,
+    groupId,
+    0,
+  );
 
   // State
-  const [loading, setLoading] = useState<boolean>(true);
-  const [state, setState] = useState(() => {
-    return new ChatScreenState({ groupId, currentUser });
+  const [state] = useState(() => {
+    return new ChatScreenState({ currentUser });
   });
 
-  // Action
-  const fetchGroup = async () => {
-    const data = await GroupService.findById(groupId);
-    initHeader(data);
-    setLoading(false);
-  };
-
   const initHeader = (data: GroupModel) => {
-    if (!data) {
-      return;
-    }
-
-    if (data == GROUP_SAMPLE) {
+    if (!data || data === GROUP_SAMPLE) {
       return;
     }
 
@@ -52,7 +53,7 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
       headerStyle: styles.headerBackground,
       headerTitle: () => {
         const hint =
-          data.type == "PRIVATE_MESSAGE"
+          data.type === "PRIVATE_MESSAGE"
             ? "Tin nhắn riêng"
             : `${data.totalMember} thành viên`;
         return <HeaderTitle name={data.name} hint={hint} />;
@@ -62,27 +63,48 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     } as Partial<StackNavigationOptions>);
   };
 
-  // SIDE EFFECT
   useEffect(() => {
-    fetchGroup();
-    setState(new ChatScreenState({ groupId, currentUser }));
-  }, [groupId]);
-
-  if (!state._groupDetail) {
-    if (loading) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: Color.backgroundChat,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <ActivityIndicator size={"large"} color={Color.primary} />
-        </View>
-      );
+    if (isSuccess && groupDetail) {
+      initHeader(groupDetail);
+      state.setNewGroupDetail(groupDetail);
+      // // Loading 1 page message with react query
+      if (messages && messages.length > 0) {
+        state.setMessageList([...messages]);
+        state.setPage(state.page + 1);
+      } else {
+        state.setMessageList([]);
+        state.setPage(-1);
+      }
     }
+  }, [groupDetail, messages, groupId]);
+
+  if (isGroupDetailLoading || isMessageLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: Color.backgroundChat,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <ActivityIndicator size={"large"} color={Color.primary} />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ErrorMessage
+        message="Đã có lỗi xảy ra! Vui lòng thử lại sau."
+        style={{
+          backgroundColor: Color.backgroundChat,
+        }}
+      />
+    );
+  }
+
+  if (isSuccess && !groupDetail) {
     return (
       <View
         style={{
@@ -103,19 +125,13 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     <ChatScreenProvider
       state={state}
       key={`chat-screen-${route.params.groupId}`}>
-      <Container />
+      <View style={styles.container}>
+        <MessagesContainer groupType={groupDetail?.type} />
+        <TextEditor />
+        <PinnedMessages />
+      </View>
     </ChatScreenProvider>
   );
 };
-
-const Container = observer(() => {
-  return (
-    <View style={styles.container}>
-      <MessagesContainer />
-      <TextEditor />
-      <PinnedMessages />
-    </View>
-  );
-});
 
 export default observer(Chat);
