@@ -32,6 +32,7 @@ import { useCurrentUser } from "~/app/server/users/queries";
 import Permission from "~/utils/PermissionStrategies";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
+import LinkAccountBtn from "~/components/LinkAccountBtn";
 
 const MyProfile = () => {
   const { authStore } = useMobxStore();
@@ -176,6 +177,14 @@ const MyProfile = () => {
             return <InfoItem data={item} key={item.type} />;
           })}
         </View>
+        <View style={[]}>
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Liên kết tài khoản</Text>
+          </View>
+          <LinkAccountBtn  type="microsoft" onPress={() => {}} email="thong89x@gmail.com"/>
+          <LinkAccountBtn  type="google" onPress={() => {}}/>
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );

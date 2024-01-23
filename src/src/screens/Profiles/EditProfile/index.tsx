@@ -76,7 +76,7 @@ const EditProfile = () => {
         keyboardType={"default"}
         defaultValue={userData.name}
         errorText={errors.name && `${errors.name?.message}`}
-      />
+      />  
       <TextInputForm
         name="personalEmail"
         label="Email cá nhân"
