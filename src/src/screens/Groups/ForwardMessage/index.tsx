@@ -8,7 +8,7 @@ import { useQueryGroupList } from "~/screens/Home/queries";
 import { ScreenProps } from "~/types/navigation";
 import styles from "./styles";
 import { Line } from "~/components/Separator";
-import GroupItemCheckbox from "~/components/GroupItemCheckbox";
+import ChannelItemCheckbox from "~/components/ChannelItemCheckbox";
 import { useNavigation } from "@react-navigation/native";
 import { HeaderCloseButton, HeaderSubmitButton } from "~/components/Header";
 import { StackNavigationOptions } from "@react-navigation/stack";
@@ -75,7 +75,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return listChannelChoosen.map(item => {
       return (
         <View style={[styles.itemCtn]}>
-          <GroupItemCheckbox onPress={onPress} channel={item} initState={true} />
+          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true} />
         </View>
       );
     });
@@ -84,7 +84,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const renderItem = useCallback(({ item }: { item: GroupChannel }) => {
     return (
       <View style={[styles.itemCtn]}>
-        <GroupItemCheckbox onPress={onPress} channel={item} />
+        <ChannelItemCheckbox onPress={onPress} channel={item} />
       </View>
     );
   }, []);

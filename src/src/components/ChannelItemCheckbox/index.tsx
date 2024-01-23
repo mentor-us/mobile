@@ -15,7 +15,7 @@ interface Props {
   initState?: boolean;
 }
 
-export default function GroupItemCheckbox({
+export default function ChannelItemCheckbox({
   channel = GROUP_CHANNEL_SAMPLE,
   onPress,
   backgroudColor = Color.white,
