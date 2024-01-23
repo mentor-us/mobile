@@ -1,14 +1,14 @@
-import React, {FC} from "react";
-import {StyleProp, View, ViewStyle} from "react-native";
+import React, { FC } from "react";
+import { StyleProp, View, ViewStyle } from "react-native";
 
-import {screenHeight, screenWidth} from "~/constants";
+import { screenHeight, screenWidth } from "~/constants";
 
 import GlobalStyles from "~/constants/GlobalStyles";
 
 import SingleThumbnail from "../SingleThumbnail";
 import SizedBox from "../SizedBox";
 
-import {IBaseGridThumbnail, ThumbnailPressFunction} from "./type";
+import { IBaseGridThumbnail, ThumbnailPressFunction } from "./type";
 import {
   horizonSeparator,
   maxHeight,
@@ -42,7 +42,6 @@ const GridThumbnail1x1: FC<Props> = ({
 
   if (mediaData.length === 1) {
     const height = getHeight(maxWidth, screenHeight * 0.7);
-
     return (
       <SingleThumbnail
         height={height}
@@ -138,7 +137,7 @@ const GridThumbnail1x1: FC<Props> = ({
     mediaData.length > 4 && mediaData.some(item => item.isLoading);
 
   return (
-    <View style={{width: maxWidth}}>
+    <View style={{ width: maxWidth }}>
       <View style={GlobalStyles.row}>
         <SingleThumbnail
           height={itemWidth}

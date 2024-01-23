@@ -1,4 +1,4 @@
-import {ShortMedia} from "~/models/media";
+import { ShortMedia } from "~/models/media";
 import ImageGallery from "../ImageGallery";
 import { FileGallery } from "../FileGallery";
 
@@ -15,11 +15,9 @@ export default function CustomTabView({
   mode,
   refresh,
 }: Props) {
-  const _render = () => {
-    return mode === "IMAGE" 
-    ? <ImageGallery data={data} loading={loading} refresh={refresh}/> 
-    : <FileGallery data={data} loading={loading} refresh={refresh}/> ;
-  };
-
-  return <_render />;
+  return mode === "IMAGE" ? (
+    <ImageGallery data={data} loading={loading} refresh={refresh} />
+  ) : (
+    <FileGallery data={data} loading={loading} refresh={refresh} />
+  );
 }
