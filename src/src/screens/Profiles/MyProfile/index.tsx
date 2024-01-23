@@ -181,8 +181,8 @@ const MyProfile = () => {
           <View style={styles.infoHeader}>
             <Text style={styles.infoText}>Liên kết tài khoản</Text>
           </View>
-          <LinkAccountBtn  type="microsoft" onPress={() => {}} email="thong89x@gmail.com"/>
-          <LinkAccountBtn  type="google" onPress={() => {}}/>
+          <LinkAccountBtn  type="microsoft" onPress={() => {}} email={myProfile?.email}/>
+          <LinkAccountBtn  type="google" onPress={() => {}} email={myProfile?.personalEmail}/>
         </View>
 
       </ScrollView>
