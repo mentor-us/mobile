@@ -9,8 +9,6 @@ import HeaderTitle from "./HeaderTitle";
 import HeaderRight from "./HeaderRight";
 import styles from "./styles";
 import MessagesContainer from "./MessagesContainer";
-import { ChatScreenState } from "~/mobx/chat";
-import ChatScreenProvider from "~/context/chat";
 import { observer } from "mobx-react-lite";
 import { GROUP_SAMPLE, GroupModel } from "~/models/group";
 import TextEditor from "./TextEditor";
@@ -18,7 +16,6 @@ import { useAppSelector } from "~/redux";
 import PinnedMessages from "./PinnedMessages";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
-import { useGetMessages } from "~/app/server/messages/queries";
 import { useMobxStore } from "~/mobx/store";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
@@ -37,16 +34,6 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     isError,
     isSuccess,
   } = useGetGroupDetail(groupId);
-  const { data: messages, isLoading: isMessageLoading } = useGetMessages(
-    currentUser.id,
-    groupId,
-    0,
-  );
-
-  // State
-  // const [state] = useState(() => {
-  //   return new ChatScreenState({ currentUser });
-  // });
 
   const initHeader = (data: GroupModel) => {
     if (!data || data === GROUP_SAMPLE) {
@@ -68,22 +55,29 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     } as Partial<StackNavigationOptions>);
   };
 
-  // useEffect(() => {
-  //   if (isSuccess && groupDetail) {
-  //     initHeader(groupDetail);
-  //     chatState.setNewGroupDetail(groupDetail);
-  //     // // Loading 1 page message with react query
-  //     if (messages && messages.length > 0) {
-  //       chatState.setMessageList([...messages]);
-  //       chatState.setPage(1);
-  //     } else {
-  //       chatState.setMessageList([]);
-  //       chatState.setPage(-1);
-  //     }
-  //   }
-  // }, [groupDetail, messages]);
+  useEffect(() => {
+    if (groupDetail) {
+      initHeader(groupDetail);
+      if (chatState._groupDetail?.id !== groupId) {
+        chatState.setInitLoading(true);
+        chatState.setNewGroupDetail(groupDetail);
+        chatState.setMessageList([]);
+        chatState.setPage(0);
+        chatState.fetchListMessage(groupDetail.id);
+      }
 
-  if (isGroupDetailLoading || isMessageLoading) {
+      // Loading 1 page message with react query
+      // if (messages && messages.length > 0) {
+      //   chatState.setMessageList([...messages]);
+      //   chatState.setPage(1);
+      // } else {
+      //   chatState.setMessageList([]);
+      //   chatState.setPage(-1);
+      // }
+    }
+  }, [groupDetail]);
+
+  if (isGroupDetailLoading) {
     return (
       <View
         style={{
@@ -126,29 +120,12 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     );
   }
 
-  if (isSuccess) {
-    initHeader(groupDetail);
-    chatState.setNewGroupDetail(groupDetail);
-    // Loading 1 page message with react query
-    if (messages && messages.length > 0) {
-      chatState.setMessageList([...messages]);
-      chatState.setPage(1);
-    } else {
-      chatState.setMessageList([]);
-      chatState.setPage(-1);
-    }
-  }
-
   return (
-    // <ChatScreenProvider
-    //   state={chatState}
-    //   key={`chat-screen-${route.params.groupId}`}>
     <View style={styles.container}>
       <MessagesContainer groupType={groupDetail?.type} />
       <TextEditor />
       <PinnedMessages />
     </View>
-    // </ChatScreenProvider>
   );
 };
 

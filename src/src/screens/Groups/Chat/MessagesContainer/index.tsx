@@ -62,11 +62,10 @@ const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (state.loadingMoreMessage) {
-      state.getMoreMessage();
-    }
-  }, [state.loadingMoreMessage]);
+  const onEndReached = () => {
+    state.setLoadingMoreMessage(true);
+    state.getMoreMessage();
+  };
 
   return (
     <FlatList
@@ -81,8 +80,8 @@ const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
       ListHeaderComponent={() => <SizedBox height={8} />}
       ItemSeparatorComponent={() => <SizedBox height={4} />}
       inverted
-      onEndReachedThreshold={0.5}
-      onEndReached={() => state.setLoadingMoreMessage(true)}
+      onEndReachedThreshold={0.7}
+      onEndReached={onEndReached}
       // legacyImplementation
     />
   );

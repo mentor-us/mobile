@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useReactNavigationQuery } from "~/hooks/useReactNavigationQuery";
 import MessageServices from "~/services/messages";
 
 export const useGetMessages = (
@@ -7,10 +8,14 @@ export const useGetMessages = (
   page = 0,
   size = 25,
 ) =>
-  useQuery({
-    queryKey: ["messages", groupId, page],
-    queryFn: () => MessageServices.getMessages(userId, groupId, page, size),
-    keepPreviousData: true,
-    staleTime: 0,
-    cacheTime: 60000, // 1 min
-  });
+  useReactNavigationQuery(
+    ["messages", groupId, page],
+    () => MessageServices.getMessages(userId, groupId, page, size),
+    {
+      keepPreviousData: true,
+      staleTime: 0,
+      cacheTime: 60000,
+      enabled: !!userId && !!groupId,
+      refetchOnWindowFocus: false,
+    }, // 1 min
+  );

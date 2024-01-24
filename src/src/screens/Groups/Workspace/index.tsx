@@ -15,7 +15,7 @@ import { Color } from "~/constants/Color";
 import { GroupIcon } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import { Line } from "~/components/Separator";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderTitle from "./HeaderTitle";
 import HeaderRight from "./HeaderRight";

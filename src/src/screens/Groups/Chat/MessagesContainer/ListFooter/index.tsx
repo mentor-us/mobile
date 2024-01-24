@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./styles";
 import FastImage from "react-native-fast-image";
 import { AnimationPerson } from "~/assets/images";
@@ -19,8 +19,26 @@ const ListFooter = ({ type }: Props) => {
 
   if (state.initLoading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator animating={true} size="small" />
+      <View style={styles.skeletonCtn}>
+        <View style={{ flexDirection: "row" }}>
+          <Skeleton height={50} width={50} />
+          <SizedBox width={8} />
+          <View>
+            <Skeleton height={20} width={screenWidth * 0.5} />
+            <SizedBox height={8} />
+            <Skeleton height={50} width={screenWidth * 0.7} />
+          </View>
+        </View>
+        <SizedBox height={28} />
+        <View style={styles.skeletonRight}>
+          <Skeleton height={50} width={50} />
+          <SizedBox width={8} />
+          <View style={{ alignItems: "flex-end" }}>
+            <Skeleton height={20} width={screenWidth * 0.5} />
+            <SizedBox height={8} />
+            <Skeleton height={50} width={screenWidth * 0.7} />
+          </View>
+        </View>
       </View>
     );
   }

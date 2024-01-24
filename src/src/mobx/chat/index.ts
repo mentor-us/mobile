@@ -511,6 +511,7 @@ export class ChatScreenState {
     }
 
     this.setLoadingMoreMessage(false);
+    this.setInitLoading(false);
   }
 
   @flow
