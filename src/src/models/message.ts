@@ -52,6 +52,7 @@ export interface ForwardMessageModel {
   id: string;
   content: string;
   type: MessageType;
+  images?: Social.MediaItem[];
 }
 
 export interface MessageModel {

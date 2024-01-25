@@ -126,7 +126,9 @@ const TextContent = ({ message }: Props) => {
   };
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
-    navigation.navigate("forwardMessage", {message: message.content, messageID: message.id, messageType: message.type});
+    console.log("Click forwardMessage");
+    console.log({message: message.content, messageID: message.id, messageType: message.type, images: message.images})
+    navigation.navigate("forwardMessage",{message: message.content, messageID: message.id, messageType: message.type, images: message.images} );
     
   };
   const showUserReacted = useCallback(() => {

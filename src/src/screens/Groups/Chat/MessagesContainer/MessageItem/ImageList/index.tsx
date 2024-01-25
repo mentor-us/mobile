@@ -86,7 +86,7 @@ const ImageList = ({message}: Props) => {
       message.id,
     );
   };
-
+  console.log(message)
   const editMessage = () => {};
   const pinMessage = async () => {
     const isSuccess = state.addPinnedMessage(message);

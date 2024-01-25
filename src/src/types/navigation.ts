@@ -39,7 +39,7 @@ export namespace MentorUsRoutes {
     // task
     createTask: {groupId: string; taskId?: string};
     taskDetail: {taskId: string};
-    forwardMessage: {message: string, messageID: string,messageType: MessageType, groupId?: string};
+    forwardMessage: {message: string, messageID: string,messageType: MessageType, groupId?: string,images?: Social.MediaItem[]};
     taskAssignees: {taskId: string; groupId: string};
 
     // Profile

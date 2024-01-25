@@ -35,6 +35,9 @@ import GroupService from "~/services/group";
 import ListFooter from "~/screens/Home/General/ListFooter";
 import ChannelService from "~/services/channel";
 import { useQueryChannelList } from "~/queries/channels";
+import ImageList from "../Chat/MessagesContainer/MessageItem/ImageList";
+import GridThumbnail from "~/components/GridThumbnail";
+import { screenWidth } from "~/constants";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannelId, setListChannelId] = useState<string[]>([]);
@@ -48,6 +51,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const message = route.params.message;
   const messageID = route.params.messageID;
   const messageType = route.params.messageType;
+  const images = route.params.images;
   const data = useQueryChannelList(search);
 
   const navigation = useNavigation();
@@ -191,6 +195,14 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
             </TouchableWithoutFeedback>
           </GestureDetector>
         )}
+        {/* {messageType == "IMAGE" && (
+          <GridThumbnail
+          useSkeletonWhenLoad
+          maxWidth={screenWidth * 0.8}
+          mediaData={images || []}
+        />
+          // <ImageList message={message} key={message.id} />
+        )} */}
       </View>
       {/* <Text>{trimmedContent}</Text> */}
       <View
