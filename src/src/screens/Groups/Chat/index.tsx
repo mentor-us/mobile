@@ -17,23 +17,45 @@ import PinnedMessages from "./PinnedMessages";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
 import { useMobxStore } from "~/mobx/store";
+import GroupService from "~/services/group";
+import { useGetMessages } from "~/app/server/messages/queries";
+
+const useIsReady = () => {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setIsReady(true), 50);
+  }, []);
+
+  return isReady;
+};
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
-  console.log("Chat screen", route);
   // Needed data
   const groupId: string = route.params.groupId;
   const type: any = route.params.type;
-  const currentUser = useAppSelector(state => state.user.data);
+  const currentUserId = useAppSelector(state => state.user.data?.id);
   const { chatState } = useMobxStore();
-  chatState.setCurrentUser(currentUser);
+  const isReady = useIsReady();
 
   const navigation = useNavigation();
+  // const [isLoading, setIsLoading] = useState(
+  //   () => !chatState._groupDetail || chatState._groupDetail.id !== groupId,
+  // );
+  // const [isError, setIsError] = useState(false);
+  // const [groupDetail, setGroupDetail] = useState<GroupModel | null>(null);
   const {
     data: groupDetail,
-    isLoading: isGroupDetailLoading,
+    isLoading,
     isError,
     isSuccess,
   } = useGetGroupDetail(groupId);
+  const {
+    data: messages,
+    isLoading: isLoadingMessages,
+    isError: isErrorMessages,
+    isSuccess: isSuccessMessages,
+  } = useGetMessages(currentUserId, groupId, 0);
 
   const initHeader = (data: GroupModel) => {
     if (!data || data === GROUP_SAMPLE) {
@@ -55,29 +77,55 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     } as Partial<StackNavigationOptions>);
   };
 
+  // const fetchGroup = () => {
+  //   setIsLoading(true);
+  //   setIsError(false);
+  //   GroupService.findById(groupId)
+  //     .then(res => {
+  //       initHeader(res);
+  //       setGroupDetail(res);
+  //     })
+  //     .catch(() => {
+  //       setIsError(true);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   if (chatState._groupDetail && chatState._groupDetail.id === groupId) {
+  //     initHeader(chatState._groupDetail);
+  //     // setGroupDetail(chatState._groupDetail);
+  //     return;
+  //   }
+
+  //   // fetchGroup();
+  // }, [groupId]);
+
   useEffect(() => {
     if (groupDetail) {
       initHeader(groupDetail);
       if (chatState._groupDetail?.id !== groupId) {
-        chatState.setInitLoading(true);
-        chatState.setNewGroupDetail(groupDetail);
-        chatState.setMessageList([]);
-        chatState.setPage(0);
-        chatState.fetchListMessage(groupDetail.id);
+        // Loading 1 page message with react query
+        if (messages && messages.length > 0) {
+          chatState.setInitLoading(false);
+          chatState.setMessageList([...messages]);
+          chatState.setPage(1);
+        } else {
+          chatState.setMessageList([]);
+          chatState.setPage(-1);
+        }
+        // chatState.setInitLoading(true);
+        // chatState.setNewGroupDetail(groupDetail);
+        // chatState.setMessageList([]);
+        // chatState.setPage(0);
+        // chatState.fetchListMessage(groupDetail.id);
       }
-
-      // Loading 1 page message with react query
-      // if (messages && messages.length > 0) {
-      //   chatState.setMessageList([...messages]);
-      //   chatState.setPage(1);
-      // } else {
-      //   chatState.setMessageList([]);
-      //   chatState.setPage(-1);
-      // }
     }
   }, [groupDetail]);
 
-  if (isGroupDetailLoading) {
+  if (isLoading || !isReady) {
     return (
       <View
         style={{
@@ -103,7 +151,7 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     );
   }
 
-  if (isSuccess && !groupDetail) {
+  if (!groupDetail) {
     return (
       <View
         style={{

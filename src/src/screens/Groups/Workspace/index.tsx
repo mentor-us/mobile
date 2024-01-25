@@ -25,6 +25,7 @@ import EventEmitterNames from "~/constants/EventEmitterNames";
 import { HeaderBackButton } from "~/components/Header";
 import { useGetWorkSpace } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
+import { useMobxStore } from "~/mobx/store";
 
 const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   // Needed data
@@ -39,6 +40,10 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
     isRefetching,
     refetch: workspaceRefetch,
   } = useGetWorkSpace(groupId);
+
+  const { chatState } = useMobxStore();
+  const currentUser = useAppSelector(state => state.user.data);
+  chatState.setCurrentUser(currentUser);
 
   // State
   const [snackBar, setSnackBar] = useState<boolean>(false);

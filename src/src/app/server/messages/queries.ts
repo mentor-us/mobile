@@ -16,6 +16,5 @@ export const useGetMessages = (
       staleTime: 0,
       cacheTime: 60000,
       enabled: !!userId && !!groupId,
-      refetchOnWindowFocus: false,
     }, // 1 min
   );
