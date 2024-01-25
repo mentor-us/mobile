@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { ScreenProps } from "~/types/navigation";
 import { StackNavigationOptions } from "@react-navigation/stack";
@@ -17,18 +17,8 @@ import PinnedMessages from "./PinnedMessages";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
 import { useMobxStore } from "~/mobx/store";
-import GroupService from "~/services/group";
 import { useGetMessages } from "~/app/server/messages/queries";
-
-const useIsReady = () => {
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => setIsReady(true), 50);
-  }, []);
-
-  return isReady;
-};
+import useIsReady from "~/hooks/useIsReady";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data

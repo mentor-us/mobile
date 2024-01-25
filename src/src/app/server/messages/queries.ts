@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useReactNavigationQuery } from "~/hooks/useReactNavigationQuery";
 import MessageServices from "~/services/messages";
 
