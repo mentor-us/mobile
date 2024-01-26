@@ -201,12 +201,15 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            <TouchableOpacity
-              style={commonStyles.actionButton}
-              testID="forward-message-icon"
-              onPress={onForwardMessage}>
-              <ForwardMessageIcon width={24} height={24} />
-            </TouchableOpacity>
+            {
+              message.type=='TEXT' &&
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                  <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       ) : (
@@ -234,6 +237,15 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            {
+              message.type=='TEXT' &&
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                  <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       )}
