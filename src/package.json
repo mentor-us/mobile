@@ -91,7 +91,7 @@
     "react-native-network-info": "^5.2.1",
     "react-native-pager-view": "^6.1.2",
     "react-native-paper": "^4.12.5",
-    "react-native-pell-rich-editor": "git+https://github.com/tramhuuducvn/react-native-rich-editor.git",
+    "react-native-pell-rich-editor":"1.9.0",
     "react-native-permissions": "^3.8.0",
     "react-native-reanimated": "^2.14.4",
     "react-native-render-html": "^6.3.4",

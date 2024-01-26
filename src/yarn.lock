@@ -8730,9 +8730,10 @@ react-native-parsed-text@0.0.22:
   dependencies:
     prop-types "^15.7.x"
 
-"react-native-pell-rich-editor@git+https://github.com/tramhuuducvn/react-native-rich-editor.git":
-  version "1.8.8"
-  resolved "git+https://github.com/tramhuuducvn/react-native-rich-editor.git#03f1bd6f25f9c733a98b80ea048a6d322c3bb029"
+react-native-pell-rich-editor@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-pell-rich-editor/-/react-native-pell-rich-editor-1.9.0.tgz#e222b4cd8ead9b5e1de7b6cf2f31a3315c82e570"
+  integrity sha512-BKzlu++FySzPXrb5bczD8b/ZZJtfzcD4z7FvW7TrH+4OENEQtaIiEMfmb5N09Kv3YVJcfm8fut8Y+GLNAcCQHA==
 
 react-native-permissions@^3.8.0:
   version "3.10.1"

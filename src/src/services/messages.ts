@@ -45,6 +45,10 @@ const MessageServices = {
       return [];
     }
   },
+
+  mentionMembers(messageId: string, listMemberIds: string[]) {
+    return MessageApi.mentionUsers(messageId, listMemberIds)
+  }
 };
 
 export default MessageServices;

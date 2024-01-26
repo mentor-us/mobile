@@ -65,6 +65,16 @@ const MessageApi = {
       return [];
     }
   },
+  mentionUsers: async (messageId: string, receiverIds: string[]) => {
+    const URL = `api/messages/mention`;
+    const response = await axiosClient.post(URL, {
+      params: {
+        messageId,
+        receiverIds,
+      },
+    });
+    return response;
+  },
 };
 
 export default MessageApi;
