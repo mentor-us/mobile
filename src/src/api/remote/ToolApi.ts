@@ -1,11 +1,13 @@
-import {MediaAttachment, StorageMediaAttachemt} from "~/models/media";
+import { MediaAttachment, StorageMediaAttachemt } from "~/models/media";
 import axiosClient from "./AxiosClient";
 import FormData from "form-data";
-import {Alert, Platform} from "react-native";
+import { Alert, Platform } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
 import Helper from "~/utils/Helper";
-import {MAX_SIZE_IMG} from "~/constants";
-import {CameraRoll} from "@react-native-camera-roll/camera-roll";
+import { MAX_SIZE_IMG } from "~/constants";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { SecureStore } from "../local/SecureStore";
+import { BASE_URL } from "@env";
 
 const ToolApi = {
   uploadMessageImages: async (
@@ -93,9 +95,13 @@ const ToolApi = {
   },
 
   downloadFile: async (url: string, filename: string) => {
+    const searchParams = new URLSearchParams();
+    searchParams.append("key", url);
+    const newUrl = `${BASE_URL}/api/files?${searchParams.toString()}`;
+
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
-    const {config, fs} = RNFetchBlob;
+    const { config, fs } = RNFetchBlob;
     const RootDir = fs.dirs.DownloadDir;
     const options = {
       fileCache: true,
@@ -107,21 +113,22 @@ const ToolApi = {
         useDownloadManager: true,
       },
     };
-    config(options)
-      .fetch("GET", url)
-      .then(res => {
-        // Alert after successful downloading
-        console.log("res -> ", JSON.stringify(res));
-        // alert("Tải về thành công.");
-        Alert.alert("Thông báo", "Tải về thành công.");
-      });
+    const token = await SecureStore.getToken();
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    return config(options).fetch("GET", newUrl, headers);
   },
 
   saveImage: async (url: string, filename: string) => {
+    const searchParams = new URLSearchParams();
+    searchParams.append("key", url);
+    const newUrl = `${BASE_URL}/api/files?${searchParams.toString()}`;
+
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
-    if (Platform.OS == "android") {
-      const {config, fs} = RNFetchBlob;
+    if (Platform.OS === "android") {
+      const { config, fs } = RNFetchBlob;
       const PictureDir = fs.dirs.PictureDir;
       const path = PictureDir + "/MentorUs/" + filename;
       const options = {
@@ -135,10 +142,13 @@ const ToolApi = {
           useDownloadManager: true,
         },
       };
-      const result = await config(options).fetch("GET", url);
+      const result = await config(options).fetch("GET", newUrl, {
+        Authorization: `Bearer ${await SecureStore.getToken()}`,
+      });
       return result;
     } else {
-      await CameraRoll.save(url);
+      const result = await CameraRoll.save(newUrl);
+      return result;
     }
   },
 

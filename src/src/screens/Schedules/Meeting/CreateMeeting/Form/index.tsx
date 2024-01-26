@@ -40,6 +40,7 @@ interface DatePickerToolModel {
 
 const FormMeeting = () => {
   const state = useCreateMeetingScreenState();
+
   const navigation = useNavigation();
   const datePickerTool = useMemo(() => {
     return {
@@ -79,11 +80,6 @@ const FormMeeting = () => {
             status: true,
             message: "Xóa lịch hẹn thành công",
           });
-          // navigation.navigate("groupSchedule", {
-          //   groupId: state.groupData.id,
-          //   mode: "meeting",
-          //   role: state.groupData.role,
-          // });
 
           navigation.goBack();
           navigation.goBack();
@@ -240,15 +236,21 @@ const FormMeeting = () => {
         modal
         open={state.datePickerStatus !== "hide"}
         title={datePickerTool[state.datePickerStatus].title}
+        minimumDate={
+          state.datePickerStatus === "from"
+            ? new Date()
+            : new Date(
+                Helper.createDateTime(`${state.fromTime} - ${state.date}`),
+              )
+        }
         date={
           state.datePickerStatus === "from"
             ? new Date(
                 Helper.createDateTime(`${state.fromTime} - ${state.date}`),
               )
-            : new Date(
-                Helper.createDateTime(`${state.toTime} - ${state.date}`),
-              )
+            : new Date(Helper.createDateTime(`${state.toTime} - ${state.date}`))
         }
+        maximumDate={new Date(state.groupData?.timeEnd || new Date())}
         onConfirm={date => {
           state.setMeetingTime(date);
           state.setDatePickerStatus("hide");

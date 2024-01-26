@@ -1,6 +1,6 @@
 import GroupApi from "~/api/remote/GroupApi";
-import {GroupMemberModel, GroupModel, GROUP_SAMPLE} from "~/models/group";
-import {ShortMedia, ShortMediaList} from "~/models/media";
+import { GroupMemberModel, GroupModel, GROUP_SAMPLE } from "~/models/group";
+import { ShortMedia, ShortMediaList } from "~/models/media";
 import Helper from "~/utils/Helper";
 
 const GroupService = {
