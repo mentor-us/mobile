@@ -15,7 +15,7 @@ import { Color } from "~/constants/Color";
 import { GroupIcon } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import { Line } from "~/components/Separator";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderTitle from "./HeaderTitle";
 import HeaderRight from "./HeaderRight";
@@ -25,11 +25,11 @@ import EventEmitterNames from "~/constants/EventEmitterNames";
 import { HeaderBackButton } from "~/components/Header";
 import { useGetWorkSpace } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
+import { useMobxStore } from "~/mobx/store";
 
 const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   // Needed data
   const groupId = route.params.groupId;
-  // const currentUser = useAppSelector(state => state.user.data);
   const navigation = useNavigation();
   const {
     data: workspace,
@@ -39,6 +39,10 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
     isRefetching,
     refetch: workspaceRefetch,
   } = useGetWorkSpace(groupId);
+
+  const { chatState } = useMobxStore();
+  const currentUser = useAppSelector(state => state.user.data);
+  chatState.setCurrentUser(currentUser);
 
   // State
   const [snackBar, setSnackBar] = useState<boolean>(false);

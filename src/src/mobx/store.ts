@@ -1,8 +1,10 @@
-import {createContext, useContext} from "react";
+import { createContext, useContext } from "react";
 import AuthStore from "./auth";
+import { ChatScreenState } from "./chat";
 
 export const rootMobxStore = {
   authStore: new AuthStore(),
+  chatState: new ChatScreenState(),
 };
 
 export type TRootMobxStore = typeof rootMobxStore;

@@ -44,15 +44,20 @@ export class ChatScreenState {
   _currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
   page = 0;
 
-  constructor(props: Props) {
+  constructor() {
     makeAutoObservable(this);
-    this._currentUser = props.currentUser;
-    if (props.groupId) {
-      this.fetchListMessage(props.groupId);
-      // this.initGroupData(props.groupId);
-      // this._messageList = [];
-      // this.fetchListMessage(props.groupId);
-    }
+    // this._currentUser = props.currentUser;
+    // if (props.groupId) {
+    //   this.fetchListMessage(props.groupId);
+    //   // this.initGroupData(props.groupId);
+    //   // this._messageList = [];
+    //   // this.fetchListMessage(props.groupId);
+    // }
+  }
+
+  @action
+  setCurrentUser(currentUser: UserProfileModel) {
+    this._currentUser = currentUser;
   }
 
   @action
@@ -506,6 +511,7 @@ export class ChatScreenState {
     }
 
     this.setLoadingMoreMessage(false);
+    this.setInitLoading(false);
   }
 
   @flow
