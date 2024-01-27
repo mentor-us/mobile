@@ -24,32 +24,58 @@ import MeetingServices from "~/services/meeting";
 import LOG from "~/utils/Logger";
 
 interface Props {
-  groupId: string;
+  groupId?: string;
   currentUser: UserProfileModel;
 }
 
 export class ChatScreenState {
   // ui/ux state
-  isKeyboardVisible: boolean = false;
-  sendable: boolean = false;
-  keyboardHeight: number = 0;
-  enableRichToolbar: boolean = false;
-  loadingMoreMessage: boolean = false;
-  editing: boolean = false;
+  isKeyboardVisible = false;
+  sendable = false;
+  keyboardHeight = 0;
+  enableRichToolbar = false;
+  initLoading = false;
+  loadingMoreMessage = false;
+  editing = false;
   replying: ReplyMessageModel | undefined = undefined;
   // data in used
   _currentMessageEditing: MessageModel | undefined;
   _groupDetail: GroupModel = GROUP_SAMPLE;
   _messageList: MessageModel[] = [];
   _currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
-  page: number = 0;
+  page = 0;
 
-  constructor(props: Props) {
+  constructor() {
     makeAutoObservable(this);
-    this.initGroupData(props.groupId);
-    this._currentUser = props.currentUser;
+    // this._currentUser = props.currentUser;
+    // if (props.groupId) {
+    //   this.fetchListMessage(props.groupId);
+    //   // this.initGroupData(props.groupId);
+    //   // this._messageList = [];
+    //   // this.fetchListMessage(props.groupId);
+    // }
+  }
+
+  @action
+  setCurrentUser(currentUser: UserProfileModel) {
+    this._currentUser = currentUser;
+  }
+
+  @action
+  setInitLoading(initLoading: boolean) {
+    this.initLoading = initLoading;
+  }
+
+  @flow
+  setNewGroupDetail(groupDetail: GroupModel) {
+    this.setGroupDetail(groupDetail);
+  }
+
+  @action
+  fetchNewGroup(groupId: string) {
+    this.initGroupData(groupId);
     this._messageList = [];
-    this.fetchListMessage(props.groupId);
+    this.fetchListMessage(groupId);
   }
 
   @action
@@ -467,7 +493,7 @@ export class ChatScreenState {
   }
 
   @flow
-  private async fetchListMessage(groupId: string, size = 25) {
+  async fetchListMessage(groupId: string, size = 25) {
     if (this.page < 0) {
       this.setPage(-1);
       return;
@@ -488,6 +514,7 @@ export class ChatScreenState {
     }
 
     this.setLoadingMoreMessage(false);
+    this.setInitLoading(false);
   }
 
   @flow

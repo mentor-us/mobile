@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from "react";
 import { ChatScreenState } from "@mobx/chat";
+import { useMobxStore } from "~/mobx/store";
 
 const ChatScreenContext = createContext<ChatScreenState | undefined>(undefined);
 
@@ -20,7 +21,8 @@ const ChatScreenProvider: React.FC<Props> = props => {
 export default ChatScreenProvider;
 
 export const useChatScreenState = (): ChatScreenState => {
-  const state = useContext(ChatScreenContext);
+  // const state = useContext(ChatScreenContext);
+  const { chatState: state } = useMobxStore();
 
   return state as ChatScreenState;
 };

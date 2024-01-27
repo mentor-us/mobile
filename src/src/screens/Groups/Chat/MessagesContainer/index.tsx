@@ -11,17 +11,18 @@ import ListFooter from "./ListFooter";
 import SizedBox from "~/components/SizedBox";
 import { Vote } from "~/models/vote";
 import { RefreshTaskDetailEvent } from "~/models/events/refresh-task-detail";
+import { GroupModel } from "~/models/group";
 
-const MessagesContainer = () => {
+interface MessagesContainerProps {
+  groupType: GroupModel["type"];
+}
+
+const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
   const state = useChatScreenState();
 
   const renderItem = useCallback(({ item }: { item: MessageModel }) => {
     return <MessageItem message={item} />;
   }, []);
-
-  const renderFooter = useCallback(() => {
-    return <ListFooter type={state._groupDetail.type} />;
-  }, [state.loadingMoreMessage]);
 
   useEffect(() => {
     const createVote = DeviceEventEmitter.addListener(
@@ -61,11 +62,10 @@ const MessagesContainer = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (state.loadingMoreMessage) {
-      state.getMoreMessage();
-    }
-  }, [state.loadingMoreMessage]);
+  const onEndReached = () => {
+    state.setLoadingMoreMessage(true);
+    state.getMoreMessage();
+  };
 
   return (
     <FlatList
@@ -76,12 +76,12 @@ const MessagesContainer = () => {
       keyboardDismissMode={"interactive"}
       keyExtractor={item => `${item.id}`}
       showsVerticalScrollIndicator={false}
-      ListFooterComponent={renderFooter}
+      ListFooterComponent={<ListFooter type={groupType} />}
       ListHeaderComponent={() => <SizedBox height={8} />}
       ItemSeparatorComponent={() => <SizedBox height={4} />}
       inverted
-      onEndReachedThreshold={0.5}
-      onEndReached={() => state.setLoadingMoreMessage(true)}
+      onEndReachedThreshold={0.7}
+      onEndReached={onEndReached}
       // legacyImplementation
     />
   );
