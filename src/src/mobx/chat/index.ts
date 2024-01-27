@@ -495,9 +495,13 @@ export class ChatScreenState {
   @flow
   async fetchListMessage(groupId: string, size = 25) {
     if (this.page < 0) {
+      this.setLoadingMoreMessage(false);
+      this.setInitLoading(false);
       this.setPage(-1);
       return;
     }
+
+    console.log("@FETCH LIST MESSAGE", this.page);
 
     const data = await MessageServices.getMessages(
       this._currentUser.id,

@@ -34,7 +34,6 @@ const ImageBase64Api = {
       const itemData = await new Promise<Caching.ImageItem>(
         (resolve, reject) => {
           fileReader.onloadend = function () {
-            console.log("fileReader.result: ", fileReader.result);
             const base64String = fileReader.result as string;
 
             Image.getSize(
