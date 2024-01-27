@@ -182,6 +182,20 @@ const GroupApi = {
       return [];
     }
   },
+  getPinnedMessages: async (groupDetail: string) => {
+    try {
+      const URL = `/api/groups/${groupDetail}/detail`;
+
+      const response: AxiosResponse = await axiosClient.get<GroupModel>(URL);
+      console.log("pinnedMessages", response.data.pinnedMessages);
+      if (response.data.pinnedMessages.length > 0) {
+        console.log("pinnedMessages", response.data.pinnedMessages);
+        return response.data.pinnedMessages;
+      } else return [];
+    } catch (error) {
+      return GROUP_SAMPLE;
+    }
+  },
 };
 
 export default GroupApi;
