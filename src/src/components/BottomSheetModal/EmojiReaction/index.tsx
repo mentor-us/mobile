@@ -7,7 +7,7 @@ import { DefaultUserAvatar } from "~/assets/images";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import { MessageModel, ReplyMessageModel } from "~/models/message";
+import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
 import { useAppSelector } from "~/redux";
 import EmojisPane from "~/components/EmoijsPane";
 import { EmoijType } from "~/constants/Emoijs";
@@ -15,6 +15,7 @@ import { BottomSheetModalRef } from "../index.props";
 import MessageApi from "~/api/remote/MessagesApi";
 import {
   CopyToClipboardIcon,
+  ForwardMessageIcon,
   GarbageIcon,
   PencilEditOffice,
   PinMessageIcon,
@@ -75,7 +76,7 @@ const EmojiReation = ({ message, action }: Props) => {
   const onEditMessage = async () => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
-    RichTextRef?.current?.setContentHTML(message.content);
+    RichTextRef?.current?.setContentHTML(message.content??"");
     RichTextRef?.current?.focusContentEditor();
   };
 
@@ -93,7 +94,16 @@ const EmojiReation = ({ message, action }: Props) => {
     BottomSheetModalRef.current?.hide();
     RichTextRef?.current?.focusContentEditor();
   };
-
+  const onForwardMessage = async () => {
+    action.forwardMessage({
+      id: message.id,
+      content: message.content,
+      type: message.type,
+      images: message.images
+    } as ForwardMessageModel);
+    BottomSheetModalRef.current?.hide();
+    // RichTextRef?.current?.focusContentEditor();
+  };
   const onCopy = () => {
     // Copy Text only
     Clipboard.setString(Helper.extractTextOnlyFromHTML(message.content));
@@ -189,6 +199,15 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            {
+              message.type=='TEXT' &&
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                  <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       ) : (
@@ -216,6 +235,15 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            {
+              message.type=='TEXT' &&
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                  <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       )}

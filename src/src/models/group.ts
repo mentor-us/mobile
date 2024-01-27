@@ -69,3 +69,27 @@ export const GROUP_MEMBER_SAMPLE: GroupMemberModel = {
   imageUrl: "",
   role: "MENTEE",
 };
+
+
+export interface GroupChannel {
+  id	: string
+	name	: string
+	description	: string
+  type?: "PUBLIC" | "PRIVATE" | "PRIVATE_MESSAGE";
+  hasNewMessage?: boolean;
+  // imageUrl?: string;
+  parentId?: string;
+  group?: GroupModel;
+}
+export interface GroupChannelSearchInput {
+  type?: string; 
+  page?: number;
+  pageSize?: number;
+  query?: string;
+}
+
+export const GROUP_CHANNEL_SAMPLE: GroupChannel = {
+  id: "",
+  name: "",
+	description	: "",
+};
