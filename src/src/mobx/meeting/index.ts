@@ -13,6 +13,7 @@ import { UserProfileModel, USER_PROFILE_SAMPLE } from "~/models/user";
 import GroupService from "~/services/group";
 import MeetingServices from "~/services/meeting";
 import Helper from "~/utils/Helper";
+import LOG from "~/utils/Logger";
 
 interface Props {
   groupId: string;
@@ -300,6 +301,7 @@ export class CreateMeetingScreenState {
   private async fetchGroupData(groupId: string) {
     try {
       const data = await GroupService.findById(groupId);
+      LOG.error("@MOBX_MEETING_GROUP_DATA", data.timeEnd);
       this.setGroupData(data);
     } catch (error) {
       console.log("@MOBX_MEETING_ERORR", error);
