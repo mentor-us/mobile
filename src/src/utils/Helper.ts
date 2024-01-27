@@ -107,7 +107,7 @@ export default class Helper {
 
   static extractTextOnlyFromHTML = (htmlInput?: string): string => {
     // Remove all html tag
-    return htmlInput?.replace(/<[^>]*>/gim, "") ?? "";
+    return htmlInput?.replace(/<[^>]*>/gim, "").replace(/&nbsp;/gim, " ") ?? "";
   };
 
   // TIME HELPER
