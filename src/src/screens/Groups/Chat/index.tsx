@@ -97,6 +97,8 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
     if (groupDetail) {
       initHeader(groupDetail);
       if (chatState._groupDetail?.id !== groupId) {
+        chatState.setGroupDetail(groupDetail);
+
         // Loading 1 page message with react query
         if (messages && messages.length > 0) {
           chatState.setInitLoading(false);

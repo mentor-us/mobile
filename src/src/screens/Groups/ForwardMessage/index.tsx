@@ -80,8 +80,8 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     }
     return listChannelChoosen.map(item => {
       return (
-        <View style={[styles.itemCtn]}>
-          <ChannelItemCheckbox onPress={onPress} key={item.id} channel={item} initState={true} />
+        <View key={item.id} style={[styles.itemCtn]}>
+          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true} />
         </View>
       );
     });
@@ -89,8 +89,8 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
 
   const renderItem = useCallback(({ item }: { item: GroupChannel }) => {
     return (
-      <View style={[styles.itemCtn]}>
-        <ChannelItemCheckbox onPress={onPress}  key={item.id} channel={item} />
+      <View key={item.id} style={[styles.itemCtn]}>
+        <ChannelItemCheckbox onPress={onPress}  channel={item} />
       </View>
     );
   }, []);
@@ -207,7 +207,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           <GestureDetector gesture={composed}>
             <TouchableWithoutFeedback style={[styles.messageContainer]}>
               <TextFormatRenderer
-                text={result.join("<br>")}
+                text={message}
                 style={styles.dimmedText}
                 numberOfLines={4}
               />
