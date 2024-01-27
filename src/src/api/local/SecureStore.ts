@@ -44,6 +44,7 @@ export const SecureStore = {
 
   /* Extend functions */
   async saveToken(token: string): Promise<boolean> {
+    console.log(token)
     return await SecureStore.saveItem(StorageKey.token, token);
   },
 

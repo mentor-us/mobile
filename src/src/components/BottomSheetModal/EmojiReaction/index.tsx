@@ -95,8 +95,6 @@ const EmojiReation = ({ message, action }: Props) => {
     RichTextRef?.current?.focusContentEditor();
   };
   const onForwardMessage = async () => {
-    console.log("onForwardMessage");
-    console.log(message);
     action.forwardMessage({
       id: message.id,
       content: message.content,

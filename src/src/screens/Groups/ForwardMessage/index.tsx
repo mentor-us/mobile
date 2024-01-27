@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { DeviceEventEmitter, FlatList, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GroupItem from "~/components/GroupItem";
@@ -38,6 +38,8 @@ import { useQueryChannelList } from "~/queries/channels";
 import ImageList from "../Chat/MessagesContainer/MessageItem/ImageList";
 import GridThumbnail from "~/components/GridThumbnail";
 import { screenWidth } from "~/constants";
+import EventEmitterNames from "~/constants/EventEmitterNames";
+import Toast from "react-native-root-toast";
 
 const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [listChannelId, setListChannelId] = useState<string[]>([]);
@@ -49,7 +51,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const message = route.params.message;
-  const messageID = route.params.messageID;
+  const messageId = route.params.messageID;
   const messageType = route.params.messageType;
   const images = route.params.images;
   const data = useQueryChannelList(search);
@@ -79,7 +81,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return listChannelChoosen.map(item => {
       return (
         <View style={[styles.itemCtn]}>
-          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true} />
+          <ChannelItemCheckbox onPress={onPress} key={item.id} channel={item} initState={true} />
         </View>
       );
     });
@@ -88,7 +90,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const renderItem = useCallback(({ item }: { item: GroupChannel }) => {
     return (
       <View style={[styles.itemCtn]}>
-        <ChannelItemCheckbox onPress={onPress} channel={item} />
+        <ChannelItemCheckbox onPress={onPress}  key={item.id} channel={item} />
       </View>
     );
   }, []);
@@ -107,8 +109,23 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
 
   const handleSubmit = listChannelId => {
     console.log("handleSubmit");
-    console.log(messageID);
+    console.log(messageId);
     console.log(listChannelId);
+    ChannelService.forward(
+      messageId,
+      listChannelId
+    ).then((res:any)=>{
+      console.log("Submit success")
+      Toast.show("Chuyển tiếp tin nhắn thành công", {
+        position: Toast.positions.BOTTOM
+      })
+      if(navigation.canGoBack()){
+        navigation.goBack()
+      }
+    }).catch((err)=>{
+      console.log("Submit fail")
+
+    })
   };
   const headerRight = useCallback(listChannelId => {
     if (!listChannelId.length) return;
@@ -177,7 +194,9 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     // };
     // fecthData();
   }, [search]);
-
+  useEffect(() => {
+    setSearch("");
+  }, []);
   return (
     <SafeAreaView style={[]}>
       <View style={[styles.reviewMessageContainer]}>
@@ -205,7 +224,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         )} */}
       </View>
       {/* <Text>{trimmedContent}</Text> */}
-      <View
+      {/* <View
         style={[
           styles.fieldContainer,
           styles.paddingItem,
@@ -228,7 +247,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           errorText={""}
           style={{ textAlignVertical: "top" }}
         />
-      </View>
+      </View> */}
       <View
         style={[
           styles.fieldContainer,

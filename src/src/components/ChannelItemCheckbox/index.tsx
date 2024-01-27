@@ -55,7 +55,7 @@ export default function ChannelItemCheckbox({
                   styles.textInfo,
                   { textAlign: "right",textAlignVertical:"center", marginRight: 5 },
                 ]}>
-                {channel.name}
+                {channel?.group?.name}
               </Text>
               <TouchableOpacity onPress={handlePress}>
                 {checked ? (
