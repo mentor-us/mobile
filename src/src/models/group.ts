@@ -50,6 +50,7 @@ export interface GroupModel {
   privates?: GroupModel[];
   parentId?: string;
   marked?: boolean;
+  timeEnd?: string;
 }
 
 export interface GroupMemberModel {

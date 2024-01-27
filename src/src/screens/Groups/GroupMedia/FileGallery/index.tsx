@@ -1,6 +1,6 @@
-import {FlatList, Text, TouchableOpacity, View} from "react-native";
-import {ShortMedia} from "~/models/media";
-import {commonStyles, otherStyle, styles} from "./styles";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { ShortMedia } from "~/models/media";
+import { commonStyles, styles } from "./styles";
 import Helper from "~/utils/Helper";
 import SizedBox from "~/components/SizedBox";
 import FileItem from "./FileItem";
@@ -11,12 +11,16 @@ interface Props {
   refresh: () => void;
 }
 
-export const FileGallery = ({data, loading = false, refresh}: Props) => {
-  const _renderMediaItem = ({item, index}) => {
+export const FileGallery = ({ data, loading = false, refresh }: Props) => {
+  const _renderMediaItem = ({ item, index }) => {
     return (
       <TouchableOpacity onPress={() => console.log("Click file")}>
         <View style={styles.container}>
-          <FileItem file={item.file} time={Helper.getTime(item.createdDate)} sender={item.sender}/>
+          <FileItem
+            file={item.file}
+            time={Helper.getTime(item.createdDate)}
+            sender={item.sender}
+          />
         </View>
       </TouchableOpacity>
     );

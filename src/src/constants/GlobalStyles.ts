@@ -1,5 +1,6 @@
-import {StyleSheet} from "react-native";
-import {Color} from "./Color";
+import { StyleSheet } from "react-native";
+import { Color } from "./Color";
+import FontSize from "./FontSize";
 
 export const LayoutDimensions = {
   XSmall: 4,
@@ -52,6 +53,12 @@ const GlobalStyles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+  },
+  errorText: {
+    color: Color.black,
+    fontSize: FontSize.larger,
+    marginBottom: 10,
+    textAlign: "center",
   },
 });
 

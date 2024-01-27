@@ -1,83 +1,77 @@
-import {View, useWindowDimensions} from "react-native";
-import {ScreenProps} from "~/types/navigation";
+import { View, useWindowDimensions, Text } from "react-native";
+import { ScreenProps } from "~/types/navigation";
 import styles from "./styles";
-import {useEffect, useState} from "react";
-import {ShortMediaList} from "~/models/media";
-import GroupService from "~/services/group";
+import { useState } from "react";
 import CustomTabView from "./CustomTabView";
-import {SceneMap, TabView} from "react-native-tab-view";
+import { SceneMap, TabView } from "react-native-tab-view";
 import CustomTabBar from "./CustomTabBar";
+import { useGetGroupMedia } from "~/app/server/groups/queries";
+import GlobalStyles from "~/constants/GlobalStyles";
 
-const GroupMedia: ScreenProps<"groupMedia"> = ({route}) => {
+const GroupMedia: ScreenProps<"groupMedia"> = ({ route }) => {
   // State
-  const {groupId, mode} = route.params;
-  const [medias, setMedias] = useState<ShortMediaList>({
-    images: [],
-    files: [],
-  } as ShortMediaList);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { groupId, mode } = route.params;
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: "images", title: "Hình ảnh"},
-    {key: "files", title: "Tập tin"},
+    { key: "images", title: "Hình ảnh" },
+    { key: "files", title: "Tập tin" },
   ]);
   const layout = useWindowDimensions();
+  const {
+    data: groupMedia,
+    isLoading,
+    isRefetching,
+    isSuccess,
+    isError,
+    refetch,
+  } = useGetGroupMedia(groupId);
 
-  // Call API fetch Group Media
-  const fetchMediaList = async () => {
-    try {
-      let data: ShortMediaList | null = await GroupService.getGroupMedia(
-        groupId,
-      );
-      if (data == null) {
-        setLoading(false);
-        return;
-      }
-      setMedias(data);
-      setLoading(false);
-    } catch (error) {
-      console.log("GroupMedia_error_fetchMediaList", error);
-    }
-  };
-
-  // Call at once
-  useEffect(() => {
-    if (loading) {
-      fetchMediaList();
-    }
-  }, [loading]);
+  if (isError) {
+    return (
+      <View style={styles.error}>
+        <Text style={GlobalStyles.errorText}>
+          Có lỗi xảy ra. Vui lòng thử lại sau.
+        </Text>
+      </View>
+    );
+  }
 
   // Multiple tab view
   const FirstRoute = () => (
     <CustomTabView
-      data={medias.images}
-      loading={loading}
+      data={groupMedia?.images ?? []}
+      loading={isLoading || isRefetching}
       mode={"IMAGE"}
-      refresh={() => setLoading(true)}
+      refresh={refetch}
     />
   );
+
   const SecondRoute = () => (
     <CustomTabView
-      data={medias.files}
-      loading={loading}
+      data={groupMedia?.files ?? []}
+      loading={isLoading || isRefetching}
       mode={"FILE"}
-      refresh={() => setLoading(true)}
+      refresh={refetch}
     />
   );
-  const _renderScene = SceneMap({
-    images: FirstRoute,
-    files: SecondRoute,
-  });
+
+  const _renderScene = () =>
+    SceneMap({
+      images: FirstRoute,
+      files: SecondRoute,
+    });
 
   return (
     <View style={styles.container}>
-      <TabView
-        navigationState={{index, routes}}
-        renderScene={_renderScene}
-        renderTabBar={CustomTabBar}
-        onIndexChange={setIndex}
-        initialLayout={{width: layout.width}}
-      />
+      {isSuccess && (
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={_renderScene()}
+          renderTabBar={CustomTabBar}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+        />
+      )}
     </View>
   );
 };
