@@ -43,7 +43,7 @@ const ListFooter = ({ type }: Props) => {
     );
   }
 
-  if (!state.loadingMoreMessage || state.page < 1) {
+  if (!state.loadingMoreMessage && state.page < 1) {
     if (type === "PRIVATE_MESSAGE") {
       return <></>;
     }
