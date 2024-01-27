@@ -148,12 +148,13 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
 
   
   const composed = Gesture.Simultaneous();
-
+ 
   const trimmedContent = Helper.trimHTMLContent(message ?? "").replace(
     /<div><br><\/div>/g,
     "",
   );
   function getContentOfNLines(inputString: string, n: number): string[] {
+    if(!inputString || inputString[0] != "<") return [inputString];
     const divRegex = /<div>(.*?)<\/div>/g;
     let lines: string[] = [];
     let match: RegExpExecArray | null;
@@ -167,7 +168,6 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return lines.slice(0, n);
   }
   const result = getContentOfNLines(trimmedContent, 6);
-
   useEffect(() => {
     setHeaderRight(listChannelId);
   }, [listChannelId]);
@@ -207,7 +207,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
           <GestureDetector gesture={composed}>
             <TouchableWithoutFeedback style={[styles.messageContainer]}>
               <TextFormatRenderer
-                text={message}
+                text={result.join('<br>')}
                 style={styles.dimmedText}
                 numberOfLines={4}
               />
