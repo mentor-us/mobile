@@ -44,7 +44,9 @@ import { GroupMemberModel } from "~/models/group";
 import MessageServices from "~/services/messages";
 import { SecureStore } from "~/api/local/SecureStore";
 
-const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)/gim;
+const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)|^@\w*/gim;
+// const mentionRegex = /(?<=<[^>]*\s|<.*>)@(\w+)(?=\s*<\/.*>|>)/gim;
+
 
 const TextEditor = () => {
   // const richText = useRef<any>();
@@ -141,6 +143,29 @@ const TextEditor = () => {
     );
   };
 
+  const setCaretToEnd = () => {
+    const placeCaretAtEnd =
+      'function placeCaretAtEnd(el) {\
+          el.focus();\
+          if (typeof window.getSelection != "undefined"\
+                  && typeof document.createRange != "undefined") {\
+              var range = document.createRange();\
+              range.selectNodeContents(el);\
+              range.collapse(false);\
+              var sel = window.getSelection();\
+              sel.removeAllRanges();\
+              sel.addRange(range);\
+          } else if (typeof document.body.createTextRange != "undefined") {\
+              var textRange = document.body.createTextRange();\
+              textRange.moveToElementText(el);\
+              textRange.collapse(false);\
+              textRange.select();\
+          }\
+      } \
+      placeCaretAtEnd($("#content"))';
+    RichTextRef?.current?.commandDOM(placeCaretAtEnd);
+  };
+
   const onSend = async () => {
     try {
       const htmlContent = await RichTextRef?.current?.getContentHtml();
@@ -161,6 +186,9 @@ const TextEditor = () => {
       setTimeout(() => {
         try {
           MessageServices.mentionMembers(message.id, mentionList);
+          setMentionList([]);
+          setOpenMention(false);
+          setSearchMentionName("");
         } catch (error) {
           LOG.error(
             `Mention Error. Message ID: ${
@@ -170,7 +198,9 @@ const TextEditor = () => {
         }
       }, 1000);
 
+      
       const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
+      console.log("@DUKE: onSend",         `${currentUser.name}: ${message.content?.replace(regex, "")}`      );
       updateLastMessage(
         `${currentUser.name}: ${message.content?.replace(regex, "")}`,
       );
@@ -203,32 +233,10 @@ const TextEditor = () => {
   };
 
   const mentionBuilder = (member: GroupMemberModel) => {
-    return `<span style='background-color:yellow;' class="mention" contenteditable="false" data-user-id="${member.id}">@${member.name}</span><span style=''>&nbsp;</span>`;
+    return `<a  class="mention" contenteditable="false" data-user-id="${member.id}">@${member.name}</a><span style=''>&nbsp;</span>`;
   };
 
-  const setCaretToEnd = () => {
-    const placeCaretAtEnd =
-      'function placeCaretAtEnd(el) {\
-          el.focus();\
-          if (typeof window.getSelection != "undefined"\
-                  && typeof document.createRange != "undefined") {\
-              var range = document.createRange();\
-              range.selectNodeContents(el);\
-              range.collapse(false);\
-              var sel = window.getSelection();\
-              sel.removeAllRanges();\
-              sel.addRange(range);\
-          } else if (typeof document.body.createTextRange != "undefined") {\
-              var textRange = document.body.createTextRange();\
-              textRange.moveToElementText(el);\
-              textRange.collapse(false);\
-              textRange.select();\
-          }\
-      } \
-      placeCaretAtEnd($("#content"))';
-    RichTextRef?.current?.commandDOM(placeCaretAtEnd);
-  };
-
+ 
   const insertMention = async (member: GroupMemberModel) => {
     setMentionList(prev => Array.from(new Set([...prev, member.id]).values()));
     const text = await RichTextRef?.current?.getContentHtml();
@@ -303,7 +311,7 @@ const TextEditor = () => {
       var div = document.getElementById("content");\
       setTimeout(function() {\
           div.focus();\
-      }, 0);\
+      }, 1000);\
       return;\
     } \
     var nonEditable = selRange.startContainer.previousSibling;\
@@ -338,6 +346,7 @@ const TextEditor = () => {
     removeMention();
     if (!text || text === "<div><br></div>") {
       RichTextRef?.current?.setContentHTML("");
+      console.log(await RichTextRef?.current?.getContentHtml());
       setOpenMention(false);
       setSearchMentionName("");
       state.setSendable(false);
