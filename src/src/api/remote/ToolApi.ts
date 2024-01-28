@@ -121,6 +121,11 @@ const ToolApi = {
   },
 
   saveImage: async (url: string, filename: string) => {
+    const fileExt = url.split(".").pop();
+    if (!fileExt) {
+      throw new Error("Không xác định được định dạng file");
+    }
+
     const searchParams = new URLSearchParams();
     searchParams.append("key", url);
     const newUrl = `${BASE_URL}/api/files?${searchParams.toString()}`;
@@ -130,14 +135,14 @@ const ToolApi = {
     if (Platform.OS === "android") {
       const { config, fs } = RNFetchBlob;
       const PictureDir = fs.dirs.PictureDir;
-      const path = PictureDir + "/MentorUs/" + filename;
+      const path = PictureDir + "/MentorUs/" + filename + "." + fileExt;
       const options = {
         fileCache: true,
         path: path,
         addAndroidDownloads: {
           path: path,
           description: "Đang tải về...",
-          title: filename,
+          title: filename + "." + fileExt,
           notification: true,
           useDownloadManager: true,
         },
