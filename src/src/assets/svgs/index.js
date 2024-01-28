@@ -36,6 +36,7 @@ import PptFile from "./_raw/ppt-file.svg";
 import Refresh from "./_raw/refresh.svg";
 import RemoveAvatarIcon from "./_raw/remove-avatar-icon.svg";
 import SearchIcon from "./_raw/search-icon.svg";
+import SearchBlackIcon from "./_raw/search-black.svg";
 import Search from "./_raw/search.svg";
 import UpdateFile from "./_raw/update-file.svg";
 import UploadAvatarIcon from "./_raw/upload-avatar-icon.svg";
@@ -108,8 +109,12 @@ import FocusIcon from "./_raw/focus-icon.svg";
 import RefreshIcon from "./_raw/refresh-icon.svg";
 import ReplyIcon from "./_raw/reply-icon.svg";
 import CopyToClipboardIcon from "./_raw/clipboard-icon.svg";
+import ForwardMessageIcon from "./_raw/forward-svgrepo-com.svg";
 import Hashtag from "./_raw/hashtag.svg";
 import AddNode from "./_raw/add-node.svg";
+import CheckBoxInactiveIcon from "./_raw/checkbox-blank-circle-svgrepo-com.svg";
+import CheckBoxActiveIcon from "./_raw/checkbox-circle-svgrepo-com.svg";
+import PencilBlack from "./_raw/pencil-svgrepo-com.svg";
 
 // Custom icon
 import HomeIcon from "./HomeIcon";
@@ -130,6 +135,7 @@ export {
   MicrosoftLogo,
   EditIcon,
   SearchIcon,
+  SearchBlackIcon,
   CloseRoundIcon,
   SideNavigationIcon,
   ChevronLeft,
@@ -210,9 +216,12 @@ export {
   RefreshIcon,
   ReplyIcon,
   CopyToClipboardIcon,
+  ForwardMessageIcon,
   Hashtag,
   AddNode,
-  
+  CheckBoxInactiveIcon,
+  CheckBoxActiveIcon,
+  PencilBlack,
 
   // custom
   HomeIcon,

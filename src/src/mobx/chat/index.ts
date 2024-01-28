@@ -21,6 +21,7 @@ import { Alert } from "react-native";
 import { TaskModel, TaskStatusType } from "~/models/task";
 import TaskServices from "~/services/task";
 import MeetingServices from "~/services/meeting";
+import LOG from "~/utils/Logger";
 
 interface Props {
   groupId?: string;
@@ -444,7 +445,9 @@ export class ChatScreenState {
   }
 
   @action
-  addPinnedMessage(message: MessageModel): boolean {
+  async addPinnedMessage(message: MessageModel): Promise<boolean> {
+    await this.getPinnedMessages(this._groupDetail.id);
+
     const pinnedMessages: MessageModel[] = this._groupDetail.pinnedMessages
       ? this._groupDetail.pinnedMessages
       : [];
@@ -456,7 +459,7 @@ export class ChatScreenState {
       return false;
     }
 
-    if (pinnedMessages.length == 5) {
+    if (pinnedMessages.length === 5) {
       Alert.alert("Thông báo", "Bạn chỉ có thể ghim tối đa 5 tin nhắn!");
       return false;
     }
@@ -492,9 +495,13 @@ export class ChatScreenState {
   @flow
   async fetchListMessage(groupId: string, size = 25) {
     if (this.page < 0) {
+      this.setLoadingMoreMessage(false);
+      this.setInitLoading(false);
       this.setPage(-1);
       return;
     }
+
+    console.log("@FETCH LIST MESSAGE", this.page);
 
     const data = await MessageServices.getMessages(
       this._currentUser.id,
@@ -583,5 +590,12 @@ export class ChatScreenState {
     } catch (error) {
       console.log("@ERROR Upload file failed");
     }
+  }
+  @flow
+  private async getPinnedMessages(groupId: string) {
+    try {
+      const pinnedMessages = await GroupApi.getPinnedMessages(groupId);
+      this.setGroupDetail({ ...this._groupDetail, pinnedMessages });
+    } catch (error) {}
   }
 }

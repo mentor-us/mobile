@@ -48,6 +48,12 @@ export interface ReplyMessageModel {
   senderName: string;
   content: string;
 }
+export interface ForwardMessageModel {
+  id: string;
+  content: string;
+  type: MessageType;
+  images?: Social.MediaItem[];
+}
 
 export interface MessageModel {
   id: string;
