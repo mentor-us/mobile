@@ -30,3 +30,15 @@ export const useGetWorkSpace = <TData = GroupModel>(
       enabled: !!groupId,
     },
   );
+
+export const GetGroupMediaQueryKey = (groupId: string) => [
+  "group-media",
+  groupId,
+];
+
+export const useGetGroupMedia = (groupId: string) =>
+  useQuery({
+    queryKey: GetGroupMediaQueryKey(groupId),
+    queryFn: () => GroupService.getGroupMedia(groupId),
+    enabled: !!groupId,
+  });

@@ -1,9 +1,9 @@
-import {View, TouchableOpacity, StyleSheet} from "react-native";
-import React, {Dispatch, SetStateAction} from "react";
-import {CloseIcon} from "~/assets/svgs";
-import {BottomSheetModalRef} from "../index.props";
-import {FAB} from "react-native-paper";
-import {Color} from "~/constants/Color";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import React, { Dispatch, SetStateAction } from "react";
+import { CloseIcon } from "~/assets/svgs";
+import { BottomSheetModalRef } from "../index.props";
+import { FAB } from "react-native-paper";
+import { Color } from "~/constants/Color";
 import uuid from "react-native-uuid";
 import ToolApi from "~/api/remote/ToolApi";
 
