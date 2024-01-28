@@ -77,14 +77,14 @@ const EditProfile = () => {
         defaultValue={userData.name}
         errorText={errors.name && `${errors.name?.message}`}
       />
-      <TextInputForm
+      {/* <TextInputForm
         name="personalEmail"
         label="Email cá nhân"
         control={control}
         keyboardType={"email-address"}
         defaultValue={userData.personalEmail}
         errorText={errors.personalEmail && `${errors.personalEmail.message}`}
-      />
+      /> */}
       <TextInputForm
         ref={birthdayRef}
         name="birthDate"

@@ -29,6 +29,17 @@ const UserApi = {
       const response = await axiosClient.patch(URL, data);
     } catch (error) {
       console.log("@API_USER_updateUser_ERROR: ", error);
+      return error;
+    }
+  },
+  updateLinkMail: async (id : string,email: string) => {
+    try {
+      const URL = `api/users/${id}/profile/email`;
+      const response : string = await axiosClient.patch(URL, email);
+      return response
+    } catch (error) {
+      console.log("@API_USER_updateLinkMail_ERROR: ", error);
+      return "Cập nhật email liên kết thất bại!";
     }
   },
 };

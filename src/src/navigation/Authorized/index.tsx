@@ -41,6 +41,7 @@ import ImportFAQ from "~/screens/Groups/GroupFAQ/ImportFAQ";
 import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 import ForwardMessage from "~/screens/Groups/ForwardMessage";
+import LinkEmail from "~/screens/Profiles/LinkEmail";
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
 
 const Authorized = () => {
@@ -301,6 +302,17 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Cập nhật thông tin",
+          };
+        }}
+      />
+      <AuthorizedStack.Screen
+        name="linkEmail"
+        component={LinkEmail}
+        options={({}) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: "Liên kết email",
           };
         }}
       />

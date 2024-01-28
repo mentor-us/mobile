@@ -32,8 +32,10 @@ import { useCurrentUser } from "~/app/server/users/queries";
 import Permission from "~/utils/PermissionStrategies";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
+import MUITextInput from "~/components/MUITextInput";
 
 const MyProfile = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { authStore } = useMobxStore();
   const navigation = useNavigation();
   const dispatcher = useAppDispatch();
@@ -49,7 +51,7 @@ const MyProfile = () => {
     return [
       { type: "fullname", text: myProfile?.name },
       { type: "email", text: myProfile?.email },
-      { type: "personal_email", text: myProfile?.personalEmail },
+      // { type: "personal_email", text: myProfile?.personalEmail },
       {
         type: "year_born",
         text: Helper.formatDate(myProfile?.birthDate ?? ""),
@@ -72,6 +74,7 @@ const MyProfile = () => {
   };
 
   const editProfile = () => navigation.navigate("editProfile");
+  const editLinkEmail = () => navigation.navigate("linkEmail");
 
   const updateAvatar = async () => {
     setLoadingAvatar(true);
@@ -175,6 +178,13 @@ const MyProfile = () => {
           {infoItems.map(item => {
             return <InfoItem data={item} key={item.type} />;
           })}
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Liên kết tài khoản</Text>
+            <TouchableOpacity onPress={editLinkEmail}>
+              <Text style={styles.editText}>Cập nhật email</Text>
+            </TouchableOpacity>
+          </View>
+          <InfoItem data={{ type: "email", text: myProfile?.personalEmail }} key={"email"} />
         </View>
       </ScrollView>
     </SafeAreaView>
