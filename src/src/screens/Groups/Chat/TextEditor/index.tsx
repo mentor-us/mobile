@@ -47,7 +47,6 @@ import { SecureStore } from "~/api/local/SecureStore";
 const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)|^@\w*/gim;
 // const mentionRegex = /(?<=<[^>]*\s|<.*>)@(\w+)(?=\s*<\/.*>|>)/gim;
 
-
 const TextEditor = () => {
   // const richText = useRef<any>();
   const [openMention, setOpenMention] = useState<boolean>(false);
@@ -183,27 +182,31 @@ const TextEditor = () => {
       socket.emit("send_message", message);
       state.sendTextMessage(message);
 
-      setTimeout(() => {
-        try {
-          MessageServices.mentionMembers(message.id, mentionList);
-          setMentionList([]);
-          setOpenMention(false);
-          setSearchMentionName("");
-        } catch (error) {
-          LOG.error(
-            `Mention Error. Message ID: ${
-              message.id
-            }. Members ID: ${mentionList.join(", ")}`,
-          );
-        }
-      }, 1000);
-
-      
       const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
-      console.log("@DUKE: onSend",         `${currentUser.name}: ${message.content?.replace(regex, "")}`      );
+
       updateLastMessage(
-        `${currentUser.name}: ${message.content?.replace(regex, "")}`,
+        `${currentUser.name}: ${message.content
+          ?.replace(regex, "")
+          ?.replace(/&nbsp;/gim, " ")}`,
       );
+
+      // if (mentionList.length > 0) {
+      //   setTimeout(async () => {
+      //     try {
+      //       await MessageServices.mentionMembers(message.id, mentionList);
+      //     } catch (error) {
+      //       LOG.error(
+      //         `Mention Error. Message ID: ${
+      //           message.id
+      //         }. Members ID: ${mentionList.join(", ")}`,
+      //       );
+      //     } finally {
+      //       setMentionList([]);
+      //       setOpenMention(false);
+      //       setSearchMentionName("");
+      //     }
+      //   }, 1000);
+      // }
 
       RichTextRef?.current?.setContentHTML("");
     } catch (error) {
@@ -236,7 +239,6 @@ const TextEditor = () => {
     return `<a  class="mention" contenteditable="false" data-user-id="${member.id}">@${member.name}</a><span style=''>&nbsp;</span>`;
   };
 
- 
   const insertMention = async (member: GroupMemberModel) => {
     setMentionList(prev => Array.from(new Set([...prev, member.id]).values()));
     const text = await RichTextRef?.current?.getContentHtml();

@@ -1,6 +1,6 @@
 import MessageApi from "~/api/remote/MessagesApi";
-import {MessageModel} from "~/models/message";
-import {TaskStatusType} from "~/models/task";
+import { MessageModel } from "~/models/message";
+import { TaskStatusType } from "~/models/task";
 
 const MessageServices = {
   getMessages: async (
@@ -47,8 +47,8 @@ const MessageServices = {
   },
 
   mentionMembers(messageId: string, listMemberIds: string[]) {
-    return MessageApi.mentionUsers(messageId, listMemberIds)
-  }
+    return MessageApi.mentionUsers(messageId, listMemberIds);
+  },
 };
 
 export default MessageServices;

@@ -1,12 +1,12 @@
-import React, {memo, useMemo} from "react";
-import {MessageModel} from "~/models/message";
+import React, { memo, useMemo } from "react";
+import { MessageModel } from "~/models/message";
 import equals from "react-fast-compare";
 import TextContent from "./TextContent";
 import Voting from "./Voting";
 import Meeting from "./Meeting";
 import Helper from "~/utils/Helper";
-import {MeetingModel} from "~/models/meeting";
-import {TaskModel} from "~/models/task";
+import { MeetingModel } from "~/models/meeting";
+import { TaskModel } from "~/models/task";
 import Task from "./Task";
 import ImageList from "./ImageList";
 import FileItem from "./FileItem";
@@ -19,15 +19,14 @@ interface Props {
   message: MessageModel;
 }
 
-const MessageItem = ({message}: Props) => {
-
+const MessageItem = ({ message }: Props) => {
   const currentUser = useAppSelector(state => state.user.data);
 
-  if (message.status == "DELETED") {
+  if (message.status === "DELETED") {
     return (
       <TextContent
         key={message.id}
-        message={{...message, type: "TEXT", content: "Tin nhắn đã được xóa"}}
+        message={{ ...message, type: "TEXT", content: "Tin nhắn đã được xóa" }}
       />
     );
   }

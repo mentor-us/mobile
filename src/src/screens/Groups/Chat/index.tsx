@@ -97,33 +97,21 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
   useEffect(() => {
     if (groupDetail) {
       initHeader(groupDetail);
-      console.log("Chat: useEffect: groupDetail", groupId);
 
-      if (!chatState._groupDetail) {
+      if (!chatState._groupDetail || chatState._groupDetail?.id !== groupId) {
         chatState.setGroupDetail(groupDetail);
+
         // Loading 1 page message with react query
-        if (messages && messages.length > 0) {
-          chatState.setInitLoading(false);
-          chatState.setMessageList([...messages]);
-          chatState.setPage(1);
-        } else {
-          chatState.setMessageList([]);
-          chatState.setPage(0);
-        }
       }
+      chatState.setLoadingMoreMessage(false);
 
-      if (chatState._groupDetail?.id !== groupId) {
-        chatState.setGroupDetail(groupDetail);
-
-        // Loading 1 page message with react query
-        if (messages && messages.length > 0) {
-          chatState.setInitLoading(false);
-          chatState.setMessageList([...messages]);
-          chatState.setPage(1);
-        } else {
-          chatState.setMessageList([]);
-          chatState.setPage(0);
-        }
+      if (messages && messages.length > 0) {
+        chatState.setInitLoading(false);
+        chatState.setMessageList([...messages]);
+        chatState.setPage(1);
+      } else {
+        chatState.setMessageList([]);
+        chatState.setPage(0);
       }
     }
   }, [groupDetail, groupId, messages]);
