@@ -95,6 +95,14 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
   // }, [groupId]);
 
   useEffect(() => {
+    chatState.setEditing(false);
+    chatState.setKeyboardVisible(false);
+    chatState.setLoadingMoreMessage(false);
+    chatState.setEnableRichToolbar(false);
+    chatState.setSendable(false);
+  }, []);
+
+  useEffect(() => {
     if (groupDetail) {
       initHeader(groupDetail);
 
@@ -103,7 +111,6 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
 
         // Loading 1 page message with react query
       }
-      chatState.setLoadingMoreMessage(false);
 
       if (messages && messages.length > 0) {
         chatState.setInitLoading(false);
