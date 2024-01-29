@@ -101,8 +101,8 @@ export default class Helper {
     // <div>    </div>
     // <div>&nbsp;</div>
     return htmlInput
-      .replace(/(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+$/g, "")
-      .replace(/^(<div>(\s+|<br>+|((&nbsp;)\s?)+?)<\/div>)+/g, "");
+      .replace(/(<.*>(\s+|<br>+|((&nbsp;)\s?)+?)<\/.*>)+$/g, "")
+      .replace(/^(<.*>(\s+|<br>+|((&nbsp;)\s?)+?)<\/.*>)+/g, "");
   };
 
   static extractTextOnlyFromHTML = (htmlInput?: string): string => {

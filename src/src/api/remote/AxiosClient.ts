@@ -41,7 +41,6 @@ const createAxiosResponseInterceptor = () => {
         axiosClient.interceptors.response.eject(interceptor);
         // Auto Remove Token
         await SecureStore.removeToken().finally(createAxiosResponseInterceptor);
-        
       }
       return Promise.reject(error);
     },

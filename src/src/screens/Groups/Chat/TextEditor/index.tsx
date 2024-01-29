@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
   ScrollView,
@@ -5,7 +6,7 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   actions,
   RichEditor,
@@ -38,9 +39,20 @@ import ReplyAction from "./ReplyAction";
 import LOG from "~/utils/Logger";
 import Helper from "~/utils/Helper";
 import Permission from "~/utils/PermissionStrategies";
+import MentionListPopup from "../MentionListPopup";
+import { GroupMemberModel } from "~/models/group";
+import MessageServices from "~/services/messages";
+import { SecureStore } from "~/api/local/SecureStore";
+
+const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)|^@\w*/gim;
+// const mentionRegex = /(?<=<[^>]*\s|<.*>)@(\w+)(?=\s*<\/.*>|>)/gim;
 
 const TextEditor = () => {
   // const richText = useRef<any>();
+  const [openMention, setOpenMention] = useState<boolean>(false);
+  const [searchMentionName, setSearchMentionName] = useState<string>("");
+  const [mentionList, setMentionList] = useState<string[]>([]);
+
   const state = useChatScreenState();
   const queryAction = useUpdateQueryGroupList();
   const currentUser = useAppSelector(state => state.user.data);
@@ -130,6 +142,29 @@ const TextEditor = () => {
     );
   };
 
+  const setCaretToEnd = () => {
+    const placeCaretAtEnd =
+      'function placeCaretAtEnd(el) {\
+          el.focus();\
+          if (typeof window.getSelection != "undefined"\
+                  && typeof document.createRange != "undefined") {\
+              var range = document.createRange();\
+              range.selectNodeContents(el);\
+              range.collapse(false);\
+              var sel = window.getSelection();\
+              sel.removeAllRanges();\
+              sel.addRange(range);\
+          } else if (typeof document.body.createTextRange != "undefined") {\
+              var textRange = document.body.createTextRange();\
+              textRange.moveToElementText(el);\
+              textRange.collapse(false);\
+              textRange.select();\
+          }\
+      } \
+      placeCaretAtEnd($("#content"))';
+    RichTextRef?.current?.commandDOM(placeCaretAtEnd);
+  };
+
   const onSend = async () => {
     try {
       const htmlContent = await RichTextRef?.current?.getContentHtml();
@@ -148,9 +183,30 @@ const TextEditor = () => {
       state.sendTextMessage(message);
 
       const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
+
       updateLastMessage(
-        `${currentUser.name}: ${message.content?.replace(regex, "")}`,
+        `${currentUser.name}: ${message.content
+          ?.replace(regex, "")
+          ?.replace(/&nbsp;/gim, " ")}`,
       );
+
+      // if (mentionList.length > 0) {
+      //   setTimeout(async () => {
+      //     try {
+      //       await MessageServices.mentionMembers(message.id, mentionList);
+      //     } catch (error) {
+      //       LOG.error(
+      //         `Mention Error. Message ID: ${
+      //           message.id
+      //         }. Members ID: ${mentionList.join(", ")}`,
+      //       );
+      //     } finally {
+      //       setMentionList([]);
+      //       setOpenMention(false);
+      //       setSearchMentionName("");
+      //     }
+      //   }, 1000);
+      // }
 
       RichTextRef?.current?.setContentHTML("");
     } catch (error) {
@@ -179,7 +235,160 @@ const TextEditor = () => {
     }
   };
 
-  const onChangeText = (text: string) => {
+  const mentionBuilder = (member: GroupMemberModel) => {
+    return `<a  class="mention" contenteditable="false" data-user-id="${member.id}">@${member.name}</a><span style="">&nbsp;</span>`;
+  };
+
+  const insertMention = async (member: GroupMemberModel) => {
+    setMentionList(prev => Array.from(new Set([...prev, member.id]).values()));
+    const text = await RichTextRef?.current?.getContentHtml();
+    RichTextRef?.current?.setContentHTML(
+      text?.replace(mentionRegex, mentionBuilder(member)) ?? "",
+    );
+
+    setCaretToEnd();
+  };
+
+  const extractMention = (text: string): string => {
+    const mentionList = text.match(mentionRegex);
+    return mentionList && mentionList.length !== 0 ? mentionList[0] : "";
+  };
+
+  const onChooseMention = async (member: GroupMemberModel) => {
+    await insertMention(member);
+    setOpenMention(false);
+    setSearchMentionName("");
+  };
+
+  const removeMention = () => {
+    console.log("removeMention");
+    const cmd =
+      '\
+    function test() {\
+        var sel = rangy.getSelection(); \
+    console.log("sel.rangeCount", sel.rangeCount);\
+    if (sel.rangeCount === 0) {\
+        return;\
+    }\
+    var selRange = sel.getRangeAt(0);\
+    console.log("selRange.collapsed", selRange.collapsed); \
+    if (!selRange.collapsed) {\
+      return;\
+    }\
+    var element = selRange.startContainer;\
+    console.log("ele", element); \
+    var isMention = element.parentElement.getAttribute("class") === "mention";\
+    console.log("isMention", isMention); \
+    if (isMention) {\
+      element.parentElement.remove();\
+      return;\
+    } \
+    var nonEditable = selRange.startContainer.previousSibling;\
+    if (!nonEditable) {\
+        return;\
+    }\
+    var range = rangy.createRange();\
+    range.collapseAfter(nonEditable);\
+    if (selRange.compareBoundaryPoints(range.START_TO_END, range) == -1) {\
+        return;\
+    }\
+    range.setEnd(selRange.startContainer, selRange.startOffset);\
+    if (range.toString() === "") {\
+        selRange.collapseBefore(nonEditable);\
+        nonEditable.parentNode.removeChild(nonEditable);\
+        sel.setSingleRange(selRange);\
+        \
+        return false;\
+    }\
+      } rangy.init(); test();';
+    // RichTextRef?.current?.commandDOM(cmd);
+    const cmd2 =
+      '\
+      function placeCaretAtEnd(el) {\
+          el.focus();\
+          if (typeof window.getSelection != "undefined"\
+                  && typeof document.createRange != "undefined") {\
+              var range = document.createRange();\
+              range.selectNodeContents(el);\
+              range.collapse(false);\
+              var sel = window.getSelection();\
+              sel.removeAllRanges();\
+              sel.addRange(range);\
+          } else if (typeof document.body.createTextRange != "undefined") {\
+              var textRange = document.body.createTextRange();\
+              textRange.moveToElementText(el);\
+              textRange.collapse(false);\
+              textRange.select();\
+          }\
+      } \
+      function removeFunc() {\
+        var sel = rangy.getSelection(); \
+        if (sel.rangeCount === 0) {\
+            return;\
+        }\
+        var selRange = sel.getRangeAt(0);\
+        if (!selRange.collapsed) {\
+          return;\
+        }\
+        var element = selRange.startContainer;\
+        console.log("ele", element.parentElement); \
+        if (element.parentElement) {\
+          var isMention = element.parentElement.getAttribute("class") === "mention";\
+          console.log(isMention);\
+          if (isMention) {\
+            var parent = element.parentElement;\
+            console.log(parent.textContent);\
+            console.log(parent.parentElement);\
+            placeCaretAtEnd(parent.parentElement);\
+            parent.remove();\
+            return;\
+          } \
+        }\
+        var nonEditable = selRange.startContainer.previousSibling;\
+        if (!nonEditable) {\
+            return;\
+        }\
+        var range = rangy.createRange();\
+        range.collapseAfter(nonEditable);\
+        if (selRange.compareBoundaryPoints(range.START_TO_END, range) == -1) {\
+            return;\
+        }\
+        range.setEnd(selRange.startContainer, selRange.startOffset);\
+        if (range.toString() === "") {\
+            selRange.collapseBefore(nonEditable);\
+            nonEditable.parentNode.removeChild(nonEditable);\
+            sel.setSingleRange(selRange);\
+            return false;\
+        }\
+      }\
+      rangy.init();\
+      removeFunc();';
+    RichTextRef?.current?.commandDOM(cmd2);
+  };
+
+  const onChangeText = async (text: string) => {
+    // LOG.error(Helper.extractTextOnlyFromHTML(text));
+    LOG.debug(TextEditor.name, "onChangeText", text);
+
+    removeMention();
+    if (!text || text === "<div><br></div>") {
+      RichTextRef?.current?.setContentHTML("");
+      // console.log(await RichTextRef?.current?.getContentHtml());
+      setOpenMention(false);
+      setSearchMentionName("");
+      state.setSendable(false);
+      return;
+    }
+
+    const mention = extractMention(text);
+    if (mention) {
+      setOpenMention(true);
+      setSearchMentionName(mention.replace("@", ""));
+    } else if (openMention) {
+      setOpenMention(false);
+      setSearchMentionName("");
+    }
+
     state.setSendable(Boolean(text));
   };
 
@@ -236,65 +445,104 @@ const TextEditor = () => {
     };
   }, [state._groupDetail]);
 
+  const isPrivateGroup = state._groupDetail?.type === "PRIVATE_MESSAGE";
+
   return (
     <Animated.View style={styles.container} layout={CustomLayoutTransition}>
       <ReplyAction />
-      <View style={styles.inputTextContainer}>
-        {/*  */}
-        <View style={[GlobalStyles.horizontalFlexEnd, { maxHeight: 120 }]}>
-          <SizedBox width={4} />
-          {!state.isKeyboardVisible && (
-            <View>
-              <TouchableOpacity onPress={onChooseImage}>
-                <MediaIcon width={30} height={30} />
-              </TouchableOpacity>
-              <SizedBox height={4} />
-            </View>
-          )}
-          <ScrollView
-            style={styles.richEditorCtn}
-            showsVerticalScrollIndicator={false}>
-            <RichEditor
-              testID="chatbox"
-              containerStyle={{ transform: [{ rotate: "180deg" }] }}
-              ref={RichTextRef}
-              onChange={onChangeText}
-              placeholder={"Soạn tin nhắn..."}
-            />
-          </ScrollView>
-          {!state.isKeyboardVisible && <SubmitButton onSend={onSend} />}
-        </View>
 
-        {!state.isKeyboardVisible || state.enableRichToolbar ? (
-          <></>
-        ) : (
-          <Actions
-            onSend={onSend}
+      {/* Member List */}
+      <View>
+        {!isPrivateGroup && (
+          <MentionListPopup
             groupId={state._groupDetail.id}
-            onChooseImage={onChooseImage}
+            searchName={searchMentionName}
+            height={150}
+            isShow={openMention}
+            onChoose={onChooseMention}
           />
         )}
-      </View>
+        <View style={styles.inputTextContainer}>
+          {/*  */}
+          <View style={[GlobalStyles.horizontalCenter, { maxHeight: 120 }]}>
+            <SizedBox width={4} />
+            {!state.isKeyboardVisible && (
+              <View>
+                <TouchableOpacity onPress={onChooseImage}>
+                  <MediaIcon width={30} height={30} />
+                </TouchableOpacity>
+              </View>
+            )}
+            <ScrollView
+              style={styles.richEditorCtn}
+              showsVerticalScrollIndicator={false}>
+              <RichEditor
+                testID="chatbox"
+                editorInitializedCallback={() => {
+                  RichTextRef?.current?.commandDOM(
+                    `\
+                    var script = document.createElement('script');\
+                    script.src="https://cdnjs.cloudflare.com/ajax/libs/rangy/1.3.1/rangy-core.min.js";\
+                    script.integrity="sha512-ZCkgV0SdoJJvBjlkwMpNZFSQzDWtB2ftYwOJQqwQUaXjfVLeUrxIfPMCxSaxVCXfFL82ccmjn6TTbkXjL3w2pA==";
+                    script.crossOrigin="anonymous";\
+                    script.referrerpolicy="no-referrer";\
+                    document.head.appendChild(script);
+                    `,
+                  );
+                }}
+                editorStyle={{
+                  cssText:
+                    "pre { all: initial;} \
+                      .mention {\
+                      display: inline-block;\
+                      color: #0000EE;\
+                      border-radius: 5px;\
+                      padding: 2px 5px;\
+                    }\
+                    .mention:hover {\
+                      background-color: #ccc;\
+                    }",
+                }}
+                containerStyle={{ transform: [{ rotate: "180deg" }] }}
+                ref={RichTextRef}
+                onChange={onChangeText}
+                onBlur={() => setOpenMention(false)}
+                pasteAsPlainText={true}
+                placeholder={"Soạn tin nhắn..."}
+              />
+            </ScrollView>
+            {!state.isKeyboardVisible && <SubmitButton onSend={onSend} />}
+          </View>
 
-      {state.enableRichToolbar && (
-        <View testID="action-chat" style={styles.richToolBarCtn}>
-          <RichToolbar
-            editor={RichTextRef}
-            actions={[
-              actions.setBold,
-              actions.setItalic,
-              actions.setUnderline,
-              actions.insertBulletsList,
-              actions.indent,
-              actions.outdent,
-            ]}
-          />
-          <TouchableOpacity onPress={hideRichToolbar}>
-            <ArrowDownCircleIcon />
-          </TouchableOpacity>
+          {state.isKeyboardVisible && !state.enableRichToolbar && (
+            <Actions
+              onSend={onSend}
+              groupId={state._groupDetail.id}
+              onChooseImage={onChooseImage}
+            />
+          )}
         </View>
-      )}
-      {Platform.OS === "ios" && <SizedBox height={state.keyboardHeight} />}
+
+        {state.enableRichToolbar && (
+          <View testID="action-chat" style={styles.richToolBarCtn}>
+            <RichToolbar
+              editor={RichTextRef}
+              actions={[
+                actions.setBold,
+                actions.setItalic,
+                actions.setUnderline,
+                actions.insertBulletsList,
+                actions.indent,
+                actions.outdent,
+              ]}
+            />
+            <TouchableOpacity onPress={hideRichToolbar}>
+              <ArrowDownCircleIcon />
+            </TouchableOpacity>
+          </View>
+        )}
+        {Platform.OS === "ios" && <SizedBox height={state.keyboardHeight} />}
+      </View>
     </Animated.View>
   );
 };

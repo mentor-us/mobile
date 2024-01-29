@@ -14,6 +14,7 @@ import { GROUP_SAMPLE, GroupModel } from "~/models/group";
 import TextEditor from "./TextEditor";
 import { useAppSelector } from "~/redux";
 import PinnedMessages from "./PinnedMessages";
+import { RichTextRef } from "./TextEditor/index.props";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
 import { useMobxStore } from "~/mobx/store";
@@ -94,35 +95,30 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
   // }, [groupId]);
 
   useEffect(() => {
+    chatState.setEditing(false);
+    chatState.setKeyboardVisible(false);
+    chatState.setLoadingMoreMessage(false);
+    chatState.setEnableRichToolbar(false);
+    chatState.setSendable(false);
+  }, []);
+
+  useEffect(() => {
     if (groupDetail) {
       initHeader(groupDetail);
-      console.log("Chat: useEffect: groupDetail", groupId);
 
-      if (!chatState._groupDetail) {
+      if (!chatState._groupDetail || chatState._groupDetail?.id !== groupId) {
         chatState.setGroupDetail(groupDetail);
+
         // Loading 1 page message with react query
-        if (messages && messages.length > 0) {
-          chatState.setInitLoading(false);
-          chatState.setMessageList([...messages]);
-          chatState.setPage(1);
-        } else {
-          chatState.setMessageList([]);
-          chatState.setPage(0);
-        }
       }
 
-      if (chatState._groupDetail?.id !== groupId) {
-        chatState.setGroupDetail(groupDetail);
-
-        // Loading 1 page message with react query
-        if (messages && messages.length > 0) {
-          chatState.setInitLoading(false);
-          chatState.setMessageList([...messages]);
-          chatState.setPage(1);
-        } else {
-          chatState.setMessageList([]);
-          chatState.setPage(0);
-        }
+      if (messages && messages.length > 0) {
+        chatState.setInitLoading(false);
+        chatState.setMessageList([...messages]);
+        chatState.setPage(1);
+      } else {
+        chatState.setMessageList([]);
+        chatState.setPage(0);
       }
     }
   }, [groupDetail, groupId, messages]);

@@ -1,8 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
+import GroupService from "~/services/group";
 import GroupApi from "~/api/remote/GroupApi";
 import { useReactNavigationQuery } from "~/hooks/useReactNavigationQuery";
 import { GroupModel } from "~/models/group";
-import GroupService from "~/services/group";
+
+export const GetGroupMembersQueryKey = (groupId?: string) => [
+  "group-members",
+  groupId,
+];
+
+export const useGroupMembers = (groupId?: string) =>
+  useQuery({
+    queryKey: GetGroupMembersQueryKey(groupId),
+    queryFn: () => GroupService.getMembers(groupId ?? ""),
+    enabled: !!groupId,
+  });
 
 export const GetGroupDetailQueryKey = (groupId: string) => ["group", groupId];
 

@@ -1,33 +1,33 @@
-import {Image, Text, TouchableOpacity, View} from "react-native";
-import React, {useCallback, useMemo} from "react";
-import {commonStyles, ownerStyle, otherStyle} from "./styles";
-import {DefaultUserAvatar} from "~/assets/images";
-import {useNavigation} from "@react-navigation/native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useMemo } from "react";
+import { commonStyles, ownerStyle, otherStyle } from "./styles";
+import { DefaultUserAvatar } from "~/assets/images";
+import { useNavigation } from "@react-navigation/native";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
-import {Gesture, GestureDetector} from "react-native-gesture-handler";
-import {MessageModel} from "~/models/message";
-import {useAppSelector} from "~/redux";
-import Animated, {withTiming} from "react-native-reanimated";
-import {EntryAnimationsValues} from "react-native-reanimated";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { MessageModel } from "~/models/message";
+import { useAppSelector } from "~/redux";
+import Animated, { withTiming } from "react-native-reanimated";
+import { EntryAnimationsValues } from "react-native-reanimated";
 import TotalEmojiReacted from "~/components/TotalEmojiReacted";
-import {EmoijType} from "~/constants/Emoijs";
+import { EmoijType } from "~/constants/Emoijs";
 import GridThumbnail from "~/components/GridThumbnail";
-import {screenWidth} from "~/constants";
+import { screenWidth } from "~/constants";
 import SizedBox from "~/components/SizedBox";
 import _ from "lodash";
-import {observer} from "mobx-react-lite";
-import {useChatScreenState} from "~/context/chat";
-import {NotiFailed} from "~/assets/svgs";
+import { observer } from "mobx-react-lite";
+import { useChatScreenState } from "~/context/chat";
+import { NotiFailed } from "~/assets/svgs";
 import GroupApi from "~/api/remote/GroupApi";
 
 interface Props {
   message: MessageModel;
 }
 
-const ImageList = ({message}: Props) => {
+const ImageList = ({ message }: Props) => {
   const userData = useAppSelector(state => state.user.data);
   const state = useChatScreenState();
   const navigation = useNavigation();
@@ -43,8 +43,8 @@ const ImageList = ({message}: Props) => {
   const entering = (targetValues: EntryAnimationsValues) => {
     "worklet";
     const animations = {
-      originY: withTiming(targetValues.targetOriginY, {duration: 369}),
-      opacity: withTiming(1, {duration: 369}),
+      originY: withTiming(targetValues.targetOriginY, { duration: 369 }),
+      opacity: withTiming(1, { duration: 369 }),
     };
     const initialValues = {
       originY: 200,
@@ -60,7 +60,7 @@ const ImageList = ({message}: Props) => {
     const groupId = !state._groupDetail.parentId
       ? state._groupDetail.id
       : state._groupDetail.parentId;
-    navigation.navigate("otherProfile", {userId: message.sender.id, groupId});
+    navigation.navigate("otherProfile", { userId: message.sender.id, groupId });
   }, [message.sender.id]);
 
   const reactEmojiAction = (emoji: EmoijType) => {
@@ -86,7 +86,7 @@ const ImageList = ({message}: Props) => {
       message.id,
     );
   };
-  console.log(message)
+
   const editMessage = () => {};
   const pinMessage = async () => {
     const isSuccess = state.addPinnedMessage(message);
@@ -108,7 +108,7 @@ const ImageList = ({message}: Props) => {
     .onStart(e => {
       BottomSheetModalRef.current?.show(
         "emoji_reaction",
-        {...message, totalReaction: message.totalReaction} as MessageModel,
+        { ...message, totalReaction: message.totalReaction } as MessageModel,
         {
           reactEmojiAction: reactEmojiAction,
           deleteEmoji: deleteEmoji,
@@ -135,7 +135,7 @@ const ImageList = ({message}: Props) => {
           <Image
             source={
               message.sender.imageUrl
-                ? {uri: message.sender.imageUrl}
+                ? { uri: message.sender.imageUrl }
                 : DefaultUserAvatar
             }
             style={commonStyles.avatar}
