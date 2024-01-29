@@ -179,12 +179,23 @@ const MyProfile = () => {
             return <InfoItem data={item} key={item.type} />;
           })}
           <View style={styles.infoHeader}>
-            <Text style={styles.infoText}>Liên kết tài khoản</Text>
+            <Text style={styles.infoText}>Liên kết email</Text>
             <TouchableOpacity onPress={editLinkEmail}>
-              <Text style={styles.editText}>Cập nhật email</Text>
+              <Text style={styles.editText}>Thêm email</Text>
             </TouchableOpacity>
           </View>
-          <InfoItem data={{ type: "email", text: myProfile?.personalEmail }} key={"email"} />
+          {myProfile?.additionalEmails && myProfile?.additionalEmails.map((email,index)=>{
+            if(index == 0)
+            return <></>
+            return (
+              <View key={"view_personal_email"+index} >
+                <InfoItem data={{ type: "personal_email", text: myProfile?.additionalEmails? myProfile?.additionalEmails[index] : "" ,userId: myProfile?.id}}  key={"personal_email"+index}/>
+              </View>// <InfoItem data={{ type: "email", text: myProfile?.additionalEmails? myProfile?.additionalEmails[index] : "" }} key={"email"+index} />
+            )
+          })}
+          {/* <View style={[styles.infoHeader,{ }]}>
+            <InfoItem data={{ type: "personal_email", text: "thong",userId: myProfile?.id}} key={"personal_email"} />
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>

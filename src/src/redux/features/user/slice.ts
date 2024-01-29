@@ -14,12 +14,12 @@ const userSlice = createSlice({
   name: "@USER",
   initialState: INITIAL_STATE,
   reducers: {
-    // updateProfile: (
-    //   state: InitialState,
-    //   action: PayloadAction<UserProfileModel>,
-    // ) => {
-    //   state.data = action.payload;
-    // },
+    updateLocalProfile: (
+      state: InitialState,
+      action: PayloadAction<UserProfileModel>,
+    ) => {
+      state.data = action.payload;
+    },
     updateAvatar: (state: InitialState, action: PayloadAction<string>) => {
       return {
         data: {

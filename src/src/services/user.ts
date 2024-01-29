@@ -47,6 +47,19 @@ const UserService = {
       return "Cập nhật email liên kết thất bại!";
     }
   },
+  deleteLinkMail: async (id: string,email: string): Promise<string> => {
+    try {
+      const data : string | undefined  = await UserApi.deleteLinkMail(id,email);
+
+      if (data) {
+        return data;
+      }
+      return "Xóa email thành công";
+    } catch (error) {
+      console.log("SERVIVES_ERROR: ", error);
+      return "Xóa email liên kết thất bại!";
+    }
+  },
 };
 
 export default UserService;

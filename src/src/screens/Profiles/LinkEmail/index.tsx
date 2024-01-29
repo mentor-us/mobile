@@ -16,6 +16,8 @@ import * as yup from "yup";
 import moment from "moment";
 import UserService from "~/services/user";
 import Toast from "react-native-root-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { CurrentUserQueryKey } from "~/app/server/users/queries";
 
 // export interface FormModel {
 //   name: string;
@@ -25,7 +27,7 @@ import Toast from "react-native-root-toast";
 // }
 
 const LinkEmail = () => {
-
+  const queryClient = useQueryClient();
   const schema = yup.object().shape({
     personalEmail: yup.string().email("Email không hợp lệ"),
   });
@@ -44,8 +46,16 @@ const LinkEmail = () => {
     // handle submit
     // UserApi.updateLinkMail(data.id,data.email);
     UserService.updateLinkMail(userData.id,data.personalEmail)
-    .then(res=>{
-      navigation.goBack();
+    .then(async res => {
+      if(navigation.canGoBack())
+      {
+        // call api get 
+        // dispatcher(UserThunks.getCurrentUser());
+        await queryClient.refetchQueries({
+          queryKey: CurrentUserQueryKey,
+        })
+        navigation.goBack();
+      }
       Toast.show(res, {
         position: Toast.positions.BOTTOM
       })
@@ -56,7 +66,7 @@ const LinkEmail = () => {
       })
     })
     .finally(()=>{
-      dispatcher(UserThunks.getCurrentUser());
+      
     })
   };
 
