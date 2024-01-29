@@ -45,7 +45,7 @@ export namespace MentorUsRoutes {
     // Profile
     otherProfile: {userId: string; groupId: string};
     editProfile: undefined;
-
+    linkEmail: undefined;
     // Notification
     notificationList: undefined;
     notificationDetail: {id: string};

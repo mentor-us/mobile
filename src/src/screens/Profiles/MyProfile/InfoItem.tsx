@@ -13,6 +13,11 @@ import {LayoutDimensions} from "~/constants/GlobalStyles";
 import {Color} from "~/constants/Color";
 import isEqual from "react-fast-compare";
 import {InfoItemModel} from "./index.props";
+import UserService from "~/services/user";
+import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-root-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { CurrentUserQueryKey } from "~/app/server/users/queries";
 
 const styles = StyleSheet.create({
   button: {
@@ -21,8 +26,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flexDirection: "row",
+    
     // marginVertical: 8,
     marginBottom: LayoutDimensions.Medium,
+  },
+  containerInfo: {
+    alignItems: "center",
+    flexDirection: "row",
   },
   field: {
     flexShrink: 1,
@@ -48,6 +58,9 @@ const styles = StyleSheet.create({
   textAction: {
     color: Color.green,
   },
+  textActionDelete: {
+    color: Color.red,
+  },
 });
 
 const ITEM_TOOL = {
@@ -62,7 +75,7 @@ const ITEM_TOOL = {
       );
     },
     textAction: "",
-    action: () => {
+    action: (id) => {
       console.log("fullname_action");
     },
   },
@@ -77,7 +90,7 @@ const ITEM_TOOL = {
       );
     },
     textAction: "",
-    action: () => {
+    action: (id) => {
       console.log("year_born_action");
     },
   },
@@ -92,7 +105,7 @@ const ITEM_TOOL = {
       );
     },
     textAction: "",
-    action: async () => {
+    action: async (id) => {
       console.log("phomenumber_action");
       // Linking.openURL(`tel:${text}`);
     },
@@ -107,11 +120,12 @@ const ITEM_TOOL = {
         />
       );
     },
-    textAction: "",
-    action: async () => {
+    textAction: "X",
+    action: async (id = "",email = "") => {
       console.log("email_action");
       // Linking.openURL(`mailto:${data.text}`);
     },
+    
   },
   email: {
     fieldName: "Email",
@@ -135,11 +149,39 @@ interface InfoItemProps {
   data: InfoItemModel;
 }
 
-const InfoItem = ({data: {type, text}}: InfoItemProps) => {
+const InfoItem = ({data: {type, text,userId = ""}}: InfoItemProps) => {
   const Item = ITEM_TOOL[type];
+  const navigation = useNavigation();
+  const queryClient = useQueryClient();
 
+  const handleAction = (id,email)=>{
+    UserService.deleteLinkMail(id,email)
+    .then(async res => {
+      if(navigation.canGoBack())
+      {
+        // call api get 
+        // dispatcher(UserThunks.getCurrentUser());
+        await queryClient.refetchQueries({
+          queryKey: CurrentUserQueryKey,
+        })
+        navigation.goBack();
+      }
+      Toast.show(res, {
+        position: Toast.positions.BOTTOM
+      })
+    })
+    .catch((err)=>{
+      Toast.show(err, {
+        position: Toast.positions.BOTTOM
+      })
+    })
+    .finally(()=>{
+      
+    })
+  }
   return (
-    <View style={styles.container}>
+    <View style={[styles.containerInfo,{justifyContent: "space-between"}]}>
+    <View style={[styles.container,{flex:1}]}>
       <View style={styles.icon}>{Item.renderIcon()}</View>
       <SizedBox width={LayoutDimensions.Medium} />
       <View style={styles.field}>
@@ -150,12 +192,15 @@ const InfoItem = ({data: {type, text}}: InfoItemProps) => {
           <Text style={styles.nullText}>Chưa cập nhật</Text>
         )}
       </View>
-      {Item.textAction && (
-        <TouchableOpacity style={styles.button} onPress={Item.action}>
-          <Text style={styles.textAction}>{Item.textAction}</Text>
-        </TouchableOpacity>
-      )}
+      
     </View>
+    {Item.textAction && (
+      <TouchableOpacity style={styles.button} onPress={type== 'personal_email'? ()=>handleAction(userId,text):()=>Item.action(userId)}>
+        <Text style={type== 'personal_email'? styles.textActionDelete : styles.textAction}>{Item.textAction}</Text>
+      </TouchableOpacity>
+    )}
+    </View>
+
   );
 };
 

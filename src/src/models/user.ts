@@ -16,6 +16,7 @@ export interface UserProfileModel {
   gender: number;
   emailVerified?: boolean;
   wallpaper?: string;
+  additionalEmails?: string[]
 }
 
 export interface ShortProfileUserModel {
