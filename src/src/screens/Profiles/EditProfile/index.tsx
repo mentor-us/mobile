@@ -14,6 +14,8 @@ import UserThunks from "~/redux/features/user/thunk";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import moment from "moment";
+import { useQueryClient } from "@tanstack/react-query";
+import { CurrentUserQueryKey } from "~/app/server/users/queries";
 
 // export interface FormModel {
 //   name: string;
@@ -23,6 +25,7 @@ import moment from "moment";
 // }
 
 const EditProfile = () => {
+  const queryClient = useQueryClient();
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?/;
   const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
@@ -49,13 +52,18 @@ const EditProfile = () => {
   const userData = useAppSelector(state => state.user.data);
   const dispatcher = useAppDispatch();
 
-  const onDone = data => {
+  const onDone =async data => {
     const newProfile: UserProfileModel = {
       ...userData,
       ...data,
       birthDate: Helper.createDate(data.birthDate),
     };
     dispatcher(UserThunks.updateProfile(newProfile));
+    await queryClient.refetchQueries({
+      queryKey: CurrentUserQueryKey,
+    })
+    // Alo Vinh
+    // call get profile
     navigation.goBack();
   };
 
@@ -77,14 +85,14 @@ const EditProfile = () => {
         defaultValue={userData.name}
         errorText={errors.name && `${errors.name?.message}`}
       />
-      <TextInputForm
+      {/* <TextInputForm
         name="personalEmail"
         label="Email cá nhân"
         control={control}
         keyboardType={"email-address"}
         defaultValue={userData.personalEmail}
         errorText={errors.personalEmail && `${errors.personalEmail.message}`}
-      />
+      /> */}
       <TextInputForm
         ref={birthdayRef}
         name="birthDate"

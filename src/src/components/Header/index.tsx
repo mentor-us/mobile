@@ -11,6 +11,7 @@ export const HeaderBackButton: React.FC<HeaderBackButtonProps> = props => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
+      testID="back-button"
       hitSlop={{top: 10, bottom: 10}}
       onPress={() => navigation.goBack()}
       style={styles.headerLeftContainer}>
@@ -57,7 +58,7 @@ export const HeaderEditButton = ({onPress}: HeaderRightProps) => {
 
 export const HeaderSubmitButton = ({onPress}: HeaderRightProps) => {
   return (
-    <TouchableOpacity style={styles.headerRightContainer} onPress={onPress}>
+    <TouchableOpacity testID="submit-btn" style={styles.headerRightContainer} onPress={onPress}>
       <CheckGoodIcon />
     </TouchableOpacity>
   );

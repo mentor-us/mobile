@@ -1,7 +1,8 @@
-import React, {createContext, useContext} from "react";
-import {ChatScreenState} from "@mobx/chat";
+import React, { createContext, useContext } from "react";
+import { ChatScreenState } from "@mobx/chat";
+import { useMobxStore } from "~/mobx/store";
 
-const context = createContext<ChatScreenState | undefined>(undefined);
+const ChatScreenContext = createContext<ChatScreenState | undefined>(undefined);
 
 interface Props {
   children: React.ReactElement;
@@ -11,13 +12,17 @@ interface Props {
 /** Wrap context for global search */
 const ChatScreenProvider: React.FC<Props> = props => {
   return (
-    <context.Provider value={props.state}>{props.children}</context.Provider>
+    <ChatScreenContext.Provider value={props.state}>
+      {props.children}
+    </ChatScreenContext.Provider>
   );
 };
 
 export default ChatScreenProvider;
-export const useChatScreenState = () => {
-  const state = useContext(context);
+
+export const useChatScreenState = (): ChatScreenState => {
+  // const state = useContext(ChatScreenContext);
+  const { chatState: state } = useMobxStore();
 
   return state as ChatScreenState;
 };

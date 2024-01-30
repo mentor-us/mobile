@@ -38,6 +38,7 @@ android/app/release/
 node_modules/
 npm-debug.log
 yarn-error.log
+.yarn/
 
 # BUCK
 buck-out/
@@ -56,6 +57,7 @@ buck-out/
 **/fastlane/Preview.html
 **/fastlane/screenshots
 **/fastlane/test_output
+**/fastlane/readme.md
 
 # Bundle artifact
 *.jsbundle
@@ -64,8 +66,11 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-*.lock
-
-./yarn.lock
+# *.lock
+# ./yarn.lock
 
 .env
+
+mentorus-mobile.json
+
+*.jks

@@ -54,6 +54,7 @@ const Form = () => {
             </View>
             <SizedBox width={16} />
             <MUITextInput
+              testID="name-input"
               label="Tên kênh *"
               keyboardType={"default"}
               value={state.name}
@@ -75,6 +76,7 @@ const Form = () => {
             </View>
             <SizedBox width={16} />
             <MUITextInput
+              testID="description-input"
               label="Mô tả"
               keyboardType={"default"}
               value={state.description}

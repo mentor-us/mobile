@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from "react";
+import React, { memo, useCallback } from "react";
 import equals from "react-fast-compare";
 import {
   ActivityIndicator,
@@ -11,13 +11,16 @@ import {
   ViewStyle,
 } from "react-native";
 import Helper from "~/utils/Helper";
-import {FileModel} from "~/models/media";
-import {images} from "~/assets/images";
-import {Color} from "~/constants/Color";
-import {AttachmentIcon, DownloadIcon} from "~/assets/svgs";
+import { FileModel } from "~/models/media";
+import { images } from "~/assets/images";
+import { Color } from "~/constants/Color";
+import { AttachmentIcon, DownloadIcon } from "~/assets/svgs";
 import ToolApi from "~/api/remote/ToolApi";
-import {styles} from "./styles";
-import {UserProfileModel} from "~/models/user";
+import { styles } from "./styles";
+import { UserProfileModel } from "~/models/user";
+import Toast from "react-native-root-toast";
+import Permission from "~/utils/PermissionStrategies";
+import LOG from "~/utils/Logger";
 
 interface Props {
   file: FileModel;
@@ -27,7 +30,7 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-const {width} = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const ITEM_WIDTH = 0.7 * width;
 
 const FileItem = ({
@@ -37,6 +40,8 @@ const FileItem = ({
   sender,
   onRemove = () => {},
 }: Props) => {
+  const [isDownloading, setIsDownloading] = React.useState(false);
+
   const renderIcon = (fileName: string) => {
     const ext = Helper.getFileExtention(fileName);
 
@@ -83,8 +88,44 @@ const FileItem = ({
   };
 
   const download = useCallback(async () => {
+    setIsDownloading(true);
     // Get today's date to add the time suffix in filename
-    await ToolApi.downloadFile(file.url, file.filename);
+    try {
+      const isHasPermission = await Permission.handleWriteStoragePermission();
+      if (isHasPermission) {
+        Toast.show("Đang tải xuống", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+        await ToolApi.downloadFile(file.url, file.filename).then(() => {
+          Toast.show("Tải file thành công.", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        });
+      } else {
+        Toast.show("Bạn chưa cấp quyền truy cập bộ nhớ", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+      }
+    } catch (error) {
+      LOG.error(File.name, error);
+    } finally {
+      setIsDownloading(false);
+    }
     // await Linking.openURL(
     //   "https://drive.google.com/uc?export=download&id=1gXFeRrveO9fRgnkSIDVWNNLlxkV0iuq_",
     // );
@@ -92,7 +133,7 @@ const FileItem = ({
 
   return (
     <View style={containerStyle}>
-      <View style={[styles.fileItemContainer]}>
+      <View style={styles.fileItemContainer}>
         <View style={styles.rowCtn}>
           {renderIcon(file.filename)}
 
@@ -105,13 +146,18 @@ const FileItem = ({
                 {time}
               </Text>
               <Text numberOfLines={1} style={styles.fileSize}>
-                {Helper.formatFileSize(file.size)} { sender ? " - " + sender.name : ""}
+                {Helper.formatFileSize(file.size)}{" "}
+                {sender ? " - " + sender.name : ""}
               </Text>
             </View>
 
             {file.uploadStatus === "Success" && (
               <TouchableOpacity style={styles.dowloadBtn} onPress={download}>
-                <DownloadIcon />
+                {isDownloading ? (
+                  <ActivityIndicator size={"small"} color={Color.primary} />
+                ) : (
+                  <DownloadIcon />
+                )}
               </TouchableOpacity>
             )}
           </View>

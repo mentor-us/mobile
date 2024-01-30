@@ -90,11 +90,7 @@ const CreateTask: ScreenProps<"createTask"> = ({route}) => {
   }, []);
 
   const headerLeft = useCallback(() => {
-    return state.screenType === "select_assignee" ? (
-      <HeaderLeft onPress={onLeftPress} />
-    ) : (
-      <HeaderCloseButton canGoBack />
-    );
+    return <HeaderCloseButton canGoBack />
   }, [state.screenType]);
 
   // Side Effect

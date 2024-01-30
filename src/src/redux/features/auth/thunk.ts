@@ -36,7 +36,7 @@ const verifyToken = createAsyncThunk(
     const token = await AuthApi.getToken();
     const refreshToken = await AuthApi.getRefreshToken();
 
-    if (token && refreshToken) {
+    if (token) {
       return {
         token,
         refreshToken,
@@ -72,6 +72,9 @@ export const AuthExtraReducer = (
     );
 };
 
+/**
+ * @deprecated will be removed in the future - use 'authStore' instead
+ */
 const AuthThunk = {
   login,
   logout,

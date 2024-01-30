@@ -92,13 +92,13 @@ export default Schedules;
 const Actions: IActionProps[] = [
   {
     text: "Lịch hẹn mới",
-    icon: <CalendarIcon />,
+    icon: <CalendarIcon testID="createMeeting" />,
     color: "white",
     name: "meeting",
   },
   {
     text: "Công việc mới",
-    icon: <TaskListIcon />,
+    icon: <TaskListIcon testID="createTask" />,
     color: "white",
     name: "task",
   },

@@ -29,6 +29,29 @@ const UserApi = {
       const response = await axiosClient.patch(URL, data);
     } catch (error) {
       console.log("@API_USER_updateUser_ERROR: ", error);
+      return error;
+    }
+  },
+  updateLinkMail: async (id : string,email: string) => {
+    try {
+      const URL = `api/users/${id}/email/add`;
+      const response : any = await axiosClient.post(URL, {additionalEmail:email});
+      return response.message
+    } catch (error) {
+      console.log("@API_USER_updateLinkMail_ERROR: ", error);
+      return "Cập nhật email liên kết thất bại!";
+    }
+  },
+  deleteLinkMail: async (id : string,email: string) => {
+    try {
+      const URL = `api/users/${id}/email/remove`;
+      const response : any = await axiosClient.delete(URL,{
+        data: { additionalEmail: email }
+      });
+      return response.message
+    } catch (error) {
+      console.log("@API_USER_updateLinkMail_ERROR: ", error);
+      return "Xóa email liên kết thất bại!";
     }
   },
 };

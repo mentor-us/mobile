@@ -33,6 +33,8 @@ const BottomTab = () => {
         component={ScheduleStack}
         options={{
           tabBarLabel: "Lịch",
+          tabBarAccessibilityLabel: 'scheduleTab',
+          tabBarTestID: 'scheduleTab',
           tabBarIcon: ({focused}) => <ScheduleIcon focused={focused} />,
         }}
       />

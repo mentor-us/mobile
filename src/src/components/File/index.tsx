@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from "react";
+import React, { memo } from "react";
 import equals from "react-fast-compare";
 import {
   ActivityIndicator,
@@ -12,14 +12,17 @@ import {
 } from "react-native";
 
 import Helper from "~/utils/Helper";
-import {FileModel} from "~/models/media";
+import { FileModel } from "~/models/media";
 
 import styles from "./styles";
 
-import {images} from "~/assets/images";
-import {Color} from "~/constants/Color";
-import {AttachmentIcon, DownloadIcon, NotiFailed} from "~/assets/svgs";
+import { images } from "~/assets/images";
+import { Color } from "~/constants/Color";
+import { AttachmentIcon, DownloadIcon, NotiFailed } from "~/assets/svgs";
 import ToolApi from "~/api/remote/ToolApi";
+import Permission from "~/utils/PermissionStrategies";
+import LOG from "~/utils/Logger";
+import Toast from "react-native-root-toast";
 
 interface Props {
   file: FileModel;
@@ -27,10 +30,12 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-const {width} = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const ITEM_WIDTH = 0.7 * width;
 
-const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
+const File = ({ file, containerStyle, onRemove = () => {} }: Props) => {
+  const [isDownloading, setIsDownloading] = React.useState(false);
+
   const renderIcon = (fileName: string) => {
     const ext = Helper.getFileExtention(fileName);
 
@@ -39,7 +44,7 @@ const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
       case "docx":
         return (
           <Image
-            style={{height: 35, width: 31}}
+            style={{ height: 35, width: 31 }}
             resizeMode={"contain"}
             source={images.docx}
           />
@@ -48,7 +53,7 @@ const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
       case "pptx":
         return (
           <Image
-            style={{height: 35, width: 31}}
+            style={{ height: 35, width: 31 }}
             resizeMode={"contain"}
             source={images.ppt}
           />
@@ -57,7 +62,7 @@ const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
       case "xlsx":
         return (
           <Image
-            style={{height: 35, width: 31}}
+            style={{ height: 35, width: 31 }}
             resizeMode={"contain"}
             source={images.excel}
           />
@@ -66,7 +71,7 @@ const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
       case "pdf":
         return (
           <Image
-            style={{height: 35, width: 31}}
+            style={{ height: 35, width: 31 }}
             resizeMode={"contain"}
             source={images.pdf}
           />
@@ -76,13 +81,50 @@ const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
     }
   };
 
-  const download = useCallback(async () => {
-    await ToolApi.downloadFile(file.url, file.filename);
-  }, [file.url]);
+  const download = async () => {
+    try {
+      setIsDownloading(true);
+
+      const isHasPermission = await Permission.handleWriteStoragePermission();
+      if (isHasPermission) {
+        Toast.show("Đang tải xuống", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+        await ToolApi.downloadFile(file.url, file.filename).then(() => {
+          Toast.show("Tải file thành công.", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        });
+      } else {
+        Toast.show("Bạn chưa cấp quyền truy cập bộ nhớ", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+      }
+    } catch (error) {
+      LOG.error(File.name, error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <View style={containerStyle}>
-      <View style={[styles.fileItemContainer, {width: ITEM_WIDTH}]}>
+      <View style={[styles.fileItemContainer, { width: ITEM_WIDTH }]}>
         <View style={styles.rowCtn}>
           {renderIcon(file.filename)}
 
@@ -97,8 +139,15 @@ const File = ({file, containerStyle, onRemove = () => {}}: Props) => {
             </View>
 
             {file.uploadStatus === "Success" && (
-              <TouchableOpacity style={styles.dowloadBtn} onPress={download}>
-                <DownloadIcon />
+              <TouchableOpacity
+                style={styles.downloadBtn}
+                disabled={isDownloading}
+                onPress={download}>
+                {isDownloading ? (
+                  <ActivityIndicator size={"small"} color={Color.primary} />
+                ) : (
+                  <DownloadIcon />
+                )}
               </TouchableOpacity>
             )}
           </View>

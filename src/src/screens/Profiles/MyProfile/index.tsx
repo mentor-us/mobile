@@ -4,112 +4,152 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
+  FlatList,
 } from "react-native";
 
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {DefaultUserAvatar, DefaultWallPaperGroup} from "~/assets/images";
-import styles, {AVATAR_SIZE} from "./styles";
-import {CameraIcon} from "~/assets/svgs";
-import GlobalStyles from "~/constants/GlobalStyles";
+import React, { useEffect, useMemo, useState } from "react";
+import { DefaultUserAvatar, DefaultWallPaperGroup } from "~/assets/images";
+import styles, { AVATAR_SIZE } from "./styles";
+import { CameraIcon } from "~/assets/svgs";
+import GlobalStyles, { LayoutDimensions } from "~/constants/GlobalStyles";
 import InfoItem from "./InfoItem";
-import {InfoItemModel} from "./index.props";
+import { InfoItemModel } from "./index.props";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
-import {StackNavigationOptions} from "@react-navigation/stack";
-import {useAppDispatch, useAppSelector} from "~/redux";
-import AuthThunk from "~/redux/features/auth/thunk";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationOptions } from "@react-navigation/stack";
+import { useAppDispatch } from "~/redux";
 import Helper from "~/utils/Helper";
-import {HeaderRight} from "~/components/Header";
+import { HeaderRight } from "~/components/Header";
 import NotificationApi from "~/api/remote/NotificationApi";
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
-import {StorageMediaAttachemt} from "~/models/media";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { StorageMediaAttachemt } from "~/models/media";
 import ToolApi from "~/api/remote/ToolApi";
-import {UserActions} from "~/redux/features/user/slice";
-import {handleReadStoragePermission} from "~/utils/Permission";
+import { UserActions } from "~/redux/features/user/slice";
 import SingleThumbnail from "~/components/SingleThumbnail";
-import {screenWidth} from "~/constants";
+import { screenWidth } from "~/constants";
+import { SecureStore } from "~/api/local/SecureStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "~/app/server/users/queries";
+import Permission from "~/utils/PermissionStrategies";
+import { observer } from "mobx-react-lite";
+import { useMobxStore } from "~/mobx/store";
+import MUITextInput from "~/components/MUITextInput";
 
 const MyProfile = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { authStore } = useMobxStore();
   const navigation = useNavigation();
   const dispatcher = useAppDispatch();
-  const currentUser = useAppSelector(state => state.user.data);
+  const queryClient = useQueryClient();
   const [loadingWallpaper, setLoadingWallpaper] = useState<boolean>(false);
   const [loadingAvatar, setLoadingAvatar] = useState<boolean>(false);
 
+  const { data: myProfile } = useCurrentUser();
+
   const infoItems: InfoItemModel[] = useMemo(() => {
+    if (!myProfile) return [] as InfoItemModel[];
+
     return [
-      {type: "fullname", text: currentUser.name},
-      {type: "email", text: currentUser.email},
-      {type: "personal_email", text: currentUser.personalEmail},
-      {type: "year_born", text: Helper.formatDate(currentUser.birthDate)},
-      {type: "phomenumber", text: currentUser.phone},
+      { type: "fullname", text: myProfile?.name },
+      { type: "email", text: myProfile?.email },
+      // { type: "personal_email", text: myProfile?.personalEmail },
+      {
+        type: "year_born",
+        text: Helper.formatDate(myProfile?.birthDate ?? ""),
+      },
+      { type: "phomenumber", text: myProfile?.phone },
     ] as InfoItemModel[];
-  }, [currentUser]);
+  }, [myProfile]);
 
-  const logout = useCallback(async () => {
-    await NotificationApi.updateToken(currentUser.id, "");
-    dispatcher(AuthThunk.logout());
-  }, []);
+  const logout = async () => {
+    if (myProfile) {
+      await NotificationApi.updateToken(myProfile.id, "");
+    }
 
-  const editProfile = useCallback(() => {
-    navigation.navigate("editProfile");
-  }, []);
+    /**
+     * @author Dqvinh - MailEdu: <dqvinh20@clc.fitus.edu.vn> Personal: <duongquangvinh2210@gmail.com>
+     */
+    await SecureStore.removeToken();
+    authStore.signOut();
+    queryClient.clear();
+  };
 
-  const renderLogoutButton = useCallback(() => {
-    return <HeaderRight onPress={logout} text={"Đăng xuất"} />;
-  }, []);
+  const editProfile = () => navigation.navigate("editProfile");
+  const editLinkEmail = () => navigation.navigate("linkEmail");
 
   const updateAvatar = async () => {
-    try {
-      setLoadingAvatar(true);
-      const hasPermission = await handleReadStoragePermission();
-      if (hasPermission) {
-        BottomSheetModalRef.current?.show("gallery", false, {
-          run: async (image: StorageMediaAttachemt) => {
-            const data = await ToolApi.updateAvatar(image);
-            if (data) {
-              dispatcher(UserActions.updateAvatar(data));
-            }
-            setLoadingAvatar(false);
-          },
-          cancel: () => {
-            setLoadingAvatar(false);
-          },
-        });
-      }
-    } catch (error) {
-      console.log("@ERROR_PERMISSION: handleReadStoragePermission");
+    setLoadingAvatar(true);
+    const hasPermission = await Permission.handleReadStoragePermission();
+    if (hasPermission) {
+      BottomSheetModalRef.current?.show("gallery", false, {
+        run: async (image: StorageMediaAttachemt) => {
+          const data = await ToolApi.updateAvatar(image);
+          if (data) {
+            dispatcher(UserActions.updateAvatar(data));
+          }
+          setLoadingAvatar(false);
+        },
+        cancel: () => {
+          setLoadingAvatar(false);
+        },
+      });
     }
   };
 
   const updateWallpaper = async () => {
-    try {
-      setLoadingWallpaper(true);
-      const hasPermission = await handleReadStoragePermission();
-      if (hasPermission) {
-        BottomSheetModalRef.current?.show("gallery", false, {
-          run: async (image: StorageMediaAttachemt) => {
-            const data = await ToolApi.updateWallpaper(image);
-            if (data) {
-              dispatcher(UserActions.updateWallpaper(data));
-            }
-            setLoadingWallpaper(false);
-          },
-          cancel: () => {
-            setLoadingWallpaper(false);
-          },
-        });
-      }
-    } catch (error) {
-      console.log("@ERROR_PERMISSION: handleReadStoragePermission");
+    setLoadingWallpaper(true);
+    const hasPermission = await Permission.handleReadStoragePermission();
+    if (hasPermission) {
+      BottomSheetModalRef.current?.show("gallery", false, {
+        run: async (image: StorageMediaAttachemt) => {
+          const data = await ToolApi.updateWallpaper(image);
+          if (data) {
+            dispatcher(UserActions.updateWallpaper(data));
+          }
+          setLoadingWallpaper(false);
+        },
+        cancel: () => {
+          setLoadingWallpaper(false);
+        },
+      });
     }
   };
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: renderLogoutButton,
+      headerRight: () => <HeaderRight onPress={logout} text={"Đăng xuất"} />,
     } as Partial<StackNavigationOptions>);
   }, []);
+
+  if (!myProfile) {
+    return null;
+  }
+
+  const viewPersonalEmails = () => {
+    const listData: any =
+      myProfile?.additionalEmails?.map((email, index) => {
+        return {
+          type: "personal_email",
+          text: email ?? "",
+          userId: myProfile?.id,
+          key: "view_personal_email" + index,
+        };
+      }) ?? [];
+
+    return (
+      <View
+        style={{
+          paddingVertical: 8,
+        }}>
+        <FlatList
+          data={listData}
+          renderItem={({ item }) => {
+            return <InfoItem data={item} />;
+          }}
+        />
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -121,7 +161,7 @@ const MyProfile = () => {
               style={styles.coverphoto}
               media={{
                 type: "IMAGE",
-                url: currentUser.wallpaper,
+                url: myProfile.wallpaper,
                 assetLocal: DefaultWallPaperGroup,
                 isLoading: loadingWallpaper,
               }}
@@ -140,7 +180,7 @@ const MyProfile = () => {
               <SingleThumbnail
                 media={{
                   type: "IMAGE",
-                  url: currentUser.imageUrl,
+                  url: myProfile.imageUrl,
                   assetLocal: DefaultUserAvatar,
                   isLoading: loadingAvatar,
                 }}
@@ -153,7 +193,7 @@ const MyProfile = () => {
             </TouchableOpacity>
           </View>
         </View>
-        {/* Infor */}
+        {/* Info */}
         <View style={styles.infoCtn}>
           <View style={styles.infoHeader}>
             <Text style={styles.infoText}>Thông tin của bạn</Text>
@@ -161,14 +201,26 @@ const MyProfile = () => {
               <Text style={styles.editText}>Cập nhật</Text>
             </TouchableOpacity>
           </View>
-          <SizedBox height={8} />
+          <SizedBox height={LayoutDimensions.Small} />
           {infoItems.map(item => {
             return <InfoItem data={item} key={item.type} />;
           })}
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Liên kết email</Text>
+            <TouchableOpacity onPress={editLinkEmail}>
+              <Text style={styles.editText}>Thêm email</Text>
+            </TouchableOpacity>
+          </View>
+
+          {myProfile?.additionalEmails && viewPersonalEmails()}
+
+          {/* <View style={[styles.infoHeader,{ }]}>
+            <InfoItem data={{ type: "personal_email", text: "thong",userId: myProfile?.id}} key={"personal_email"} />
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default MyProfile;
+export default observer(MyProfile);

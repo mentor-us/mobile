@@ -1,108 +1,100 @@
-import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "~/redux";
+import React, { useEffect } from "react";
 import AuthorizedStack from "./Authorized";
 import UnAuthorizedStack from "./UnAuthorized";
-import AuthThunk from "~/redux/features/auth/thunk";
-import {View, StyleSheet, ActivityIndicator, StatusBar} from "react-native";
-import {Color} from "~/constants/Color";
-import UserThunks from "~/redux/features/user/thunk";
-import {AuthApi} from "~/api/local";
-import EventThunk from "~/redux/features/event/thunk";
-import {useQueryGroupList} from "~/screens/Home/queries";
-import {NavigationContainer} from "@react-navigation/native";
-import {Deeplink, config, config_auth} from "~/utils/Deeplink";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { Color } from "~/constants/Color";
+import { NavigationContainer } from "@react-navigation/native";
+import { Deeplink, config, config_auth } from "~/utils/Deeplink";
 import BottomSheetModal from "~/components/BottomSheetModal";
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
-
-interface Props {
-  onNavigationContainerReady: () => void;
-}
-
-const RootNavigator = ({onNavigationContainerReady}: Props) => {
-  const {tokenStatus, token} = useAppSelector(state => state.auth);
-  const dispatcher = useAppDispatch();
-  const data = useQueryGroupList();
-
-  useEffect(() => {
-    if (tokenStatus == "verifying") {
-      dispatcher(AuthThunk.verifyToken());
-    }
-  }, [tokenStatus]);
-
-  useEffect(() => {
-    if (tokenStatus === "actived") {
-      // console.log("@TOKEN: ", token);
-      dispatcher(UserThunks.getCurrentUser());
-    }
-  }, [tokenStatus]);
-
-  const updateToken = async (token: string) => {
-    await AuthApi.saveToken(token);
-  };
-
-  const refresh = async () => {
-    await dispatcher(UserThunks.getCurrentUser());
-    await updateToken(token);
-    await dispatcher(EventThunk.fetchEvent());
-    data.refetch();
-  };
-
-  useEffect(() => {
-    if (token) {
-      refresh();
-    }
-  }, [token]);
-
-  console.log("@DUKE:   render");
-
-  switch (tokenStatus) {
-    case "actived":
-      return (
-        <NavigationContainer
-          onReady={onNavigationContainerReady}
-          linking={{...Deeplink, config: config_auth}}>
-          <StatusBar
-            animated={true}
-            backgroundColor={Color.primary}
-            showHideTransition={"fade"}
-            barStyle={"light-content"}
-            hidden={false}
-          />
-          <AuthorizedStack />
-          <BottomSheetModal ref={BottomSheetModalRef} />
-        </NavigationContainer>
-      );
-    case "inactived":
-      return (
-        <NavigationContainer
-          onReady={onNavigationContainerReady}
-          linking={{...Deeplink, config: config}}>
-          <StatusBar
-            animated={true}
-            backgroundColor={Color.primary}
-            showHideTransition={"fade"}
-            barStyle={"light-content"}
-            hidden={false}
-          />
-          <UnAuthorizedStack />
-          <BottomSheetModal ref={BottomSheetModalRef} />
-        </NavigationContainer>
-      );
-    default:
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator size={"large"} color={Color.primary} />
-        </View>
-      );
-  }
-};
-
-export default RootNavigator;
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { useCurrentUser } from "~/app/server/users/queries";
+import { AxiosError } from "axios";
+import { useNetInfo } from "@react-native-community/netinfo";
+import RNBootSplash from "react-native-bootsplash";
+import { observer } from "mobx-react-lite";
+import { useMobxStore } from "~/mobx/store";
+import { SecureStore } from "~/api/local/SecureStore";
+import LOG from "~/utils/Logger";
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
   },
 });
+
+const LoadingFullSreen = () => {
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size={"large"} color={Color.primary} />
+    </View>
+  );
+};
+
+const RootNavigator = () => {
+  const { refetch } = useCurrentUser();
+  const { authStore } = useMobxStore();
+  const { isConnected } = useNetInfo();
+
+  useEffect(() => {
+    const bootstrapAsync = async () => {
+      const userToken = await SecureStore.getToken();
+      if (isConnected === false) {
+        authStore.setError("Mất kết nối mạng");
+        return;
+      }
+
+      if (userToken) {
+        // Check token is valid or not, expired or not
+        const res = await refetch();
+        if (res.isError && res.error instanceof AxiosError) {
+          const resStatus = res.error.response?.status;
+          if (resStatus === 401) {
+            authStore.restoreToken(null);
+            authStore.setError("Phiên đăng nhập đã hết hạn");
+            return;
+          }
+        }
+      }
+
+      // Save token to store
+      authStore.setError(null);
+      authStore.restoreToken(
+        !userToken || userToken.length === 0 ? null : userToken,
+      );
+    };
+
+    bootstrapAsync().finally(async () => {
+      // Hide splash screen after token is restored
+      await RNBootSplash.hide({ fade: true, duration: 500 });
+    });
+  }, []);
+
+  if (authStore.isLoading) {
+    return <LoadingFullSreen />;
+  }
+
+  const navigationLinking = {
+    ...Deeplink,
+    config: authStore.userToken === null ? config : config_auth,
+  };
+
+  return (
+    <NavigationContainer
+      onReady={() => RNBootSplash.hide()}
+      linking={navigationLinking}
+      fallback={<LoadingFullSreen />}>
+      {!authStore.userToken  ? (
+        <UnAuthorizedStack />
+      ) : (
+        <>
+          <AuthorizedStack />
+          <BottomSheetModal ref={BottomSheetModalRef} />
+        </>
+      )}
+    </NavigationContainer>
+  );
+};
+
+export default observer(RootNavigator);

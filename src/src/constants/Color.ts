@@ -10,6 +10,7 @@ export const Color = {
   white: "#fff",
   black: "#000",
   messageChat: "#333",
+  mentionListBackground: "#f5faff",
   online: "#00FF00",
   offline: "#CCCCCC",
   transparent: "transparent",

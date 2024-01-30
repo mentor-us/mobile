@@ -1,5 +1,5 @@
-import {AxiosError, AxiosResponse} from "axios";
-import {GroupModel, GROUP_SAMPLE} from "~/models/group";
+import { AxiosError, AxiosResponse } from "axios";
+import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import axiosClient from "./AxiosClient";
 
 const GroupApi = {
@@ -180,6 +180,20 @@ const GroupApi = {
     } catch (error) {
       console.log("@API_GROUP_ERRO: Add new channel", error);
       return [];
+    }
+  },
+  getPinnedMessages: async (groupDetail: string) => {
+    try {
+      const URL = `/api/groups/${groupDetail}/detail`;
+
+      const response: AxiosResponse = await axiosClient.get<GroupModel>(URL);
+      console.log("pinnedMessages", response.data.pinnedMessages);
+      if (response.data.pinnedMessages.length > 0) {
+        console.log("pinnedMessages", response.data.pinnedMessages);
+        return response.data.pinnedMessages;
+      } else return [];
+    } catch (error) {
+      return GROUP_SAMPLE;
     }
   },
 };

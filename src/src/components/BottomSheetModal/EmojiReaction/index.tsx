@@ -1,34 +1,37 @@
-import {Image, Text, TouchableOpacity, View} from "react-native";
-import React, {memo, useMemo} from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { memo, useMemo } from "react";
 import TextFormatRenderer from "~/components/TextFormatRenderer";
-import {commonStyles, ownerStyle, otherStyle} from "./styles";
+import { commonStyles, ownerStyle, otherStyle } from "./styles";
 import equals from "react-fast-compare";
-import {DefaultUserAvatar} from "~/assets/images";
+import { DefaultUserAvatar } from "~/assets/images";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import {MessageModel, ReplyMessageModel} from "~/models/message";
-import {useAppSelector} from "~/redux";
+import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
+import { useAppSelector } from "~/redux";
 import EmojisPane from "~/components/EmoijsPane";
-import {EmoijType} from "~/constants/Emoijs";
-import {BottomSheetModalRef} from "../index.props";
+import { EmoijType } from "~/constants/Emoijs";
+import { BottomSheetModalRef } from "../index.props";
 import MessageApi from "~/api/remote/MessagesApi";
 import {
   CopyToClipboardIcon,
+  ForwardMessageIcon,
   GarbageIcon,
   PencilEditOffice,
   PinMessageIcon,
   ReplyIcon,
 } from "~/assets/svgs";
-import {RichTextRef} from "~/screens/Groups/Chat/TextEditor/index.props";
+import { RichTextRef } from "~/screens/Groups/Chat/TextEditor/index.props";
 import Clipboard from "@react-native-clipboard/clipboard";
+import Toast from "react-native-root-toast";
+import { ToastMessage } from "~/constants/ToastMessage";
 
 interface Props {
   message: MessageModel;
   action: any;
 }
 
-const EmojiReation = ({message, action}: Props) => {
+const EmojiReation = ({ message, action }: Props) => {
   const userId = useAppSelector(state => state.user.data.id);
   const isOwner = useMemo(() => {
     return userId === message.sender.id;
@@ -73,7 +76,7 @@ const EmojiReation = ({message, action}: Props) => {
   const onEditMessage = async () => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
-    RichTextRef?.current?.setContentHTML(message.content);
+    RichTextRef?.current?.setContentHTML(message.content??"");
     RichTextRef?.current?.focusContentEditor();
   };
 
@@ -91,13 +94,27 @@ const EmojiReation = ({message, action}: Props) => {
     BottomSheetModalRef.current?.hide();
     RichTextRef?.current?.focusContentEditor();
   };
-
-  const onCopy = () => {
-    const value: string = message.content
-      ? message.content.replace("<div>", "").replace("</div>", "")
-      : "";
-    Clipboard.setString(value);
+  const onForwardMessage = async () => {
+    action.forwardMessage({
+      id: message.id,
+      content: message.content,
+      type: message.type,
+      images: message.images
+    } as ForwardMessageModel);
     BottomSheetModalRef.current?.hide();
+    // RichTextRef?.current?.focusContentEditor();
+  };
+  const onCopy = () => {
+    // Copy Text only
+    Clipboard.setString(Helper.extractTextOnlyFromHTML(message.content));
+
+    BottomSheetModalRef.current?.hide();
+
+    // Show toast for user know
+    Toast.show(ToastMessage.copyToClipboard, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+    });
   };
 
   return (
@@ -108,7 +125,7 @@ const EmojiReation = ({message, action}: Props) => {
             <Image
               source={
                 message.sender.imageUrl
-                  ? {uri: message.sender.imageUrl}
+                  ? { uri: message.sender.imageUrl }
                   : DefaultUserAvatar
               }
               style={commonStyles.avatar}
@@ -145,6 +162,7 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.editMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="edit-icon"
                 onPress={onEditMessage}>
                 <PencilEditOffice width={24} height={24} />
               </TouchableOpacity>
@@ -153,6 +171,7 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.deleteMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="delete-icon"
                 onPress={onDeleteMessage}>
                 <GarbageIcon width={24} height={24} />
               </TouchableOpacity>
@@ -161,24 +180,34 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.pinMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="pin-icon"
                 onPress={onPinMessage}>
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            <TouchableOpacity
+              style={commonStyles.actionButton}
+              testID="copy-icon"
+              onPress={onCopy}>
+              <CopyToClipboardIcon width={24} height={24} />
+            </TouchableOpacity>
             {action?.replyMessage && (
               <TouchableOpacity
-                style={commonStyles.actionButton}
-                onPress={onCopy}>
-                <CopyToClipboardIcon width={24} height={24} />
-              </TouchableOpacity>
-            )}
-            {action?.replyMessage && (
-              <TouchableOpacity
+                testID="reply-icon"
                 style={commonStyles.actionButton}
                 onPress={onReplyMessage}>
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            {
+              message.type=='TEXT' &&
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                  <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       ) : (
@@ -187,24 +216,34 @@ const EmojiReation = ({message, action}: Props) => {
             {action?.pinMessage && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
+                testID="pin-icon"
                 onPress={onPinMessage}>
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            <TouchableOpacity
+              testID="copy-icon"
+              style={commonStyles.actionButton}
+              onPress={onCopy}>
+              <CopyToClipboardIcon width={24} height={24} />
+            </TouchableOpacity>
             {action?.replyMessage && (
               <TouchableOpacity
-                style={commonStyles.actionButton}
-                onPress={onCopy}>
-                <CopyToClipboardIcon width={24} height={24} />
-              </TouchableOpacity>
-            )}
-            {action?.replyMessage && (
-              <TouchableOpacity
+                testID="reply-icon"
                 style={commonStyles.actionButton}
                 onPress={onReplyMessage}>
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
+            {
+              message.type=='TEXT' &&
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                  <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       )}

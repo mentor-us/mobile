@@ -1,5 +1,5 @@
-import React, {createContext, useContext} from "react";
-import {CreateMeetingScreenState} from "~/mobx/meeting";
+import React, { createContext, useContext } from "react";
+import { CreateMeetingScreenState } from "~/mobx/meeting";
 
 interface Props {
   children: React.ReactElement;

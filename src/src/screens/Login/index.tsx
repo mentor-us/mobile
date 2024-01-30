@@ -1,33 +1,55 @@
-import {View, Text, Linking} from "react-native";
-import React, {useEffect, useState} from "react";
+import { View, Text, Linking } from "react-native";
+import React, { useEffect, useState } from "react";
 import styles from "./styles";
-import {LogoApp} from "~/assets/svgs";
+import { LogoApp } from "~/assets/svgs";
 import LoginButton from "~/components/LoginButton";
-import {useRoute} from "@react-navigation/native";
-import {useAppDispatch} from "~/redux";
-import {ScreenProps} from "~/types/navigation";
-import {LinkAuthorize} from "~/constants";
-import AuthThunk from "~/redux/features/auth/thunk";
-import {TOKEN, BASE_URL} from "@env";
-import {Snackbar} from "react-native-paper";
+import { useRoute } from "@react-navigation/native";
+import { ScreenProps } from "~/types/navigation";
+import { LinkAuthorize } from "~/constants";
+import { BASE_URL, TOKEN as TEST_TOKEN } from "@env";
+import { Snackbar } from "react-native-paper";
+import LOG from "~/utils/Logger";
+import { SecureStore } from "~/api/local/SecureStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { CurrentUserQueryKey } from "~/app/server/users/queries";
+import { useMobxStore } from "~/mobx/store";
+import { observer } from "mobx-react-lite";
 
-const Login: ScreenProps<"loginScreen"> = () => {
+interface LoginRouteParamsProps extends Readonly<object> {
+  token?: string;
+  emailVerified?: boolean;
+  error?: string;
+  refreshToken?: string;
+}
+
+const LoginScreen: ScreenProps<"loginScreen"> = () => {
+  const { authStore } = useMobxStore();
   const route = useRoute();
-  const dispatcher = useAppDispatch();
-
   const [snackBar, setSnackBar] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>(TOKEN);
+  const [message, setMessage] = useState<string>("");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const {token, emailVerified, error, refreshToken}: any = route.params || {
-      token: "",
-      emailVerified: false,
-      refreshToken: "",
-      error: null,
+    const login = async (token: string) => {
+      await SecureStore.saveToken(token);
+      await queryClient.invalidateQueries({
+        queryKey: CurrentUserQueryKey,
+        exact: true,
+      });
+      authStore.signIn(token);
     };
 
-    // console.log("@DUKE: LOGIN: ", error, token);
+    if (!route.params) {
+      return;
+    }
 
+    // WARNING: BUA - TOKEN PHAI CON HAN
+    if (TEST_TOKEN && __DEV__) {
+      login(TEST_TOKEN);
+      return;
+    }
+
+    const { token, error }: LoginRouteParamsProps = route.params as object;
     if (error) {
       switch (error) {
         case "704":
@@ -43,23 +65,25 @@ const Login: ScreenProps<"loginScreen"> = () => {
       return;
     }
 
-    if (!token) {
-      return;
-    }
-
     if (token) {
-      dispatcher(
-        AuthThunk.login({token, refreshToken, tokenStatus: "actived"}),
-      );
+      login(token);
     }
   }, [route.params]);
+
+  useEffect(() => {
+    if (authStore.error) {
+      setMessage(authStore.error);
+      setSnackBar(true);
+      authStore.setError(null);
+    }
+  }, [authStore.error]);
 
   const onPressLogin = async (link: string) => {
     const formatLink = link.replace(/\s/g, "");
     try {
       await Linking.openURL(formatLink);
     } catch {
-      console.log("Cannot open url: ", formatLink);
+      LOG.error(LoginScreen.name, "Cannot open url: " + formatLink);
     }
   };
 
@@ -70,10 +94,8 @@ const Login: ScreenProps<"loginScreen"> = () => {
       <View style={styles.bannerContainer}>
         <LogoApp width={200} height={200} />
       </View>
-
       <View style={styles.mainBody}>
         <Text style={styles.welcomeText}>MentorUS</Text>
-
         <View style={styles.loginOptionsContainer}>
           {/* Login with Google */}
           <LoginButton
@@ -81,6 +103,7 @@ const Login: ScreenProps<"loginScreen"> = () => {
             onPress={() => onPressLogin(LinkAuthorize.google)}
           />
           <Text>hoặc</Text>
+
           {/* Login with Microsoft 365 */}
           <LoginButton
             type="microsoft"
@@ -104,4 +127,4 @@ const Login: ScreenProps<"loginScreen"> = () => {
   );
 };
 
-export default Login;
+export default observer(LoginScreen);
