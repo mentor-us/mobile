@@ -1,17 +1,17 @@
-import {Alert, Keyboard, Text, View} from "react-native";
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useNavigation} from "@react-navigation/native";
-import {StackNavigationOptions} from "@react-navigation/stack";
-import {HeaderRight, HeaderSubmitButton} from "~/components/Header";
+import { Alert, Keyboard, Text, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationOptions } from "@react-navigation/stack";
+import { HeaderRight, HeaderSubmitButton } from "~/components/Header";
 import styles from "./styles";
 import TextInputForm from "~/components/TextInputForm";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import DatePicker from "react-native-date-picker";
 import Helper from "~/utils/Helper";
-import {useAppDispatch, useAppSelector} from "~/redux";
-import {UserProfileModel} from "~/models/user";
+import { useAppDispatch, useAppSelector } from "~/redux";
+import { UserProfileModel } from "~/models/user";
 import UserThunks from "~/redux/features/user/thunk";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import moment from "moment";
 import UserService from "~/services/user";
@@ -36,8 +36,8 @@ const LinkEmail = () => {
   const {
     control,
     handleSubmit,
-    formState: {errors},
-  } = useForm({resolver: yupResolver(schema)});
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
 
   const userData = useAppSelector(state => state.user.data);
   const dispatcher = useAppDispatch();
@@ -45,29 +45,26 @@ const LinkEmail = () => {
   const onDone = data => {
     // handle submit
     // UserApi.updateLinkMail(data.id,data.email);
-    UserService.updateLinkMail(userData.id,data.personalEmail)
-    .then(async res => {
-      if(navigation.canGoBack())
-      {
-        // call api get 
-        // dispatcher(UserThunks.getCurrentUser());
+    UserService.updateLinkMail(userData.id, data.personalEmail)
+      .then(async res => {
+        if (navigation.canGoBack()) {
+          // call api get
+          // dispatcher(UserThunks.getCurrentUser());
+          navigation.goBack();
+        }
         await queryClient.refetchQueries({
           queryKey: CurrentUserQueryKey,
-        })
-        navigation.goBack();
-      }
-      Toast.show(res, {
-        position: Toast.positions.BOTTOM
+        });
+        Toast.show("Liên kết email thành công", {
+          position: Toast.positions.BOTTOM,
+        });
       })
-    })
-    .catch((err)=>{
-      Toast.show(err, {
-        position: Toast.positions.BOTTOM
+      .catch(err => {
+        Toast.show("Liên kết email thất bại", {
+          position: Toast.positions.BOTTOM,
+        });
       })
-    })
-    .finally(()=>{
-      
-    })
+      .finally(() => {});
   };
 
   const headerRight = useCallback(() => {
@@ -75,7 +72,7 @@ const LinkEmail = () => {
   }, []);
 
   useEffect(() => {
-    navigation.setOptions({headerRight} as StackNavigationOptions);
+    navigation.setOptions({ headerRight } as StackNavigationOptions);
   });
 
   return (
@@ -88,7 +85,6 @@ const LinkEmail = () => {
         defaultValue={userData.personalEmail}
         errorText={errors.personalEmail && `${errors.personalEmail.message}`}
       />
-      
     </View>
   );
 };

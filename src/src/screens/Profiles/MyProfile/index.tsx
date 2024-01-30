@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
+  FlatList,
 } from "react-native";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -124,6 +125,32 @@ const MyProfile = () => {
     return null;
   }
 
+  const viewPersonalEmails = () => {
+    const listData: any =
+      myProfile?.additionalEmails?.map((email, index) => {
+        return {
+          type: "personal_email",
+          text: email ?? "",
+          userId: myProfile?.id,
+          key: "view_personal_email" + index,
+        };
+      }) ?? [];
+
+    return (
+      <View
+        style={{
+          paddingVertical: 8,
+        }}>
+        <FlatList
+          data={listData}
+          renderItem={({ item }) => {
+            return <InfoItem data={item} />;
+          }}
+        />
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={GlobalStyles.fullFlex} bounces={false}>
@@ -184,15 +211,9 @@ const MyProfile = () => {
               <Text style={styles.editText}>Thêm email</Text>
             </TouchableOpacity>
           </View>
-          {myProfile?.additionalEmails && myProfile?.additionalEmails.map((email,index)=>{
-            if(index == 0)
-            return <></>
-            return (
-              <View key={"view_personal_email"+index} >
-                <InfoItem data={{ type: "personal_email", text: myProfile?.additionalEmails? myProfile?.additionalEmails[index] : "" ,userId: myProfile?.id}}  key={"personal_email"+index}/>
-              </View>// <InfoItem data={{ type: "email", text: myProfile?.additionalEmails? myProfile?.additionalEmails[index] : "" }} key={"email"+index} />
-            )
-          })}
+
+          {myProfile?.additionalEmails && viewPersonalEmails()}
+
           {/* <View style={[styles.infoHeader,{ }]}>
             <InfoItem data={{ type: "personal_email", text: "thong",userId: myProfile?.id}} key={"personal_email"} />
           </View> */}
