@@ -9,9 +9,9 @@ import {
   Alert,
 } from "react-native";
 import styles from "./styles";
-import {useNavigation} from "@react-navigation/native";
-import {Color} from "~/constants/Color";
-import React, {useCallback, useEffect, useState} from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Color } from "~/constants/Color";
+import React, { useCallback, useEffect, useState } from "react";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 import {
   ChoiceResult,
@@ -21,22 +21,22 @@ import {
   VoteDetail,
   VoteResult,
 } from "~/models/vote";
-import {ScrollView} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import Helper from "~/utils/Helper";
 import MUITextInput from "~/components/MUITextInput";
 import uuid from "react-native-uuid";
 import Feather from "react-native-vector-icons/Feather";
-import {Checkbox, FAB, Snackbar} from "react-native-paper";
+import { Checkbox, FAB, Snackbar } from "react-native-paper";
 import VoteService from "~/services/vote";
-import {useAppSelector} from "~/redux";
-import {ColumnChartImage, DefaultUserAvatar} from "~/assets/images";
-import {LockRedIcon, SortIcon} from "~/assets/svgs";
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
-import {StackNavigationOptions} from "@react-navigation/stack";
+import { useAppSelector } from "~/redux";
+import { ColumnChartImage, DefaultUserAvatar } from "~/assets/images";
+import { LockRedIcon, SortIcon } from "~/assets/svgs";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderRight from "./HeaderRight";
 import VotingApi from "~/api/remote/VotingApi";
 
-const VotingDetail = ({route}) => {
+const VotingDetail = ({ route }) => {
   /* Data in need */
   const navigation = useNavigation();
   const voteId = route.params.voteId;
@@ -62,7 +62,7 @@ const VotingDetail = ({route}) => {
   const validateForm = () => {
     let hasErrorItems = false;
     const errorItems = vote.choiceResult.map(choice => {
-      if (choice.name == "") {
+      if (choice.name === "") {
         hasErrorItems = true;
         return "Không được rỗng";
       }
@@ -156,7 +156,7 @@ const VotingDetail = ({route}) => {
     const newId = uuid.v4().toString();
     const newChoices = [
       ...vote.choiceResult,
-      {id: newId, name: "", voters: [], status: "unchecked"} as ChoiceResult,
+      { id: newId, name: "", voters: [], status: "unchecked" } as ChoiceResult,
     ];
     setVote({
       ...vote,
@@ -212,7 +212,10 @@ const VotingDetail = ({route}) => {
 
   const openChoiceResult = useCallback(
     (choice: ChoiceResult) => {
-      BottomSheetModalRef.current?.show("choice_result", {choice: choice, groupId: vote.groupId});
+      BottomSheetModalRef.current?.show("choice_result", {
+        choice: choice,
+        groupId: vote.groupId,
+      });
     },
     [vote.choiceResult],
   );
@@ -227,8 +230,8 @@ const VotingDetail = ({route}) => {
       "Bình chọn",
       question,
       [
-        {onPress: async () => changeVoteStatus(newStatus), text: "Đồng ý"},
-        {onPress: () => {}, text: "Đóng"},
+        { onPress: async () => changeVoteStatus(newStatus), text: "Đồng ý" },
+        { onPress: () => {}, text: "Đóng" },
       ],
       {
         cancelable: true,
@@ -268,7 +271,7 @@ const VotingDetail = ({route}) => {
   const headerRight = useCallback(() => {
     if (!vote.canEdit) {
       return <></>;
-    };
+    }
     return (
       <HeaderRight
         voteId={vote.id}
@@ -284,12 +287,13 @@ const VotingDetail = ({route}) => {
     } as StackNavigationOptions);
   }, [vote, refreshing]);
 
-  const VoterThumbnail = ({voters}) => {
+  const VoterThumbnail = ({ voters }) => {
     return voters.slice(0, 3).map(voter => (
       <Image
         key={voter.id}
         source={
-          (voter.imageUrl && voter.imageUrl != "https://graph.microsoft.com/v1.0/me/photo/$value")
+          voter.imageUrl &&
+          voter.imageUrl !== "https://graph.microsoft.com/v1.0/me/photo/$value"
             ? {
                 uri: voter.imageUrl,
               }
@@ -328,7 +332,7 @@ const VotingDetail = ({route}) => {
         <View
           style={[
             styles.container,
-            {backgroundColor: Color.white, padding: 15},
+            { backgroundColor: Color.white, padding: 15 },
           ]}>
           <View style={styles.header}>
             <View style={styles.headerTitle}>
@@ -344,11 +348,13 @@ const VotingDetail = ({route}) => {
             </Text>
           </View>
 
-          {vote?.status == "OPEN" ? (
+          {vote?.status === "OPEN" ? (
             <>
               <View style={styles.headerTitle}>
                 <SortIcon />
-                <Text style={styles.openTitleText}>Chọn được nhiều lựa chọn</Text>
+                <Text style={styles.openTitleText}>
+                  Chọn được nhiều lựa chọn
+                </Text>
               </View>
             </>
           ) : (
@@ -360,7 +366,7 @@ const VotingDetail = ({route}) => {
 
           <View style={styles.lineSeparator} />
 
-          {voterNumber == 0 ? (
+          {voterNumber === 0 ? (
             <Text style={styles.hint}>Chưa có người tham gia bình chọn!</Text>
           ) : (
             <Text style={styles.hint}>{voterNumber} người đã bình chọn.</Text>
@@ -371,8 +377,20 @@ const VotingDetail = ({route}) => {
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
             {vote.choiceResult.map((item, index) => {
+              const votePercent = item.voters.length
+                ? ((item.voters.length / voterNumber) * 103).toFixed(2) + "%"
+                : "0%";
+
               return (
                 <View style={styles.optionItem} key={item.id}>
+                  <View
+                    style={[
+                      styles.percentView,
+                      {
+                        width: votePercent,
+                      },
+                    ]}
+                  />
                   {/* <MarkTitleIcon width={20} height={20} /> */}
                   <View style={styles.fieldInput}>
                     <View style={styles.checkboxCtn}>
@@ -380,7 +398,7 @@ const VotingDetail = ({route}) => {
                         onPress={() => pressCheckBox(item.id)}
                         status={item.status}
                         color={Color.primary}
-                        disabled={vote.status == "CLOSED"}
+                        disabled={vote.status === "CLOSED"}
                       />
                     </View>
 
@@ -407,7 +425,7 @@ const VotingDetail = ({route}) => {
                       onPress={() => removeChoice(item.id)}
                     />
                   )}
-                  {item.voters.length != 0 && (
+                  {item.voters.length !== 0 && (
                     <TouchableOpacity
                       style={styles.voterCtn}
                       onPress={() => openChoiceResult(item)}>
@@ -421,16 +439,16 @@ const VotingDetail = ({route}) => {
 
           <View style={styles.lineSeparator} />
 
-          {vote.status == "OPEN" && (
+          {vote.status === "OPEN" && (
             <TouchableOpacity onPress={addChoice}>
               <View style={styles.plus}>
                 <Feather name={"plus"} size={24} color={"#006EDC"} />
-                <Text style={{color: "#006EDC"}}>Thêm phương án</Text>
+                <Text style={{ color: "#006EDC" }}>Thêm phương án</Text>
               </View>
             </TouchableOpacity>
           )}
 
-          {vote.status == "OPEN" ? (
+          {vote.status === "OPEN" ? (
             <TouchableOpacity style={styles.btn} onPress={onSave}>
               <Text numberOfLines={1} style={styles.textBtn}>
                 Bình chọn
