@@ -1,6 +1,7 @@
 import {AxiosResponse} from "axios";
 import {UserProfileModel} from "~/models/user";
 import axiosClient from "./AxiosClient";
+import { ToastEmail } from "~/constants/AddEmail";
 
 const UserApi = {
   getCurrentUser: async () => {
@@ -36,10 +37,11 @@ const UserApi = {
     try {
       const URL = `api/users/${id}/email/add`;
       const response : any = await axiosClient.post(URL, {additionalEmail:email});
-      return response.message
+    
+      return ToastEmail[response.returnCode];
     } catch (error) {
       console.log("@API_USER_updateLinkMail_ERROR: ", error);
-      return "Cập nhật email liên kết thất bại!";
+      return ToastEmail["error"];
     }
   },
   deleteLinkMail: async (id : string,email: string) => {

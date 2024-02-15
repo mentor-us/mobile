@@ -25,11 +25,18 @@ import { CurrentUserQueryKey } from "~/app/server/users/queries";
 //   personalEmail: string;
 //   phone: string;
 // }
+const validateEmail = (email) => {
+  return email.match(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
+};
 
 const LinkEmail = () => {
   const queryClient = useQueryClient();
   const schema = yup.object().shape({
-    personalEmail: yup.string().email("Email không hợp lệ"),
+    personalEmail: yup.string().email("Email không hợp lệ")
+    .required("Mail is required")
+    .test("is-valid", (message) => `Email không hợp lệ`, (value) => value ? validateEmail(value) : new yup.ValidationError("Email không hợp lệ")),
   });
 
   const navigation = useNavigation();
@@ -55,7 +62,7 @@ const LinkEmail = () => {
         await queryClient.refetchQueries({
           queryKey: CurrentUserQueryKey,
         });
-        Toast.show("Liên kết email thành công", {
+        Toast.show(res, {
           position: Toast.positions.BOTTOM,
         });
       })
