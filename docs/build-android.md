@@ -26,4 +26,5 @@ yarn all-android
 # You will need two terminal windows; one for running 'yarn start' and another for 'yarn android'
 yarn start
 yarn android
+
 ```
