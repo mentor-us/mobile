@@ -1,23 +1,59 @@
-import {View, Text, TouchableOpacity, Image} from "react-native";
-import React, {useCallback} from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import React, { useCallback, useMemo } from "react";
 import styles from "./styles";
-import {useNavigation} from "@react-navigation/native";
-import {NEW_VOTE_SAMPLE, Vote} from "~/models/vote";
-import {ColumnChartImage} from "~/assets/images";
-import {LockRedIcon} from "~/assets/svgs";
-interface Props {
+import { useNavigation } from "@react-navigation/native";
+import { Choice, NEW_VOTE_SAMPLE, Vote } from "~/models/vote";
+import { ColumnChartImage } from "~/assets/images";
+import { LockRedIcon } from "~/assets/svgs";
+
+interface VotingProps {
   data?: Vote;
 }
 
-const Voting = ({data = NEW_VOTE_SAMPLE}: Props) => {
+const Voting = ({ data = NEW_VOTE_SAMPLE }: VotingProps) => {
   const navigation = useNavigation();
   const onPress = useCallback(() => {
-    navigation.navigate("votingDetail", {voteId: data.id});
+    navigation.navigate("votingDetail", { voteId: data.id });
   }, []);
 
   const voterNumber = data.choices
     .flatMap(choice => choice.voters)
     .filter((value, index, array) => array.indexOf(value) === index).length;
+
+  const renderVoteItems = useMemo(
+    () =>
+      data.choices.map((item: Choice) => {
+        let votePercent = "0%";
+        if (voterNumber) {
+          votePercent =
+            ((item.voters.length / voterNumber) * 107).toFixed(2) + "%";
+        }
+
+        return (
+          <View style={styles.optionItem} key={item.id}>
+            <View
+              style={[
+                styles.percentView,
+                {
+                  width: votePercent,
+                },
+              ]}
+            />
+            <View style={styles.choiceCtn}>
+              <Text numberOfLines={1} style={styles.choiceContent}>
+                {item.name}
+              </Text>
+            </View>
+            <View>
+              <Text numberOfLines={1} style={styles.choiceNumber}>
+                {item.voters.length}
+              </Text>
+            </View>
+          </View>
+        );
+      }),
+    [data.choices, voterNumber],
+  );
 
   return (
     <TouchableOpacity style={styles.root} onPress={onPress}>
@@ -29,7 +65,7 @@ const Voting = ({data = NEW_VOTE_SAMPLE}: Props) => {
           </Text>
         </View>
 
-        {data.status == "CLOSED" && (
+        {data.status === "CLOSED" && (
           <View style={styles.hintCtn}>
             <LockRedIcon width={15} height={15} />
             <Text style={styles.lockHint}>Bình chọn đã kết thúc!</Text>
@@ -38,29 +74,14 @@ const Voting = ({data = NEW_VOTE_SAMPLE}: Props) => {
 
         <View style={styles.lineSeparator} />
 
-        {voterNumber == 0 ? (
+        {voterNumber === 0 ? (
           <Text style={styles.hint}>Chưa có người tham gia bình chọn!</Text>
         ) : (
           <Text style={styles.hint}>{voterNumber} người đã bình chọn.</Text>
         )}
 
-        <View style={styles.optionItemList}>
-          {data.choices.map(item => {
-            return (
-              <View style={styles.optionItem} key={item.id}>
-                <View style={styles.choiceCtn}>
-                  <Text numberOfLines={1} style={styles.choiceContent}>
-                    {item.name}
-                  </Text>
-                </View>
-                <Text numberOfLines={1} style={styles.choiceNumber}>
-                  {item.voters.length}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-        {data.status == "OPEN" ? (
+        <View style={styles.optionItemList}>{renderVoteItems}</View>
+        {data.status === "OPEN" ? (
           <TouchableOpacity style={styles.btn} onPress={onPress}>
             <Text numberOfLines={1} style={styles.textBtn}>
               BÌNH CHỌN

@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import { screenHeight } from "~/constants";
-import {Color} from "~/constants/Color";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
@@ -20,15 +20,15 @@ const styles = StyleSheet.create({
   headerBtn: {
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   closeBtn: {
     color: Color.red,
-    marginLeft: 3
+    marginLeft: 3,
   },
   reopenBtn: {
     color: Color.green,
-    marginLeft: 3
+    marginLeft: 3,
   },
   header: {
     padding: 0,
@@ -52,9 +52,9 @@ const styles = StyleSheet.create({
   lockHeaderTitle: {
     color: Color.red,
     marginLeft: 4,
-    fontWeight: "500"
+    fontWeight: "500",
   },
-  headerIcon: {width: 30, height: 30, marginRight: 12},
+  headerIcon: { width: 30, height: 30, marginRight: 12 },
   formTitle: {
     fontWeight: "700",
     fontSize: 22,
@@ -118,10 +118,24 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
   },
+  percentView: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 1,
+    backgroundColor: Color.votePercentColor,
+    width: 0,
+    marginBottom: 0,
+    padding: 0,
+    borderRadius: 5,
+  },
   fieldInput: {
     width: "75%",
     flexDirection: "row",
     alignItems: "center",
+    zIndex: 9999,
   },
   checkboxCtn: {
     padding: 0,
@@ -153,6 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     padding: 7,
+    zIndex: 9999,
   },
   avatar: {
     width: 20,
