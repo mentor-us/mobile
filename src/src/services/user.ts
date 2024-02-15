@@ -1,4 +1,5 @@
 import UserApi from "~/api/remote/UserApi";
+import { ToastEmail } from "~/constants/AddEmail";
 import {UserProfileModel, USER_PROFILE_SAMPLE} from "~/models/user";
 
 const UserService = {
@@ -37,14 +38,13 @@ const UserService = {
   updateLinkMail: async (id: string,email: string): Promise<string> => {
     try {
       const data : string | undefined  = await UserApi.updateLinkMail(id,email);
-
       if (data) {
         return data;
       }
-      return "Cập nhật email thành công";
+      return ToastEmail[200];
     } catch (error) {
       console.log("SERVIVES_ERROR: ", error);
-      return "Cập nhật email liên kết thất bại!";
+      return ToastEmail["error"];
     }
   },
   deleteLinkMail: async (id: string,email: string): Promise<string> => {
