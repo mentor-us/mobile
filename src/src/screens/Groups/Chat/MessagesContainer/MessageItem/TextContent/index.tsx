@@ -121,13 +121,19 @@ const TextContent = ({ message }: Props) => {
     DeviceEventEmitter.emit(EventEmitterNames.refreshHomePage);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const replyMessage = (message: ReplyMessageModel) => {
     state.setReplying(message);
   };
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
-    navigation.navigate("forwardMessage",{message: message.content, messageID: message.id, messageType: message.type, images: message.images} );
-    
+    navigation.navigate("forwardMessage", {
+      message: message.content,
+      messageID: message.id,
+      messageType: message.type,
+      images: message.images,
+    });
   };
   const showUserReacted = useCallback(() => {
     BottomSheetModalRef.current?.show("user_reacted", message.reactions);
@@ -147,7 +153,7 @@ const TextContent = ({ message }: Props) => {
           deleteMessage: deleteMessage,
           pinMessage: pinMessage,
           replyMessage: replyMessage,
-          forwardMessage: forwardMessage
+          forwardMessage: forwardMessage,
         },
       );
     })

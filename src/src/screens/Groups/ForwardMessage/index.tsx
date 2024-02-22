@@ -203,7 +203,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         <Text style={[styles.textInfo, styles.displayName, styles.boldText]}>
           Xem trước tin nhắn
         </Text>
-        {messageType == "TEXT" && (
+        {["IMAGE", "TEXT"].includes(messageType) && (
           <GestureDetector gesture={composed}>
             <TouchableWithoutFeedback style={[styles.messageContainer]}>
               <TextFormatRenderer

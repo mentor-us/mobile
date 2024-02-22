@@ -57,6 +57,7 @@ const EmojiReation = ({ message, action }: Props) => {
 
     try {
       await MessageApi.removeReaction(message.id || "", userId);
+      // eslint-disable-next-line no-empty
     } catch (error) {
     } finally {
       BottomSheetModalRef.current?.hide();
@@ -68,7 +69,9 @@ const EmojiReation = ({ message, action }: Props) => {
     try {
       await MessageApi.deleteMessage(message.id || "");
       BottomSheetModalRef.current?.hide();
+      // eslint-disable-next-line no-empty
     } catch (error) {
+      // eslint-disable-next-line no-empty
     } finally {
     }
   };
@@ -76,7 +79,7 @@ const EmojiReation = ({ message, action }: Props) => {
   const onEditMessage = async () => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
-    RichTextRef?.current?.setContentHTML(message.content??"");
+    RichTextRef?.current?.setContentHTML(message.content ?? "");
     RichTextRef?.current?.focusContentEditor();
   };
 
@@ -99,7 +102,7 @@ const EmojiReation = ({ message, action }: Props) => {
       id: message.id,
       content: message.content,
       type: message.type,
-      images: message.images
+      images: message.images,
     } as ForwardMessageModel);
     BottomSheetModalRef.current?.hide();
     // RichTextRef?.current?.focusContentEditor();
@@ -199,15 +202,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {
-              message.type=='TEXT' &&
+            {["IMAGE", "TEXT"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
                 onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
+                <ForwardMessageIcon width={24} height={24} />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       ) : (
@@ -235,15 +237,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {
-              message.type=='TEXT' &&
+            {["IMAGE", "TEXT"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
                 onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
+                <ForwardMessageIcon width={24} height={24} />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       )}
