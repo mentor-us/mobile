@@ -179,7 +179,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      if(search!=searchTerm){
+      if (search != searchTerm) {
         setSearch(searchTerm);
       }
     }, 500);
@@ -199,15 +199,15 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   }, []);
   return (
     <SafeAreaView style={[]}>
-      <View style={[styles.reviewMessageContainer]}>
+      <View style={styles.reviewMessageContainer}>
         <Text style={[styles.textInfo, styles.displayName, styles.boldText]}>
           Xem trước tin nhắn
         </Text>
         {["IMAGE", "TEXT"].includes(messageType) && (
           <GestureDetector gesture={composed}>
-            <TouchableWithoutFeedback style={[styles.messageContainer]}>
+            <TouchableWithoutFeedback style={styles.messageContainer}>
               <TextFormatRenderer
-                text={result.join('<br>')}
+                text={result.join("<br>")}
                 style={styles.dimmedText}
                 numberOfLines={4}
               />
