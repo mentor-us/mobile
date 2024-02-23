@@ -14,11 +14,11 @@ export const config = {
       path: "/send-link/invitation",
     },
     [AppRoutes("meetingDetail")]: {
-      path: "/meeting",
+      path: "/send-link/meeting",
       exact: true,
     },
     [AppRoutes("taskDetail")]: {
-      path: "/task",
+      path: "/send-link/task",
     },
   },
 };
@@ -33,11 +33,11 @@ export const config_auth = {
       path: "/send-link/invitation",
     },
     [AppRoutes("meetingDetail")]: {
-      path: "/meeting",
+      path: "/send-link/meeting",
       exact: true,
     },
     [AppRoutes("taskDetail")]: {
-      path: "/task",
+      path: "/send-link/task",
     },
   },
 };
