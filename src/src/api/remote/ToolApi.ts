@@ -240,8 +240,6 @@ const ToolApi = {
         type: "multipart/form-data",
       });
 
-      formData.append("groupId", groupId);
-
       const res = await axiosClient.post(URL, formData, {
         timeout: 20000,
         headers: {
