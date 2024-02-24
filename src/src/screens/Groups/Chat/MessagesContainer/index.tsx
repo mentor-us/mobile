@@ -81,7 +81,7 @@ const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
       ListHeaderComponent={() => <SizedBox height={8} />}
       ItemSeparatorComponent={() => <SizedBox height={4} />}
       inverted
-      onEndReachedThreshold={0.7}
+      onEndReachedThreshold={0.9}
       onEndReached={() => state.setLoadingMoreMessage(true)}
       // legacyImplementation
     />

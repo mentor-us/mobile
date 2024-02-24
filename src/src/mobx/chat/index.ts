@@ -21,7 +21,7 @@ import { Alert } from "react-native";
 import { TaskModel, TaskStatusType } from "~/models/task";
 import TaskServices from "~/services/task";
 import MeetingServices from "~/services/meeting";
-import LOG from "~/utils/Logger";
+import _ from "lodash";
 
 interface Props {
   groupId?: string;
@@ -511,8 +511,15 @@ export class ChatScreenState {
     );
 
     if (data && data.length > 0) {
-      this.setMessageList([...this._messageList, ...data]);
       this.setPage(this.page + 1);
+      const newList = [...this._messageList, ...data];
+      if (this._messageList && this._messageList.length < 15) {
+        const n = _.uniqWith(newList, (a, b) => a.id === b.id);
+        this.setMessageList(n);
+        this.setInitLoading(false);
+      } else {
+        this.setMessageList(newList);
+      }
     } else {
       this.setPage(-1);
     }
