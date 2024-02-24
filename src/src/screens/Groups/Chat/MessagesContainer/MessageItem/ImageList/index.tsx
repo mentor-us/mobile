@@ -113,7 +113,7 @@ const ImageList = ({ message }: Props) => {
           reactEmojiAction: reactEmojiAction,
           deleteEmoji: deleteEmoji,
           deleteMessage: deleteMessage,
-          // pinMessage: pinMessage,
+          pinMessage: pinMessage,
         },
       );
     })
