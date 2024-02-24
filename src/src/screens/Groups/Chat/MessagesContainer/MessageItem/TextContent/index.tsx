@@ -154,7 +154,7 @@ const TextContent = ({ message }: Props) => {
     .minDuration(200);
 
   const composed = Gesture.Simultaneous(longPressGesture);
-  const trimmedContent = Helper.trimHTMLContent(message.content ?? "");
+  const trimmedContent = message.content ?? "";
 
   return (
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
