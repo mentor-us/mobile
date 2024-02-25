@@ -15,6 +15,7 @@ interface Props {
   expanding: boolean;
   unpinMessage: (messageId: string) => void;
   onLongPress?: () => void;
+  onPress?: (string) => void;
 }
 
 const formatContent = (
@@ -39,6 +40,7 @@ const PinnedItem = ({
   expanding,
   unpinMessage,
   onLongPress = () => {},
+  onPress = () => {},
 }: Props) => {
   const isDeleted = message.status === "DELETED";
   const content = formatContent(message.content, expanding, isDeleted);
@@ -114,7 +116,9 @@ const PinnedItem = ({
   };
 
   return (
-    <TouchableOpacity onLongPress={() => onLongPress()}>
+    <TouchableOpacity
+      onPress={() => onPress(message.id)}
+      onLongPress={() => onLongPress()}>
       <View style={styles.messageCtn}>
         {renderPinMessage()}
         {expanding && (

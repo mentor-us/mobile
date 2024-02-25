@@ -63,6 +63,16 @@ const PinnedMessages = () => {
 
   const onItemLongPress = () => {};
 
+  const onItemPress = id => {
+    state.setScrollToId(id);
+    const index = state._messageList.findIndex(item => item.id === id);
+    state._messageFlatlistRef.current?.scrollToIndex({
+      index: index,
+      animated: true,
+      viewPosition: 0.5,
+    });
+  };
+
   return (
     <>
       <ContextMenuModal
@@ -101,6 +111,7 @@ const PinnedMessages = () => {
                     expanding={expanding}
                     unpinMessage={unpinMessage}
                     onLongPress={onItemLongPress}
+                    onPress={onItemPress}
                   />
                 );
               })}
@@ -110,6 +121,7 @@ const PinnedMessages = () => {
               message={state._groupDetail.pinnedMessages[0]}
               expanding={expanding}
               unpinMessage={unpinMessage}
+              onPress={onItemPress}
             />
           )}
         </Animated.View>
