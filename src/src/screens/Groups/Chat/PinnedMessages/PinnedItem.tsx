@@ -87,20 +87,21 @@ const PinnedItem = ({
                       styles.ownerText
                     }>{`Tin nhắn của ${message.sender.name}`}</Text>
                 </View>
+                {expanding && (
+                  <View style={styles.imageMessageImageCtn}>
+                    <Image
+                      source={{
+                        uri: `${BASE_URL}/api/files?${searchParams}`,
 
-                <View style={styles.imageMessageImageCtn}>
-                  <Image
-                    source={{
-                      uri: `${BASE_URL}/api/files?${searchParams}`,
-
-                      method: "GET",
-                      headers: {
-                        Authorization: `Bearer ${store.authStore.userToken}`,
-                      },
-                    }}
-                    style={styles.imageMessageImage}
-                  />
-                </View>
+                        method: "GET",
+                        headers: {
+                          Authorization: `Bearer ${store.authStore.userToken}`,
+                        },
+                      }}
+                      style={styles.imageMessageImage}
+                    />
+                  </View>
+                )}
               </View>
             </MessageContentLayout>
           </>

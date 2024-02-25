@@ -1,4 +1,4 @@
-import {FC, useRef} from "react";
+import { FC, useRef } from "react";
 import {
   ImageResizeMode,
   Pressable,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
   Text,
 } from "react-native";
-import Video, {OnLoadData} from "react-native-video";
+import Video, { OnLoadData } from "react-native-video";
 import convertToProxyURL from "react-native-video-cache";
 
 import Helper from "~/utils/Helper";
@@ -18,9 +18,9 @@ import FontSize from "~/constants/FontSize";
 
 import ImageCache from "../ImageCache";
 
-import {Color} from "~/constants/Color";
-import {ActivityIndicator} from "react-native-paper";
-import {PlayVideoIcon} from "~/assets/svgs";
+import { Color } from "~/constants/Color";
+import { ActivityIndicator } from "react-native-paper";
+import { PlayVideoIcon } from "~/assets/svgs";
 import IMGBase64 from "../IMGBase64";
 
 interface Props {
@@ -39,7 +39,7 @@ interface Props {
   resizeMode?: ImageResizeMode;
 }
 
-const SingleThumbnail: FC<Props> = ({...props}) => {
+const SingleThumbnail: FC<Props> = ({ ...props }) => {
   const videoRef = useRef<Video | null>(null);
 
   const remainingComponent = () => {
@@ -109,7 +109,7 @@ const SingleThumbnail: FC<Props> = ({...props}) => {
       <IMGBase64
         useSkeleton
         resizeMode={props.resizeMode ?? "cover"}
-        style={{height: props.height, width: props.width}}
+        style={{ height: props.height, width: props.width }}
         url={(props.media.url || props.media.assetLocal) ?? ""}
       />
       {Boolean(props.totalRemaining) && remainingComponent()}
@@ -122,7 +122,8 @@ export default SingleThumbnail;
 
 const styles = StyleSheet.create({
   imageView: {
-    flex: 1,
+    // flex: 1,
+    flexBasis: "auto",
     justifyContent: "center",
   },
   txtTotalRemaining: {
