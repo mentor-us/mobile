@@ -1,12 +1,12 @@
-import {useEffect, useState} from "react";
-import {Animated, Text, TouchableOpacity, View} from "react-native";
-import {Color} from "~/constants/Color";
+import { useEffect, useState } from "react";
+import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 import styles from "./styles";
 import ChannelItem from "./ChannelItem";
-import {AddNode, ParagraphIcon, UserNameIcon} from "~/assets/svgs";
-import {GroupModel} from "~/models/group";
-import {RoleType} from "~/models/commonTypes";
+import { AddNode, ParagraphIcon, UserNameIcon } from "~/assets/svgs";
+import { GroupModel } from "~/models/group";
+import { RoleType } from "~/models/commonTypes";
 
 interface Props {
   channels?: GroupModel[];
@@ -30,7 +30,7 @@ const ChannelList = ({
 
   // Action
   const chooseChannel = (channelId: string) => {
-    if (type == "PRIVATE_MESSAGE") {
+    if (type === "PRIVATE_MESSAGE") {
       return;
     }
     setSelected(channelId);
@@ -43,7 +43,8 @@ const ChannelList = ({
     }
 
     const content =
-      type == "CHANNEL" ? "Chưa có kênh nào" : "Chưa có cuộc trò chuyện nào";
+      type === "CHANNEL" ? "Chưa có kênh nào" : "Chưa có cuộc trò chuyện nào";
+
     return (
       <View>
         <Text
@@ -67,7 +68,7 @@ const ChannelList = ({
     <Animated.View>
       <View style={styles.commonRoom}>
         <View style={styles.iconBox}>
-          {type == "CHANNEL" ? (
+          {type === "CHANNEL" ? (
             <ParagraphIcon width={20} height={20} />
           ) : (
             <UserNameIcon width={22} height={22} />
@@ -76,7 +77,7 @@ const ChannelList = ({
         <Text style={styles.commonRoomText}>{title}</Text>
       </View>
       <View style={styles.channelList}>
-        {type == "CHANNEL" && role == "MENTOR" && (
+        {type === "CHANNEL" && role === "MENTOR" && (
           <TouchableOpacity onPress={addChannel}>
             <View style={styles.commonRoom}>
               <View style={styles.addChannelIcon}>
@@ -97,7 +98,7 @@ const ChannelList = ({
           </TouchableOpacity>
         )}
 
-        {!channels || channels.length == 0 ? (
+        {!channels || channels.length === 0 ? (
           <EmptyListMessage />
         ) : (
           channels?.map(channel => {
