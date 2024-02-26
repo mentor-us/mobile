@@ -198,7 +198,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     setSearch("");
   }, []);
   return (
-    <SafeAreaView style={[{backgroundColor: "white"}]}>
+    <SafeAreaView style={[{backgroundColor: "#E2E9F3",flex:1}]}>
       <View style={styles.reviewMessageContainer}>
         <Text style={[styles.textInfo, styles.displayName, styles.boldText]}>
           Xem trước tin nhắn
@@ -252,7 +252,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         style={[
           styles.fieldContainer,
           styles.paddingItem,
-          { width: "100%", marginTop: 10,backgroundColor: "white" },
+          { width: "100%", marginTop: 10,backgroundColor: "#E2E9F3" },
         ]}>
         <View>
           <SizedBox height={16} />

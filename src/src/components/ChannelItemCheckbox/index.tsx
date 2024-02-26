@@ -57,7 +57,7 @@ export default function ChannelItemCheckbox({
                 ]}>
                 {channel?.group?.name}
               </Text>
-              <TouchableOpacity onPress={handlePress}>
+              <TouchableOpacity onPress={handlePress} style={[styles.itemsCenter]}>
                 {checked ? (
                   <CheckBoxActiveIcon width={24} height={24} />
                 ) : (

@@ -66,6 +66,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
   },
+  itemsCenter: {
+    justifyContent: "center",
+    alignItems: 'center',
+    // flex: 1,
+  },
   pinIcon: {
     position: "absolute",
     top: 0,
