@@ -416,7 +416,7 @@ export class ChatScreenState {
   @action
   updateMessage(messageId: string, newContent: string) {
     const newMessageList: MessageModel[] = this._messageList.map(item => {
-      if (item.id == messageId) {
+      if (item.id === messageId) {
         return {
           ...item,
           status: "EDITED",
