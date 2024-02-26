@@ -68,7 +68,6 @@ const FileItem = ({ message }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
-    console.log(`Chuyển tiếp 1 file`);
     navigation.navigate("forwardMessage", {
       message: `Chuyển tiếp 1 file`,
       messageID: message.id,
