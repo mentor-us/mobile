@@ -202,7 +202,7 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {["IMAGE", "TEXT"].includes(message.type) && (
+            {["IMAGE", "TEXT", "FILE"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
@@ -237,7 +237,7 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {["IMAGE", "TEXT"].includes(message.type) && (
+            {["IMAGE", "TEXT", "FILE"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
