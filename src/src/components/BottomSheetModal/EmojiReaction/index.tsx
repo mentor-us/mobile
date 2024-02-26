@@ -7,7 +7,12 @@ import { DefaultUserAvatar } from "~/assets/images";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
+import {
+  ForwardMessageModel,
+  MessageEnumType,
+  MessageModel,
+  ReplyMessageModel,
+} from "~/models/message";
 import { useAppSelector } from "~/redux";
 import EmojisPane from "~/components/EmoijsPane";
 import { EmoijType } from "~/constants/Emoijs";
@@ -25,6 +30,8 @@ import { RichTextRef } from "~/screens/Groups/Chat/TextEditor/index.props";
 import Clipboard from "@react-native-clipboard/clipboard";
 import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
+import File from "~/components/File";
+import FileItem from "~/screens/Groups/Chat/MessagesContainer/MessageItem/FileItem";
 
 interface Props {
   message: MessageModel;
@@ -76,7 +83,7 @@ const EmojiReation = ({ message, action }: Props) => {
   const onEditMessage = async () => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
-    RichTextRef?.current?.setContentHTML(message.content??"");
+    RichTextRef?.current?.setContentHTML(message.content ?? "");
     RichTextRef?.current?.focusContentEditor();
   };
 
@@ -99,7 +106,7 @@ const EmojiReation = ({ message, action }: Props) => {
       id: message.id,
       content: message.content,
       type: message.type,
-      images: message.images
+      images: message.images,
     } as ForwardMessageModel);
     BottomSheetModalRef.current?.hide();
     // RichTextRef?.current?.focusContentEditor();
@@ -115,6 +122,28 @@ const EmojiReation = ({ message, action }: Props) => {
       duration: Toast.durations.SHORT,
       position: Toast.positions.TOP,
     });
+  };
+
+  const renderMessage = () => {
+    if (!message?.type) {
+      return null;
+    }
+
+    switch (message.type) {
+      case MessageEnumType.TEXT:
+        return (
+          <TextFormatRenderer
+            text={message.content || ""}
+            style={commonStyles.text}
+          />
+        );
+
+      case MessageEnumType.FILE:
+        return <File file={message.file!} isDownloadable={false} />;
+
+      default:
+        return null;
+    }
   };
 
   return (
@@ -139,10 +168,7 @@ const EmojiReation = ({ message, action }: Props) => {
                 <Text style={otherStyle.senderName}>{message.sender.name}</Text>
               </View>
             )}
-            <TextFormatRenderer
-              text={message.content || ""}
-              style={commonStyles.text}
-            />
+            {renderMessage()}
             <Text style={otherStyle.sentTime}>
               {Helper.getTime(message.createdDate)}
             </Text>
@@ -199,15 +225,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {
-              message.type=='TEXT' &&
+            {message.type === "TEXT" && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
                 onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
+                <ForwardMessageIcon width={24} height={24} />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       ) : (
@@ -235,15 +260,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {
-              message.type=='TEXT' &&
+            {message.type === "TEXT" && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
                 onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
+                <ForwardMessageIcon width={24} height={24} />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       )}

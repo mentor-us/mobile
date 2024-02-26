@@ -15,7 +15,11 @@ import Helper from "~/utils/Helper";
 
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
+import {
+  ForwardMessageModel,
+  MessageModel,
+  ReplyMessageModel,
+} from "~/models/message";
 import { useAppSelector } from "~/redux";
 import Animated, { withTiming } from "react-native-reanimated";
 import { EntryAnimationsValues } from "react-native-reanimated";
@@ -38,7 +42,7 @@ const TextContent = ({ message }: Props) => {
   const state = useChatScreenState();
   const navigation = useNavigation();
   const queryAction = useUpdateQueryGroupList();
-  
+
   const isOwner = useMemo(() => {
     return userData.id === message.sender.id;
   }, [message.sender.id]);
@@ -126,8 +130,12 @@ const TextContent = ({ message }: Props) => {
   };
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
-    navigation.navigate("forwardMessage",{message: message.content, messageID: message.id, messageType: message.type, images: message.images} );
-    
+    navigation.navigate("forwardMessage", {
+      message: message.content,
+      messageID: message.id,
+      messageType: message.type,
+      images: message.images,
+    });
   };
   const showUserReacted = useCallback(() => {
     BottomSheetModalRef.current?.show("user_reacted", message.reactions);
@@ -147,7 +155,7 @@ const TextContent = ({ message }: Props) => {
           deleteMessage: deleteMessage,
           pinMessage: pinMessage,
           replyMessage: replyMessage,
-          forwardMessage: forwardMessage
+          forwardMessage: forwardMessage,
         },
       );
     })

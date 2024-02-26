@@ -40,6 +40,8 @@ const BottomSheetModal = (_, ref) => {
     switch (type) {
       case "emoji_reaction":
         return <EmojiReaction message={data} action={action} />;
+      // case "emoji_reaction":
+      //   return <EmojiReaction message={data} action={action} />;
       case "gallery":
         return <Gallery action={action} isMulti={data} />;
       case "image_slider":

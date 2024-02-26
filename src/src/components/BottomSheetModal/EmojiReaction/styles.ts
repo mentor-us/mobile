@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 export const commonStyles = StyleSheet.create({
@@ -101,6 +101,7 @@ export const otherStyle = StyleSheet.create({
   container: {
     borderTopLeftRadius: 0,
     borderColor: "#ccc",
+    padding: 8,
   },
   senderName: {
     fontSize: FontSize.small,
@@ -110,7 +111,7 @@ export const otherStyle = StyleSheet.create({
   sentTime: {
     fontSize: FontSize.smaller,
     color: Color.text[5],
-    marginBottom: 8,
+    marginBottom: 0,
   },
   emojiPane: {
     marginLeft: 50,

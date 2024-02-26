@@ -1,10 +1,10 @@
-import {TotalReaction} from "~/constants/Emoijs";
-import {MeetingModel} from "./meeting";
-import {TaskModel} from "./task";
-import {ShortProfileUserModel} from "./user";
-import {Reaction} from "./reaction";
-import {FileModel} from "./media";
-import {Vote} from "./vote";
+import { TotalReaction } from "~/constants/Emoijs";
+import { MeetingModel } from "./meeting";
+import { TaskModel } from "./task";
+import { ShortProfileUserModel } from "./user";
+import { Reaction } from "./reaction";
+import { FileModel } from "./media";
+import { Vote } from "./vote";
 
 export type MessageType =
   | "TEXT"
@@ -16,6 +16,18 @@ export type MessageType =
   | "VOTE"
   | "NOTIFICATION"
   | "SYSTEM";
+
+export const MessageEnumType = {
+  TEXT: "TEXT",
+  FILE: "FILE",
+  IMAGE: "IMAGE",
+  VIDEO: "VIDEO",
+  MEETING: "MEETING",
+  TASK: "TASK",
+  VOTE: "VOTE",
+  NOTIFICATION: "NOTIFICATION",
+  SYSTEM: "SYSTEM",
+};
 
 export type VotingStatus = "OPEN" | "CLOSED";
 
@@ -105,8 +117,8 @@ export const VOTE_SAMPLE: VoteModel = {
   createdDate: "8 ngày trước",
   question: "Bình chọn mới",
   options: [
-    {id: "1", title: "A", total: 0, voters: []},
-    {id: "2", title: "B", total: 0, voters: []},
+    { id: "1", title: "A", total: 0, voters: [] },
+    { id: "2", title: "B", total: 0, voters: [] },
   ],
   groupId: "",
   timeEnd: "",

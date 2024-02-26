@@ -1,27 +1,30 @@
-import {Image, Text, TouchableOpacity, View} from "react-native";
-import React, {useCallback, useMemo} from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useMemo } from "react";
 
-import {commonStyles, ownerStyle, otherStyle} from "./styles";
-import {DefaultUserAvatar} from "~/assets/images";
-import {useNavigation} from "@react-navigation/native";
+import { commonStyles, ownerStyle, otherStyle } from "./styles";
+import { DefaultUserAvatar } from "~/assets/images";
+import { useNavigation } from "@react-navigation/native";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import {MessageModel} from "~/models/message";
-import {useAppSelector} from "~/redux";
-import Animated, {withTiming} from "react-native-reanimated";
-import {EntryAnimationsValues} from "react-native-reanimated";
+import { MessageModel } from "~/models/message";
+import { useAppSelector } from "~/redux";
+import Animated, { withTiming } from "react-native-reanimated";
+import { EntryAnimationsValues } from "react-native-reanimated";
 
 import _ from "lodash";
-import {observer} from "mobx-react-lite";
-import {useChatScreenState} from "~/context/chat";
+import { observer } from "mobx-react-lite";
+import { useChatScreenState } from "~/context/chat";
 import File from "~/components/File";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { EmoijType } from "~/constants/Emoijs";
 
 interface Props {
   message: MessageModel;
 }
 
-const FileItem = ({message}: Props) => {
+const FileItem = ({ message }: Props) => {
   const userData = useAppSelector(state => state.user.data);
   const state = useChatScreenState();
   const navigation = useNavigation();
@@ -37,8 +40,8 @@ const FileItem = ({message}: Props) => {
   const entering = (targetValues: EntryAnimationsValues) => {
     "worklet";
     const animations = {
-      originY: withTiming(targetValues.targetOriginY, {duration: 369}),
-      opacity: withTiming(1, {duration: 369}),
+      originY: withTiming(targetValues.targetOriginY, { duration: 369 }),
+      opacity: withTiming(1, { duration: 369 }),
     };
     const initialValues = {
       originY: 200,
@@ -63,6 +66,58 @@ const FileItem = ({message}: Props) => {
   if (!message.file) {
     return <></>;
   }
+  const reactEmojiAction = (emoji: EmoijType) => {
+    const newTotalReaction = Helper.addEmoji(message.totalReaction, emoji);
+    state.setTotalReaction(newTotalReaction, message.id);
+
+    state.setReactions(
+      Helper.addUserEmoji(message.reactions, emoji, userData),
+      message.id,
+    );
+  };
+  const deleteEmoji = () => {
+    state.setTotalReaction(
+      Helper.removeEmoji(message.totalReaction),
+      message.id,
+    );
+
+    state.setReactions(
+      Helper.removeUserEmoji(message.reactions, userData),
+      message.id,
+    );
+  };
+  const pinMessage = async () => {
+    const isSuccess = state.addPinnedMessage(message);
+    if (isSuccess) {
+      await GroupApi.pinMessage(state._groupDetail.id, message.id);
+
+      const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
+      const sanitizedContent = message.content?.replace(regex, " ");
+      // const newMessage = `${state._currentUser.name} đã ghim tin nhắn "${sanitizedContent}"`;
+      // queryAction.updateGroupNewMessage(
+      //   state._groupDetail.id,
+      //   newMessage,
+      //   false,
+      // );
+    }
+  };
+  const longPressGesture = Gesture.LongPress()
+    .runOnJS(true)
+    .onStart(e => {
+      if (message.status === "DELETED") return;
+      BottomSheetModalRef.current?.show(
+        "emoji_reaction",
+        { ...message, totalReaction: message.totalReaction } as MessageModel,
+        {
+          reactEmojiAction: reactEmojiAction,
+          deleteEmoji: deleteEmoji,
+          // deleteMessage: deleteMessage,
+          pinMessage: pinMessage,
+        },
+      );
+    })
+    .minDuration(200);
+  const composed = Gesture.Simultaneous(longPressGesture);
 
   return (
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
@@ -71,24 +126,30 @@ const FileItem = ({message}: Props) => {
           <Image
             source={
               message.sender.imageUrl
-                ? {uri: message.sender.imageUrl}
+                ? { uri: message.sender.imageUrl }
                 : DefaultUserAvatar
             }
             style={commonStyles.avatar}
           />
         </TouchableOpacity>
       )}
-      <View style={[commonStyles.container, styles.container]}>
-        {!isOwner && (
-          <View style={GlobalStyles.flexRow}>
-            <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+
+      {}
+      <GestureDetector gesture={composed}>
+        <TouchableOpacity style={[]} disabled={message.status === "DELETED"}>
+          <View style={[commonStyles.container, styles.container]}>
+            {!isOwner && (
+              <View style={GlobalStyles.flexRow}>
+                <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+              </View>
+            )}
+            <File file={message.file} />
+            <Text style={otherStyle.sentTime}>
+              {Helper.getTime(message.createdDate)}
+            </Text>
           </View>
-        )}
-        <File file={message.file} />
-        <Text style={otherStyle.sentTime}>
-          {Helper.getTime(message.createdDate)}
-        </Text>
-      </View>
+        </TouchableOpacity>
+      </GestureDetector>
     </Animated.View>
   );
 };
