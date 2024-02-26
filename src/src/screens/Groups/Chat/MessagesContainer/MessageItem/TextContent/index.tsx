@@ -201,6 +201,11 @@ const TextContent = ({ message }: Props) => {
               />
             </View>
           )}
+          {message.content && isOwner && (
+            <Text style={commonStyles.name} numberOfLines={1}>
+              {"Bạn đã chuyển tiếp một tin nhắn"}
+            </Text>
+          )}
 
           {message.status == "DELETED" ? (
             <TextFormatRenderer
