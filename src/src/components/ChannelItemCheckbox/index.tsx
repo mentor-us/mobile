@@ -35,7 +35,7 @@ export default function ChannelItemCheckbox({
   };
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
-      <View style={[styles.infoCtn,{backgroundColor:"lightgray",borderRadius:10}]}>
+      <View style={[styles.infoCtn,{backgroundColor: checked ? "#D2DCFE" : "white",borderRadius:10}]}>
         {
           channel?.group && <GroupAvatar role={channel?.group?.role|| "MENTEE"} avatar={channel?.group?.imageUrl} />
         }

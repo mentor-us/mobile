@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:12,
     paddingVertical:10,
     maxHeight: "50%",
+    // backgroundColor: "#E2E9F3",
     // flex: 1
   },
   messageContainer: {
