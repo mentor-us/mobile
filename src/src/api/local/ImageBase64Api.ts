@@ -70,16 +70,15 @@ const ImageBase64Api = {
       }
 
       // Get from local
-      const value = await AsyncStorage.getItem(url);
-      if (value) {
-        return value;
-      }
+      // const value = await AsyncStorage.getItem(url);
+      // if (value) {
+      //   return value;
+      // }
 
       // Get from url and Save to local
       const newValue = await ImageBase64Api.getBase64String(url);
-
       if (newValue) {
-        AsyncStorage.setItem(url, newValue);
+        // AsyncStorage.setItem(url, newValue);
         return newValue;
       }
 

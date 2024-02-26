@@ -6,6 +6,7 @@ import { FAB } from "react-native-paper";
 import { Color } from "~/constants/Color";
 import uuid from "react-native-uuid";
 import ToolApi from "~/api/remote/ToolApi";
+import Permission from "~/utils/PermissionStrategies";
 
 interface Props {
   image?: string;
@@ -28,6 +29,12 @@ const ListHeader = ({
     if (!image) {
       return;
     }
+
+    const hasPermission = await Permission.handleWriteStoragePermission();
+    if (!hasPermission) {
+      return;
+    }
+
     setDownloading(true);
     try {
       await ToolApi.saveImage(image, uuid.v4().toString());
@@ -45,15 +52,16 @@ const ListHeader = ({
       <TouchableOpacity onPress={onClose}>
         <CloseIcon />
       </TouchableOpacity>
-
-      <FAB
-        icon={"download"}
-        label={""}
-        style={styles.btn}
-        onPress={saveImage}
-        small={true}
-        animated={true}
-      />
+      {image && !image.startsWith("file://") && (
+        <FAB
+          icon={"download"}
+          label={""}
+          style={styles.btn}
+          onPress={saveImage}
+          small={true}
+          animated={true}
+        />
+      )}
     </View>
   );
 };

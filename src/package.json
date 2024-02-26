@@ -1,6 +1,6 @@
 {
   "name": "MentorUS",
-  "version": "1.7.9",
+  "version": "1.8.0",
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
@@ -17,7 +17,9 @@
     "generate-splash-screen": "npx react-native generate-bootsplash ./src/assets/logoapp/logo_mentorus.svg --background-color=006EDC --logo-width=200 --assets-path=assets --flavor=main",
     "test-deep-link": "npx uri-scheme open 'mentorus://oauth2/redirect?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NDI2Yjc3MmQ0MWE2YzQxYzc0MmVkNWYiLCJpYXQiOjE2ODIzNTM0MDMsImV4cCI6MTY4MjM1NzAwM30.TwhKdnVIDXsnYEBBeoYK_KoKPHIjbYm-cars1ucnOWFdu2ItyqWSPtw-Xwk46nlWPV8HpJAG24QyuUbjTzDngA&verifyEmail=true' --android",
     "test-deep-link_1": "npx uri-scheme open 'mentorus://' --android",
-    "test-deep-link_group_chat": "npx uri-scheme open 'mentorus://chat?groupId=64357728499a4a65268447d7' --android",
+    "test-deep-link_group_chat_2": "npx uri-scheme open 'intent://mentor.somesandwich.rocks/send-link/invitation?groupId=65d7720c11137e3360f27e03#Intent;scheme=https;end' --android",
+    "test-deep-link_group_chat_1": "npx uri-scheme open 'mentorus://send-link/invitation?groupId=65d7720c11137e3360f27e03' --android",
+    "test-deep-link_group_chat": "npx uri-scheme open 'mentorus://chat?groupId=65d7720c11137e3360f27e03' --android",
     "test-deep-link_2": "npx uri-scheme open 'https://mentor.fit.hcmus.edu.vn/chat/64357728499a4a65268447d7' --android",
     "test-deep-link_3": "npx uri-scheme open 'http://localhost:3000/' --android",
     "test-deep-link_4": "npx uri-scheme open 'https://web-nang-cao-19-3-ymeb.vercel.app/chat?groupId=64357728499a4a65268447d7' --android",
@@ -92,7 +94,7 @@
     "react-native-network-info": "^5.2.1",
     "react-native-pager-view": "^6.1.2",
     "react-native-paper": "^4.12.5",
-    "react-native-pell-rich-editor":"1.9.0",
+    "react-native-pell-rich-editor": "1.9.0",
     "react-native-permissions": "^3.8.0",
     "react-native-reanimated": "^2.14.4",
     "react-native-render-html": "^6.3.4",

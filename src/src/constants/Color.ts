@@ -23,4 +23,5 @@ export const Color = {
   violet: "#A347BA",
   blue: "#3281ef",
   opacity: ["#0007"],
+  votePercentColor: "#C2E5F5",
 };

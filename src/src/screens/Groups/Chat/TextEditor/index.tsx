@@ -168,10 +168,11 @@ const TextEditor = () => {
   const onSend = async () => {
     try {
       const htmlContent = await RichTextRef?.current?.getContentHtml();
+      // console.log(Helper.trimHTMLContent(htmlContent ?? ""));
 
       const message = {
         id: `${uuid.v4().toString()}`,
-        content: Helper.trimHTMLContent(htmlContent ?? ""),
+        content: htmlContent ?? "",
         groupId: state._groupDetail.id,
         senderId: currentUser.id,
         createdDate: new Date(),
@@ -261,7 +262,6 @@ const TextEditor = () => {
   };
 
   const removeMention = () => {
-    console.log("removeMention");
     const cmd =
       '\
     function test() {\
@@ -366,28 +366,32 @@ const TextEditor = () => {
     RichTextRef?.current?.commandDOM(cmd2);
   };
 
+  const isTextEmpty = async () => {
+    const text = await RichTextRef?.current?.getContentHtml();
+    const newStr = text?.replace(/<[^>]*>/gim, "");
+    return newStr === "";
+  };
+
   const onChangeText = async (text: string) => {
-    // LOG.error(Helper.extractTextOnlyFromHTML(text));
     LOG.debug(TextEditor.name, "onChangeText", text);
 
-    removeMention();
-    if (!text || text === "<div><br></div>") {
+    // removeMention();
+    if (!text || (await isTextEmpty())) {
       RichTextRef?.current?.setContentHTML("");
-      // console.log(await RichTextRef?.current?.getContentHtml());
       setOpenMention(false);
       setSearchMentionName("");
       state.setSendable(false);
       return;
     }
 
-    const mention = extractMention(text);
-    if (mention) {
-      setOpenMention(true);
-      setSearchMentionName(mention.replace("@", ""));
-    } else if (openMention) {
-      setOpenMention(false);
-      setSearchMentionName("");
-    }
+    // const mention = extractMention(text);
+    // if (mention) {
+    //   setOpenMention(true);
+    //   setSearchMentionName(mention.replace("@", ""));
+    // } else if (openMention) {
+    //   setOpenMention(false);
+    //   setSearchMentionName("");
+    // }
 
     state.setSendable(Boolean(text));
   };
