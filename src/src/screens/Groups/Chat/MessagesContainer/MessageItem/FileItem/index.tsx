@@ -113,6 +113,11 @@ const FileItem = ({ message }: Props) => {
               <Text style={otherStyle.senderName}>{message.sender.name}</Text>
             </View>
           )}
+          {message.forward && isOwner && (
+            <Text style={otherStyle.senderName} numberOfLines={1}>
+              {"Bạn đã chuyển tiếp một file"}
+            </Text>
+          )}
           <File file={message.file} />
           <Text style={otherStyle.sentTime}>
             {Helper.getTime(message.createdDate)}

@@ -166,6 +166,11 @@ const ImageList = ({ message }: Props) => {
               <Text style={otherStyle.senderName}>{message.sender.name}</Text>
             </View>
           )}
+          {message.forward && isOwner && (
+            <Text style={otherStyle.senderName} numberOfLines={1}>
+              {"Bạn đã chuyển tiếp hình ảnh"}
+            </Text>
+          )}
           <SizedBox height={4} />
           <View>
             <GridThumbnail
