@@ -22,8 +22,16 @@ const formatContent = (
   message: string | undefined,
   expanding: boolean,
   isDeleted: boolean,
+  type:string
 ) => {
-  let content = isDeleted ? "Tin nhắn đã được xoá" : message || "[Hình ảnh]";
+  let content = '';
+  if(type === "VOTE"){
+    content = isDeleted ? "Tin nhắn đã được xoá" :'[Bình chọn] - '+ message || "[Bình chọn]";
+
+  }
+  else{
+    content = isDeleted ? "Tin nhắn đã được xoá" : message || "[Hình ảnh]";
+  }
   const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
   content = expanding
     ? content
@@ -43,7 +51,10 @@ const PinnedItem = ({
   onPress = () => {},
 }: Props) => {
   const isDeleted = message.status === "DELETED";
-  const content = formatContent(message.content, expanding, isDeleted);
+  if (message.type === "VOTE") {
+    message.content = message.vote?.question || "";
+  }
+  const content = formatContent(message.content, expanding, isDeleted, message.type);
   const store = useMobxStore();
 
   const renderPinMessage = () => {
@@ -106,6 +117,25 @@ const PinnedItem = ({
                 )}
               </View>
             </MessageContentLayout>
+          </>
+        );
+      }
+      case "VOTE": {
+        return (
+          <>
+            <PinnedMessageIcon />
+            <SizedBox width={8} />
+            <View style={styles.messageContent}>
+              <TextFormatRenderer
+                text={content}
+                style={styles.message}
+                numberOfLines={expanding ? 10 : 1}
+              />
+              <Text
+                style={
+                  styles.ownerText
+                }>{`Tin nhắn của ${message.sender.name}`}</Text>
+            </View>
           </>
         );
       }
