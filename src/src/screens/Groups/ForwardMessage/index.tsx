@@ -108,14 +108,10 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   };
 
   const handleSubmit = listChannelId => {
-    console.log("handleSubmit");
-    console.log(messageId);
-    console.log(listChannelId);
     ChannelService.forward(
       messageId,
       listChannelId
     ).then((res:any)=>{
-      console.log("Submit success")
       Toast.show("Chuyển tiếp tin nhắn thành công", {
         position: Toast.positions.BOTTOM
       })
@@ -123,7 +119,6 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         navigation.goBack()
       }
     }).catch((err)=>{
-      console.log("Submit fail")
 
     })
   };
