@@ -9,6 +9,7 @@ import Helper from "~/utils/Helper";
 
 import {
   ForwardMessageModel,
+  MessageEnumType,
   MessageModel,
   ReplyMessageModel,
 } from "~/models/message";
@@ -29,8 +30,6 @@ import { RichTextRef } from "~/screens/Groups/Chat/TextEditor/index.props";
 import Clipboard from "@react-native-clipboard/clipboard";
 import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
-import TextMessage from "./TextMessage";
-import ImageMessage from "./ImageMessage";
 import File from "~/components/File";
 import FileItem from "~/screens/Groups/Chat/MessagesContainer/MessageItem/FileItem";
 
@@ -125,43 +124,27 @@ const EmojiReation = ({ message, action }: Props) => {
     });
   };
 
-  // const renderMessage = () => {
-  //   if (!message?.type) {
-  //     return null;
-  //   }
-
-  //   switch (message.type) {
-  //     case MessageEnumType.TEXT:
-  //       return (
-  //         <TextFormatRenderer
-  //           text={message.content || ""}
-  //           style={commonStyles.text}
-  //         />
-  //       );
-
-  //     case MessageEnumType.FILE:
-  //       return <File file={message.file!} isDownloadable={false} />;
-
-  //     default:
-  //       return null;
-  //   }
-  // };
-
   const renderMessage = () => {
+    if (!message?.type) {
+      return null;
+    }
+
     switch (message.type) {
-      case "TEXT":
+      case MessageEnumType.TEXT:
         return (
-          <TextMessage isOwner={isOwner} message={message} styles={styles} />
+          <TextFormatRenderer
+            text={message.content || ""}
+            style={commonStyles.text}
+          />
         );
-      case "IMAGE":
-        return <ImageMessage isOwner={isOwner} message={message} />;
+
+      case MessageEnumType.FILE:
+        return <File file={message.file!} isDownloadable={false} />;
+
       default:
         return null;
     }
   };
-
-  const isThreeImages =
-    message?.type === "IMAGE" && message?.images?.length === 3;
 
   return (
     <View style={commonStyles.modalCtnStyle}>
@@ -190,107 +173,104 @@ const EmojiReation = ({ message, action }: Props) => {
               {Helper.getTime(message.createdDate)}
             </Text>
           </TouchableOpacity>
-          {/* <View style={isThreeImages && commonStyles.imageCtn}>
-            {renderMessage()}
-          </View> */}
         </View>
-        <View style={styles.emojiPane}>
-          <EmojisPane
-            onChooseEmoji={onChooseEmoji}
-            onRemoveEmoji={onRemoveEmoji}
-            removable={message.totalReaction.ownerReacted.length > 0}
-          />
-        </View>
-        {isOwner ? (
-          <View style={styles.emojiPane}>
-            <View style={styles.actionBox}>
-              {action?.editMessage && (
-                <TouchableOpacity
-                  style={commonStyles.actionButton}
-                  testID="edit-icon"
-                  onPress={onEditMessage}>
-                  <PencilEditOffice width={24} height={24} />
-                </TouchableOpacity>
-              )}
-
-              {action?.deleteMessage && (
-                <TouchableOpacity
-                  style={commonStyles.actionButton}
-                  testID="delete-icon"
-                  onPress={onDeleteMessage}>
-                  <GarbageIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-
-              {action?.pinMessage && (
-                <TouchableOpacity
-                  style={commonStyles.actionButton}
-                  testID="pin-icon"
-                  onPress={onPinMessage}>
-                  <PinMessageIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-              <TouchableOpacity
-                style={commonStyles.actionButton}
-                testID="copy-icon"
-                onPress={onCopy}>
-                <CopyToClipboardIcon width={24} height={24} />
-              </TouchableOpacity>
-              {action?.replyMessage && (
-                <TouchableOpacity
-                  testID="reply-icon"
-                  style={commonStyles.actionButton}
-                  onPress={onReplyMessage}>
-                  <ReplyIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-              {message.type === "TEXT" && (
-                <TouchableOpacity
-                  style={commonStyles.actionButton}
-                  testID="forward-message-icon"
-                  onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        ) : (
-          <View style={styles.emojiPane}>
-            <View style={styles.actionBox}>
-              {action?.pinMessage && (
-                <TouchableOpacity
-                  style={commonStyles.actionButton}
-                  testID="pin-icon"
-                  onPress={onPinMessage}>
-                  <PinMessageIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-              <TouchableOpacity
-                testID="copy-icon"
-                style={commonStyles.actionButton}
-                onPress={onCopy}>
-                <CopyToClipboardIcon width={24} height={24} />
-              </TouchableOpacity>
-              {action?.replyMessage && (
-                <TouchableOpacity
-                  testID="reply-icon"
-                  style={commonStyles.actionButton}
-                  onPress={onReplyMessage}>
-                  <ReplyIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-              {message.type === "TEXT" && (
-                <TouchableOpacity
-                  style={commonStyles.actionButton}
-                  testID="forward-message-icon"
-                  onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        )}
       </View>
+      <View style={styles.emojiPane}>
+        <EmojisPane
+          onChooseEmoji={onChooseEmoji}
+          onRemoveEmoji={onRemoveEmoji}
+          removable={message.totalReaction.ownerReacted.length > 0}
+        />
+      </View>
+      {isOwner ? (
+        <View style={styles.emojiPane}>
+          <View style={styles.actionBox}>
+            {action?.editMessage && (
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="edit-icon"
+                onPress={onEditMessage}>
+                <PencilEditOffice width={24} height={24} />
+              </TouchableOpacity>
+            )}
+
+            {action?.deleteMessage && (
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="delete-icon"
+                onPress={onDeleteMessage}>
+                <GarbageIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+
+            {action?.pinMessage && (
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="pin-icon"
+                onPress={onPinMessage}>
+                <PinMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={commonStyles.actionButton}
+              testID="copy-icon"
+              onPress={onCopy}>
+              <CopyToClipboardIcon width={24} height={24} />
+            </TouchableOpacity>
+            {action?.replyMessage && (
+              <TouchableOpacity
+                testID="reply-icon"
+                style={commonStyles.actionButton}
+                onPress={onReplyMessage}>
+                <ReplyIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+            {message.type === "TEXT" && (
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      ) : (
+        <View style={styles.emojiPane}>
+          <View style={styles.actionBox}>
+            {action?.pinMessage && (
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="pin-icon"
+                onPress={onPinMessage}>
+                <PinMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              testID="copy-icon"
+              style={commonStyles.actionButton}
+              onPress={onCopy}>
+              <CopyToClipboardIcon width={24} height={24} />
+            </TouchableOpacity>
+            {action?.replyMessage && (
+              <TouchableOpacity
+                testID="reply-icon"
+                style={commonStyles.actionButton}
+                onPress={onReplyMessage}>
+                <ReplyIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+            {message.type === "TEXT" && (
+              <TouchableOpacity
+                style={commonStyles.actionButton}
+                testID="forward-message-icon"
+                onPress={onForwardMessage}>
+                <ForwardMessageIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      )}
     </View>
   );
 };

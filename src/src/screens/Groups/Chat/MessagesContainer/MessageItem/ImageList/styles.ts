@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
-import { screenWidth } from "~/constants";
-import { Color } from "~/constants/Color";
+import {StyleSheet} from "react-native";
+import {screenWidth} from "~/constants";
+import {Color} from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 export const commonStyles = StyleSheet.create({

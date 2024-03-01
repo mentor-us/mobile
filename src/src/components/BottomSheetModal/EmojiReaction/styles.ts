@@ -51,9 +51,7 @@ export const commonStyles = StyleSheet.create({
     fontSize: FontSize.smaller,
     color: Color.text[0],
   },
-  imageCtn: {
-    width: "100%",
-  },
+
   actionButton: {
     backgroundColor: Color.white,
     padding: 8,

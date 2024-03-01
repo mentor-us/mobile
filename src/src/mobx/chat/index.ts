@@ -22,8 +22,6 @@ import { TaskModel, TaskStatusType } from "~/models/task";
 import TaskServices from "~/services/task";
 import MeetingServices from "~/services/meeting";
 import _ from "lodash";
-import { FlatList } from "react-native-gesture-handler";
-import { MutableRefObject, RefObject, createRef } from "react";
 
 interface Props {
   groupId?: string;
@@ -45,8 +43,6 @@ export class ChatScreenState {
   _groupDetail: GroupModel = GROUP_SAMPLE;
   _messageList: MessageModel[] = [];
   _currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
-  _messageFlatlistRef: RefObject<FlatList<MessageModel>> = createRef();
-  _scrollToId = "";
   page = 0;
 
   constructor() {
@@ -58,11 +54,6 @@ export class ChatScreenState {
     //   // this._messageList = [];
     //   // this.fetchListMessage(props.groupId);
     // }
-  }
-
-  @action
-  setScrollToId(id: string) {
-    this._scrollToId = id;
   }
 
   @action

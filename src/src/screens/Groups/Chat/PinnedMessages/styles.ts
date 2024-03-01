@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
-import { screenWidth } from "~/constants";
-import { Color } from "~/constants/Color";
+import {StyleSheet} from "react-native";
+import {screenWidth} from "~/constants";
+import {Color} from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   moreBtn: {
-    zIndex: 2,
     padding: 8,
     borderWidth: 0.5,
     borderColor: Color.gray[4],
@@ -39,19 +38,9 @@ const styles = StyleSheet.create({
     height: 40,
   },
   rotate: {
-    transform: [{ rotate: "180deg" }],
+    transform: [{rotate: "180deg"}],
   },
   itemCtn: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    zIndex: 1,
-
-    width: "100%",
-    // backgroundColor: "red",
-  },
-  itemCtnExpaned: {
     width: screenWidth - 16,
   },
   headerCtn: {
