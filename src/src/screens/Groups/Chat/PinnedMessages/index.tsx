@@ -63,9 +63,12 @@ const PinnedMessages = () => {
 
   const onItemLongPress = () => {};
 
-  const onItemPress = id => {
+  const onItemPress = async id => {
     state.setScrollToId(id);
-    const index = state._messageList.findIndex(item => item.id === id);
+    let index = state._messageList.findIndex(item => item.id === id);
+    if (index === -1) {
+     return;
+    }
     state._messageFlatlistRef.current?.scrollToIndex({
       index: index,
       animated: true,

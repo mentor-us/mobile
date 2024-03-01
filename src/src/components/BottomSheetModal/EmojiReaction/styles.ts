@@ -59,6 +59,7 @@ export const commonStyles = StyleSheet.create({
     padding: 8,
     borderRadius: 50,
     marginLeft: 8,
+    marginTop: 8
   },
 });
 
