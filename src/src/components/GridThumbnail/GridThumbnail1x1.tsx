@@ -89,7 +89,6 @@ const GridThumbnail1x1: FC<Props> = ({
 
   if (mediaData.length === 3) {
     const itemWidth = maxWidth / 2 - horizonSeparator / 2;
-
     const heightItem = itemWidth - verticalSeparator / 2;
 
     return (

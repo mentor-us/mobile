@@ -20,6 +20,7 @@ import ErrorMessage from "~/components/ErrorMessage";
 import { useMobxStore } from "~/mobx/store";
 import { useGetMessages } from "~/app/server/messages/queries";
 import useIsReady from "~/hooks/useIsReady";
+import { Provider } from "react-native-paper";
 
 const Chat: ScreenProps<"chat"> = ({ route }) => {
   // Needed data
@@ -168,9 +169,11 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <MessagesContainer groupType={groupDetail?.type} />
-      <TextEditor />
-      <PinnedMessages />
+      <Provider>
+        <MessagesContainer groupType={groupDetail?.type} />
+        <TextEditor />
+        <PinnedMessages />
+      </Provider>
     </View>
   );
 };

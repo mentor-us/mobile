@@ -1,19 +1,32 @@
-import {TouchableOpacity, View} from "react-native";
-import React, {useState} from "react";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
+import React, { useState } from "react";
 import styles from "./styles";
-import {ArrowheadDownIcon} from "~/assets/svgs";
-import {useChatScreenState} from "~/context/chat";
-import {observer} from "mobx-react-lite";
+import { ArrowheadDownIcon } from "~/assets/svgs";
+import { useChatScreenState } from "~/context/chat";
+import { observer } from "mobx-react-lite";
 import PinnedItem from "./PinnedItem";
-import {runWithLayoutAnimation} from "~/hooks/LayoutAnimation";
+import { runWithLayoutAnimation } from "~/hooks/LayoutAnimation";
 import Animated, {
   FadeIn,
   ZoomInEasyUp,
   withTiming,
 } from "react-native-reanimated";
 import GroupApi from "~/api/remote/GroupApi";
+import ContextMenuModal from "./ContextMenuModal";
+import { StyleProp } from "react-native";
 
 const PinnedMessages = () => {
+  const [visible, setVisible] = React.useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle: StyleProp<ViewStyle> = {
+    backgroundColor: "white",
+    padding: 20,
+    width: "80%",
+    alignSelf: "center",
+  };
+
   const state = useChatScreenState();
   const [expanding, setExpanding] = useState<boolean>(false);
 
@@ -35,7 +48,7 @@ const PinnedMessages = () => {
     "worklet";
     return {
       animations: {
-        height: withTiming(values.targetHeight, {duration: 500}),
+        height: withTiming(values.targetHeight, { duration: 500 }),
       },
       initialValues: {
         height: values.currentHeight,
@@ -48,49 +61,72 @@ const PinnedMessages = () => {
     await GroupApi.unpinMessage(state._groupDetail.id, messageId);
   };
 
+  const onItemLongPress = () => {};
+
+  const onItemPress = id => {
+    state.setScrollToId(id);
+    const index = state._messageList.findIndex(item => item.id === id);
+    state._messageFlatlistRef.current?.scrollToIndex({
+      index: index,
+      animated: true,
+      viewPosition: 0.5,
+    });
+  };
+
   return (
-    <Animated.View
-      testID="pinned-msg"
-      style={[styles.container, expanding && styles.expandCtn]}
-      layout={CustomLayoutTransition}>
-      <View style={[expanding && styles.headerCtn]}>
-        {expanding && (
-          <Animated.Text entering={FadeIn.delay(500)} style={styles.title}>
-            Tin nhắn đã ghim
-          </Animated.Text>
-        )}
-        <TouchableOpacity
-          testID="expand-pin-msg-icon"
-          style={[styles.moreBtn, expanding && styles.rotate]}
-          onPress={expand}>
-          <ArrowheadDownIcon />
-        </TouchableOpacity>
-      </View>
-      <Animated.View style={[expanding && styles.itemCtn]}>
-        {expanding ? (
-          <Animated.View
-            entering={ZoomInEasyUp.duration(500)}
-            exiting={undefined}>
-            {state._groupDetail.pinnedMessages?.map(item => {
-              return (
-                <PinnedItem
-                  key={`${item.id}`}
-                  message={item}
-                  expanding={expanding}
-                  unpinMessage={unpinMessage}
-                />
-              );
-            })}
-          </Animated.View>
-        ) : (
-          <PinnedItem
-            message={state._groupDetail.pinnedMessages[0]}
-            expanding={expanding}
-            unpinMessage={unpinMessage}
-          />
-        )}
+    <>
+      <ContextMenuModal
+        visible={visible}
+        onDismiss={hideModal}
+        containerStyle={containerStyle}
+      />
+      <Animated.View
+        testID="pinned-msg"
+        style={[styles.container, expanding && styles.expandCtn]}
+        layout={CustomLayoutTransition}>
+        <View style={expanding && styles.headerCtn}>
+          {expanding && (
+            <Animated.Text entering={FadeIn.delay(500)} style={styles.title}>
+              Danh sách đã ghim
+            </Animated.Text>
+          )}
+          <TouchableOpacity
+            testID="expand-pin-msg-icon"
+            style={[styles.moreBtn, expanding && styles.rotate]}
+            onPress={expand}>
+            <ArrowheadDownIcon />
+          </TouchableOpacity>
+        </View>
+        <Animated.View
+          style={expanding ? styles.itemCtnExpaned : styles.itemCtn}>
+          {expanding ? (
+            <Animated.View
+              entering={ZoomInEasyUp.duration(500)}
+              exiting={undefined}>
+              {state._groupDetail.pinnedMessages?.map(item => {
+                return (
+                  <PinnedItem
+                    key={`${item.id}`}
+                    message={item}
+                    expanding={expanding}
+                    unpinMessage={unpinMessage}
+                    onLongPress={onItemLongPress}
+                    onPress={onItemPress}
+                  />
+                );
+              })}
+            </Animated.View>
+          ) : (
+            <PinnedItem
+              message={state._groupDetail.pinnedMessages[0]}
+              expanding={expanding}
+              unpinMessage={unpinMessage}
+              onPress={onItemPress}
+            />
+          )}
+        </Animated.View>
       </Animated.View>
-    </Animated.View>
+    </>
   );
 };
 
