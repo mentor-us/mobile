@@ -4,6 +4,7 @@ import {DefaultGroupNotification} from "~/assets/images";
 import {StudentReadingIcon, TeacherIcon} from "~/assets/svgs";
 import {Color} from "~/constants/Color";
 import {RoleType} from "~/models/commonTypes";
+import IMGBase64 from "../IMGBase64";
 
 interface Props {
   avatar?: string;
@@ -14,9 +15,11 @@ const GroupAvatar = ({avatar, online = true, role = "MENTEE"}: Props) => {
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>
-        <Image
+        <IMGBase64
+          useSkeleton
+          resizeMode={"cover"}
           style={styles.avatar}
-          source={avatar ? {uri: avatar} : DefaultGroupNotification}
+          url={avatar ?? DefaultGroupNotification}
         />
         <View style={styles.roleType}>
           {role == "MENTEE" ? (
