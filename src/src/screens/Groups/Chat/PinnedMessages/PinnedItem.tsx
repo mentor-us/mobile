@@ -1,10 +1,10 @@
-import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
-import {MessageModel} from "~/models/message";
-import {Color} from "~/constants/Color";
-import {screenWidth} from "~/constants";
+import { MessageModel } from "~/models/message";
+import { Color } from "~/constants/Color";
+import { screenWidth } from "~/constants";
 import FontSize from "~/constants/FontSize";
-import {CloseRoundIcon, PinnedMessageIcon} from "~/assets/svgs";
+import { CloseRoundIcon, PinnedMessageIcon } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import TextFormatRenderer from "~/components/TextFormatRenderer";
 
@@ -27,25 +27,52 @@ const formatContent = (
   return content;
 };
 
-const PinnedItem = ({message, expanding, unpinMessage}: Props) => {
+const PinnedItem = ({ message, expanding, unpinMessage }: Props) => {
   const isDeleted = message.status == "DELETED";
-  let content = formatContent(message.content, expanding, isDeleted);
+  const content = formatContent(message.content, expanding, isDeleted);
+  const renderPinMessage = () => {
+    switch (message?.type) {
+      case "TEXT":
+        return (
+          <View style={styles.messageCtn}>
+            <PinnedMessageIcon />
+            <SizedBox width={8} />
+            <View>
+              <TextFormatRenderer
+                text={content}
+                style={styles.message}
+                numberOfLines={expanding ? 10 : 1}
+              />
+              <Text style={styles.ownerText}>
+                {`Tin nhắn của ${message.sender.name}`}
+              </Text>
+            </View>
+          </View>
+        );
+      case "FILE":
+        return (
+          <View style={styles.messageCtn}>
+            <PinnedMessageIcon />
+            <SizedBox width={8} />
+            <View>
+              <Text style={styles.message} numberOfLines={expanding ? 10 : 1}>
+                {`[Tệp tin]`}
+              </Text>
+              <Text
+                style={
+                  styles.ownerText
+                }>{`Tin nhắn của ${message.sender.name}`}</Text>
+            </View>
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <View style={styles.messageCtn}>
-      <PinnedMessageIcon />
-      <SizedBox width={8} />
-      <View>
-        <TextFormatRenderer
-          text={content}
-          style={styles.message}
-          numberOfLines={expanding ? 10 : 1}
-        />
-        <Text
-          style={
-            styles.ownerText
-          }>{`Tin nhắn của ${message.sender.name}`}</Text>
-      </View>
+    <TouchableOpacity>
+      {renderPinMessage()}
       {expanding && (
         <TouchableOpacity
           style={styles.deleteBtn}
@@ -55,7 +82,8 @@ const PinnedItem = ({message, expanding, unpinMessage}: Props) => {
           <CloseRoundIcon width={18} height={18} />
         </TouchableOpacity>
       )}
-    </View>
+      {/* </View> */}
+    </TouchableOpacity>
   );
 };
 

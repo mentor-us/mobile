@@ -9,7 +9,6 @@ import Helper from "~/utils/Helper";
 
 import {
   ForwardMessageModel,
-  MessageEnumType,
   MessageModel,
   ReplyMessageModel,
 } from "~/models/message";
@@ -130,7 +129,7 @@ const EmojiReation = ({ message, action }: Props) => {
     }
 
     switch (message.type) {
-      case MessageEnumType.TEXT:
+      case "TEXT":
         return (
           <TextFormatRenderer
             text={message.content || ""}
@@ -138,7 +137,7 @@ const EmojiReation = ({ message, action }: Props) => {
           />
         );
 
-      case MessageEnumType.FILE:
+      case "FILE":
         return <File file={message.file!} isDownloadable={false} />;
 
       default:

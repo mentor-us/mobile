@@ -19,6 +19,8 @@ import File from "~/components/File";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { EmoijType } from "~/constants/Emoijs";
+import GroupApi from "~/api/remote/GroupApi";
+import TotalEmojiReacted from "~/components/TotalEmojiReacted";
 
 interface Props {
   message: MessageModel;
@@ -101,6 +103,12 @@ const FileItem = ({ message }: Props) => {
       // );
     }
   };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const showUserReacted = useCallback(() => {
+    BottomSheetModalRef.current?.show("user_reacted", message.reactions);
+  }, [message.reactions]);
+
   const longPressGesture = Gesture.LongPress()
     .runOnJS(true)
     .onStart(e => {
@@ -143,10 +151,15 @@ const FileItem = ({ message }: Props) => {
                 <Text style={otherStyle.senderName}>{message.sender.name}</Text>
               </View>
             )}
-            <File file={message.file} />
+            <File file={message.file} isDownloadable={true} />
             <Text style={otherStyle.sentTime}>
               {Helper.getTime(message.createdDate)}
             </Text>
+            <TouchableOpacity
+              onPress={showUserReacted}
+              style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
+              <TotalEmojiReacted reaction={message.totalReaction} />
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </GestureDetector>

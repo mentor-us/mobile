@@ -17,18 +17,6 @@ export type MessageType =
   | "NOTIFICATION"
   | "SYSTEM";
 
-export const MessageEnumType = {
-  TEXT: "TEXT",
-  FILE: "FILE",
-  IMAGE: "IMAGE",
-  VIDEO: "VIDEO",
-  MEETING: "MEETING",
-  TASK: "TASK",
-  VOTE: "VOTE",
-  NOTIFICATION: "NOTIFICATION",
-  SYSTEM: "SYSTEM",
-};
-
 export type VotingStatus = "OPEN" | "CLOSED";
 
 export interface VoteOptionModel {
