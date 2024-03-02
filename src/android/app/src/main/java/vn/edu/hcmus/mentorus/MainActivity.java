@@ -1,4 +1,4 @@
-package com.mentorus;
+package vn.edu.hcmus.mentorus;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

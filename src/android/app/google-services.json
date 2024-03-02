@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "340978024605",
-    "project_id": "mentorus-f8bae",
-    "storage_bucket": "mentorus-f8bae.appspot.com"
+    "project_number": "656800775099",
+    "project_id": "mentorus-5d1n",
+    "storage_bucket": "mentorus-5d1n.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:340978024605:android:d15367571d3d2653cf1474",
+        "mobilesdk_app_id": "1:656800775099:android:a3a8ba5f2c0518f1bb629e",
         "android_client_info": {
-          "package_name": "com.mentorus"
+          "package_name": "vn.edu.hcmus.mentorus"
         }
       },
       "oauth_client": [
         {
-          "client_id": "340978024605-p7ijr48kb2ek5je973g5qs2g6hp6bicu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mentorus",
-            "certificate_hash": "ca1406b45b9d7ba9fd6622f0f92051f7b37068dd"
-          }
-        },
-        {
-          "client_id": "340978024605-j716ts3roo27lktdddmjq81odb1ro5sp.apps.googleusercontent.com",
+          "client_id": "656800775099-44usv82974p8v8eb6tokagsrnr77ieg4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAj17py4I2DGOK7-G1vQN8HyuF0NkimbJ8"
+          "current_key": "AIzaSyAFkh1xMbem1fFr7HedGRXuZn-Noa9yxFs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "340978024605-j716ts3roo27lktdddmjq81odb1ro5sp.apps.googleusercontent.com",
+              "client_id": "656800775099-44usv82974p8v8eb6tokagsrnr77ieg4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

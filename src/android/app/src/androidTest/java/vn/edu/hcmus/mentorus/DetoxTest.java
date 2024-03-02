@@ -1,4 +1,4 @@
-package com.mentorus; // (1)
+package vn.edu.hcmus.mentorus; // (1)
 
 import com.wix.detox.Detox;
 import com.wix.detox.config.DetoxConfig;
