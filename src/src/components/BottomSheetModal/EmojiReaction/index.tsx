@@ -188,12 +188,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            <TouchableOpacity
-              style={commonStyles.actionButton}
-              testID="copy-icon"
-              onPress={onCopy}>
-              <CopyToClipboardIcon width={24} height={24} />
-            </TouchableOpacity>
+            {["TEXT"].includes(message.type) && (
+              <TouchableOpacity
+                testID="copy-icon"
+                style={commonStyles.actionButton}
+                onPress={onCopy}>
+                <CopyToClipboardIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
             {action?.replyMessage && (
               <TouchableOpacity
                 testID="reply-icon"
@@ -223,12 +225,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            <TouchableOpacity
-              testID="copy-icon"
-              style={commonStyles.actionButton}
-              onPress={onCopy}>
-              <CopyToClipboardIcon width={24} height={24} />
-            </TouchableOpacity>
+            {["TEXT"].includes(message.type) && (
+              <TouchableOpacity
+                testID="copy-icon"
+                style={commonStyles.actionButton}
+                onPress={onCopy}>
+                <CopyToClipboardIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
             {action?.replyMessage && (
               <TouchableOpacity
                 testID="reply-icon"
