@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { GroupChannel, GROUP_SAMPLE, GROUP_CHANNEL_SAMPLE } from "~/models/group";
 import styles from "./styles";
 import { Color } from "~/constants/Color";
-import GroupAvatar from "./GroupAvatar";
 
 import CheckBox from "@react-native-community/checkbox";
 import { CheckBoxActiveIcon, CheckBoxInactiveIcon } from "~/assets/svgs";
+import GroupAvatar from "../GroupItem/GroupAvatar";
 interface Props {
   channel?: GroupChannel;
   onPress?: (channel: GroupChannel) => void;
@@ -47,7 +47,10 @@ export default function ChannelItemCheckbox({
                   styles.textInfo,
                   styles.displayName,
                   styles.boldText,
-                ]}>
+                  {flex:3}
+                ]}
+                numberOfLines={1}
+                >
                 {channel.name}
               </Text>
               <Text

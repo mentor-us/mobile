@@ -209,40 +209,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
             </TouchableWithoutFeedback>
           </GestureDetector>
         )}
-        {/* {messageType == "IMAGE" && (
-          <GridThumbnail
-          useSkeletonWhenLoad
-          maxWidth={screenWidth * 0.8}
-          mediaData={images || []}
-        />
-          // <ImageList message={message} key={message.id} />
-        )} */}
       </View>
-      {/* <Text>{trimmedContent}</Text> */}
-      {/* <View
-        style={[
-          styles.fieldContainer,
-          styles.paddingItem,
-          { width: "100%", borderRadius: 5 },
-        ]}>
-        <View>
-          <SizedBox height={16} />
-          <PencilBlack width={24} height={24} />
-        </View>
-        <SizedBox width={16} />
-        <MUITextInput
-          label="Thêm Nhận xét"
-          keyboardType={"default"}
-          value={comment.current}
-          onChangeText={text => {
-            comment.current = text;
-          }}
-          multiline
-          numberOfLines={2}
-          errorText={""}
-          style={{ textAlignVertical: "top" }}
-        />
-      </View> */}
       <View
         style={[
           styles.fieldContainer,
