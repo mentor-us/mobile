@@ -44,10 +44,12 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>MentorUS user your calendar</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>MentorUS use your calendar.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>MentorUS photos and video use.</string>
+	<string>MentorUS use photos and video.</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>MentorUS use media library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>
