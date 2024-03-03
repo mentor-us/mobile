@@ -133,6 +133,7 @@ const ImageList = ({ message }: Props) => {
         deleteEmoji: deleteEmoji,
         deleteMessage: deleteMessage,
         pinMessage: pinMessage,
+        forwardMessage: forwardMessage
       },
     );
   };

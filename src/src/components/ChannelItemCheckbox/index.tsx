@@ -13,6 +13,7 @@ interface Props {
   backgroudColor?: string;
   showMessage?: boolean;
   initState?: boolean;
+  hiddenImage?: boolean;
 }
 
 export default function ChannelItemCheckbox({
@@ -20,7 +21,8 @@ export default function ChannelItemCheckbox({
   onPress,
   backgroudColor = Color.white,
   showMessage = true,
-  initState
+  initState,
+  hiddenImage= false
 }: Props) {
   const [checked, setChecked] = React.useState<boolean>(initState||false);
   const handlePress = () => {
@@ -36,9 +38,12 @@ export default function ChannelItemCheckbox({
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
       <View style={[styles.infoCtn,{backgroundColor: checked ? "#D2DCFE" : "white",borderRadius:10}]}>
-        {
-          channel?.group && <GroupAvatar role={channel?.group?.role|| "MENTEE"} avatar={channel?.group?.imageUrl} />
-        }
+        {hiddenImage == false && channel?.group && (
+          <GroupAvatar
+            role={channel?.group?.role || "MENTEE"}
+            avatar={channel?.group?.imageUrl}
+          />
+        )}
         <View style={styles.flexRowBetween}>
           <View style={[styles.detailCtn]}>
             <View style={styles.categoryCtn}>
