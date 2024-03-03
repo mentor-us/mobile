@@ -1,5 +1,5 @@
 import DeviceInfo from "react-native-device-info";
-import {PermissionStrategy} from "./interfaces";
+import { PermissionStrategy } from "./interfaces";
 import {
   PERMISSIONS,
   RESULTS,
@@ -9,7 +9,7 @@ import {
   request,
   requestNotifications,
 } from "react-native-permissions";
-import {Alert} from "react-native";
+import { Alert } from "react-native";
 import LOG from "../Logger";
 
 /**
@@ -61,11 +61,11 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
       // If permission is not granted, show alert
       if (!isMediaRequestGranted && !isMediaRequestLimited) {
         Alert.alert(
-          "Allow Access to Your Photos",
-          "This lets you share from your camera roll, and enables other features for photos. Go to Settings and tap on Photos",
+          "Hình ảnh",
+          "Ứng dụng cần quyền truy cập vào hình ảnh của thiết bị của bạn. Mở cài đặt và cho phép quyền truy cập hình ảnh.",
           [
-            {onPress: () => openSettings(), text: "Go to Settings"},
-            {onPress: () => {}, text: "Not now"},
+            { onPress: () => openSettings(), text: "Mở cài đặt" },
+            { onPress: () => {}, text: "Huỷ" },
           ],
           {
             cancelable: true,
@@ -82,20 +82,53 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
 
   async handleWriteStoragePermission(): Promise<boolean> {
     try {
+      // Check write storage permission
+      const checkWriteStorageResult = await check(
+        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      );
+
+      switch (checkWriteStorageResult) {
+        case RESULTS.UNAVAILABLE:
+          break;
+        case RESULTS.DENIED:
+          break;
+        case RESULTS.LIMITED:
+          break;
+        case RESULTS.GRANTED:
+          return true;
+        case RESULTS.BLOCKED:
+          await openSettings();
+          break;
+      }
+
       const requestResult = await request(
         PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
         {
-          title: "Write Storage Permission Required",
-          message: "Application needs access to your storage to download File",
+          title: "Quyền bộ nhớ",
+          message:
+            "Ứng dụng cần quyền truy cập vào bộ nhớ của thiết bị của bạn để lưu trữ dữ liệu. Bạn có muốn cho phép không?",
+          buttonPositive: "Cho phép",
+          buttonNegative: "Từ chối",
         },
       );
 
-      if (requestResult === RESULTS.GRANTED) {
-        return true;
-      } else {
-        // If permission denied then show alert
-        Alert.alert("Error", "Write Storage Permission Not Granted");
+      switch (requestResult) {
+        case RESULTS.GRANTED:
+          return true;
+        default:
+          break;
       }
+
+      // If permission denied then show alert
+      Alert.alert("Lỗi tải xuống", "Ứng dụng không có quyền truy cập bộ nhớ", [
+        {
+          text: "Mở cài đặt",
+          onPress: () => {
+            openSettings();
+          },
+        },
+        { onPress: () => {}, text: "Huỷ" },
+      ]);
     } catch (error) {
       LOG.error(AndroidPermissionStrategy.name, (error as Error).message);
       // To handle permission related exception
@@ -121,11 +154,11 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
         requestCameraResult !== RESULTS.LIMITED
       ) {
         Alert.alert(
-          "Allow Access to Your Camera",
-          "This lets you share from your camera roll. Go to Settings and tap on Camera",
+          "Máy ảnh",
+          "Ứng dụng cần quyền truy cập vào máy ảnh của thiết bị của bạn để chức năng chụp ảnh. Mở cài đặt và cho phép quyền truy cập máy ảnh.",
           [
-            {onPress: () => openSettings(), text: "Go to Settings"},
-            {onPress: () => {}, text: "Not now"},
+            { onPress: () => openSettings(), text: "Mở cài đặt" },
+            { onPress: () => {}, text: "Huỷ" },
           ],
           {
             cancelable: true,

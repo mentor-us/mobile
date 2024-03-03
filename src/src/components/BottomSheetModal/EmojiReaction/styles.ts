@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 export const commonStyles = StyleSheet.create({
@@ -51,12 +51,15 @@ export const commonStyles = StyleSheet.create({
     fontSize: FontSize.smaller,
     color: Color.text[0],
   },
-
+  imageCtn: {
+    width: "100%",
+  },
   actionButton: {
     backgroundColor: Color.white,
     padding: 8,
     borderRadius: 50,
     marginLeft: 8,
+    marginTop: 8
   },
 });
 

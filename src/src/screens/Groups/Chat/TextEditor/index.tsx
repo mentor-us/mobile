@@ -168,10 +168,11 @@ const TextEditor = () => {
   const onSend = async () => {
     try {
       const htmlContent = await RichTextRef?.current?.getContentHtml();
+      // console.log(Helper.trimHTMLContent(htmlContent ?? ""));
 
       const message = {
         id: `${uuid.v4().toString()}`,
-        content: Helper.trimHTMLContent(htmlContent ?? ""),
+        content: htmlContent ?? "",
         groupId: state._groupDetail.id,
         senderId: currentUser.id,
         createdDate: new Date(),
@@ -374,7 +375,7 @@ const TextEditor = () => {
   const onChangeText = async (text: string) => {
     LOG.debug(TextEditor.name, "onChangeText", text);
 
-    removeMention();
+    // removeMention();
     if (!text || (await isTextEmpty())) {
       RichTextRef?.current?.setContentHTML("");
       setOpenMention(false);
@@ -383,14 +384,14 @@ const TextEditor = () => {
       return;
     }
 
-    const mention = extractMention(text);
-    if (mention) {
-      setOpenMention(true);
-      setSearchMentionName(mention.replace("@", ""));
-    } else if (openMention) {
-      setOpenMention(false);
-      setSearchMentionName("");
-    }
+    // const mention = extractMention(text);
+    // if (mention) {
+    //   setOpenMention(true);
+    //   setSearchMentionName(mention.replace("@", ""));
+    // } else if (openMention) {
+    //   setOpenMention(false);
+    //   setSearchMentionName("");
+    // }
 
     state.setSendable(Boolean(text));
   };

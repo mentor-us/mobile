@@ -7,7 +7,8 @@ export type ModalType =
   | "user_reacted"
   | "choice_result"
   | "status_box"
-  | "group_chat_threads";
+  | "group_chat_threads"
+  | "voting_detail";
 
 export interface BottomSheetRef {
   hide: () => void;

@@ -7,7 +7,11 @@ import { DefaultUserAvatar } from "~/assets/images";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
+import {
+  ForwardMessageModel,
+  MessageModel,
+  ReplyMessageModel,
+} from "~/models/message";
 import { useAppSelector } from "~/redux";
 import EmojisPane from "~/components/EmoijsPane";
 import { EmoijType } from "~/constants/Emoijs";
@@ -25,6 +29,8 @@ import { RichTextRef } from "~/screens/Groups/Chat/TextEditor/index.props";
 import Clipboard from "@react-native-clipboard/clipboard";
 import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
+import TextMessage from "./TextMessage";
+import ImageMessage from "./ImageMessage";
 
 interface Props {
   message: MessageModel;
@@ -34,8 +40,8 @@ interface Props {
 const EmojiReation = ({ message, action }: Props) => {
   const userId = useAppSelector(state => state.user.data.id);
   const isOwner = useMemo(() => {
-    return userId === message.sender.id;
-  }, [message.sender.id]);
+    return userId === message?.sender?.id;
+  }, [message?.sender?.id]);
 
   const styles = useMemo(() => {
     return isOwner ? ownerStyle : otherStyle;
@@ -80,6 +86,7 @@ const EmojiReation = ({ message, action }: Props) => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
     RichTextRef?.current?.setContentHTML(message.content ?? "");
+    RichTextRef?.current?.setContentHTML(message.content ?? "");
     RichTextRef?.current?.focusContentEditor();
   };
 
@@ -120,6 +127,22 @@ const EmojiReation = ({ message, action }: Props) => {
     });
   };
 
+  const renderMessage = () => {
+    switch (message.type) {
+      case "TEXT":
+        return (
+          <TextMessage isOwner={isOwner} message={message} styles={styles} />
+        );
+      case "IMAGE":
+        return <ImageMessage isOwner={isOwner} message={message} />;
+      default:
+        return null;
+    }
+  };
+
+  const isThreeImages =
+    message?.type === "IMAGE" && message?.images?.length === 3;
+
   return (
     <View style={commonStyles.modalCtnStyle}>
       <View style={[styles.root, commonStyles.root]}>
@@ -135,21 +158,8 @@ const EmojiReation = ({ message, action }: Props) => {
             />
           </View>
         )}
-        <View>
-          <TouchableOpacity style={[commonStyles.container, styles.container]}>
-            {!isOwner && (
-              <View style={GlobalStyles.flexRow}>
-                <Text style={otherStyle.senderName}>{message.sender.name}</Text>
-              </View>
-            )}
-            <TextFormatRenderer
-              text={message.content || ""}
-              style={commonStyles.text}
-            />
-            <Text style={otherStyle.sentTime}>
-              {Helper.getTime(message.createdDate)}
-            </Text>
-          </TouchableOpacity>
+        <View style={isThreeImages && commonStyles.imageCtn}>
+          {renderMessage()}
         </View>
       </View>
       <View style={styles.emojiPane}>

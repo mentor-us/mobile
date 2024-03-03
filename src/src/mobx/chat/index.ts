@@ -21,7 +21,9 @@ import { Alert } from "react-native";
 import { TaskModel, TaskStatusType } from "~/models/task";
 import TaskServices from "~/services/task";
 import MeetingServices from "~/services/meeting";
-import LOG from "~/utils/Logger";
+import _ from "lodash";
+import { FlatList } from "react-native-gesture-handler";
+import { MutableRefObject, RefObject, createRef } from "react";
 
 interface Props {
   groupId?: string;
@@ -43,6 +45,8 @@ export class ChatScreenState {
   _groupDetail: GroupModel = GROUP_SAMPLE;
   _messageList: MessageModel[] = [];
   _currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
+  _messageFlatlistRef: RefObject<FlatList<MessageModel>> = createRef();
+  _scrollToId = "";
   page = 0;
 
   constructor() {
@@ -54,6 +58,11 @@ export class ChatScreenState {
     //   // this._messageList = [];
     //   // this.fetchListMessage(props.groupId);
     // }
+  }
+
+  @action
+  setScrollToId(id: string) {
+    this._scrollToId = id;
   }
 
   @action
@@ -416,7 +425,7 @@ export class ChatScreenState {
   @action
   updateMessage(messageId: string, newContent: string) {
     const newMessageList: MessageModel[] = this._messageList.map(item => {
-      if (item.id == messageId) {
+      if (item.id === messageId) {
         return {
           ...item,
           status: "EDITED",
@@ -511,8 +520,15 @@ export class ChatScreenState {
     );
 
     if (data && data.length > 0) {
-      this.setMessageList([...this._messageList, ...data]);
       this.setPage(this.page + 1);
+      const newList = [...this._messageList, ...data];
+      if (this._messageList && this._messageList.length < 15) {
+        const n = _.uniqWith(newList, (a, b) => a.id === b.id);
+        this.setMessageList(n);
+        this.setInitLoading(false);
+      } else {
+        this.setMessageList(newList);
+      }
     } else {
       this.setPage(-1);
     }

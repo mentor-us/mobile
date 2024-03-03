@@ -1,5 +1,5 @@
 import { Alert, DeviceEventEmitter, FlatList } from "react-native";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import styles from "./styles";
 import { observer } from "mobx-react-lite";
 
@@ -70,6 +70,7 @@ const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
 
   return (
     <FlatList
+      ref={state._messageFlatlistRef}
       testID="message-container"
       style={styles.container}
       renderItem={renderItem}
@@ -81,7 +82,7 @@ const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
       ListHeaderComponent={() => <SizedBox height={8} />}
       ItemSeparatorComponent={() => <SizedBox height={4} />}
       inverted
-      onEndReachedThreshold={0.7}
+      onEndReachedThreshold={0.9}
       onEndReached={() => state.setLoadingMoreMessage(true)}
       // legacyImplementation
     />
