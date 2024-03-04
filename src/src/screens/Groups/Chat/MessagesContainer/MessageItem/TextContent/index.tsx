@@ -126,9 +126,11 @@ const TextContent = ({ message }: Props) => {
     DeviceEventEmitter.emit(EventEmitterNames.refreshHomePage);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const replyMessage = (message: ReplyMessageModel) => {
     state.setReplying(message);
   };
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
     navigation.navigate("forwardMessage", {
@@ -215,18 +217,23 @@ const TextContent = ({ message }: Props) => {
               </View>
             )}
 
-            {message.reply && (
-              <View style={commonStyles.card}>
-                <Text style={commonStyles.name} numberOfLines={1}>
-                  {message.reply.senderName}
-                </Text>
-                <TextFormatRenderer
-                  text={message.reply.content || ""}
-                  style={commonStyles.replyMessage}
-                  numberOfLines={1}
-                />
-              </View>
-            )}
+          {message.reply && (
+            <View style={commonStyles.card}>
+              <Text style={commonStyles.name} numberOfLines={1}>
+                {message.reply.senderName}
+              </Text>
+              <TextFormatRenderer
+                text={message.reply.content || ""}
+                style={commonStyles.replyMessage}
+                numberOfLines={1}
+              />
+            </View>
+          )}
+          {message.forward && isOwner && (
+            <Text style={commonStyles.name} numberOfLines={1}>
+              {"Bạn đã chuyển tiếp một tin nhắn"}
+            </Text>
+          )}
 
             {message.status === "DELETED" ? (
               <TextFormatRenderer

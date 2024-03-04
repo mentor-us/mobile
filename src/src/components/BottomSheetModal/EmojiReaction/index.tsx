@@ -63,6 +63,7 @@ const EmojiReation = ({ message, action }: Props) => {
 
     try {
       await MessageApi.removeReaction(message.id || "", userId);
+      // eslint-disable-next-line no-empty
     } catch (error) {
     } finally {
       BottomSheetModalRef.current?.hide();
@@ -74,7 +75,9 @@ const EmojiReation = ({ message, action }: Props) => {
     try {
       await MessageApi.deleteMessage(message.id || "");
       BottomSheetModalRef.current?.hide();
+      // eslint-disable-next-line no-empty
     } catch (error) {
+      // eslint-disable-next-line no-empty
     } finally {
     }
   };
@@ -82,6 +85,7 @@ const EmojiReation = ({ message, action }: Props) => {
   const onEditMessage = async () => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
+    RichTextRef?.current?.setContentHTML(message.content ?? "");
     RichTextRef?.current?.setContentHTML(message.content ?? "");
     RichTextRef?.current?.focusContentEditor();
   };
@@ -194,10 +198,10 @@ const EmojiReation = ({ message, action }: Props) => {
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {message.type === "TEXT" && (
+            {["TEXT"].includes(message.type) && (
               <TouchableOpacity
-                style={commonStyles.actionButton}
                 testID="copy-icon"
+                style={commonStyles.actionButton}
                 onPress={onCopy}>
                 <CopyToClipboardIcon width={24} height={24} />
               </TouchableOpacity>
@@ -210,7 +214,7 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {message.type == "TEXT" && (
+            {["IMAGE", "TEXT", "FILE"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
@@ -231,7 +235,7 @@ const EmojiReation = ({ message, action }: Props) => {
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {message.type === "TEXT" && (
+            {["TEXT"].includes(message.type) && (
               <TouchableOpacity
                 testID="copy-icon"
                 style={commonStyles.actionButton}
@@ -247,7 +251,7 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {message.type == "TEXT" && (
+            {["IMAGE", "TEXT", "FILE"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"

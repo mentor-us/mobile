@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { GroupChannel, GROUP_SAMPLE, GROUP_CHANNEL_SAMPLE } from "~/models/group";
 import styles from "./styles";
 import { Color } from "~/constants/Color";
-import GroupAvatar from "./GroupAvatar";
 
 import CheckBox from "@react-native-community/checkbox";
 import { CheckBoxActiveIcon, CheckBoxInactiveIcon } from "~/assets/svgs";
+import GroupAvatar from "./GroupAvatar";
 interface Props {
   channel?: GroupChannel;
   onPress?: (channel: GroupChannel) => void;
@@ -20,7 +20,7 @@ export default function ChannelItemCheckbox({
   onPress,
   backgroudColor = Color.white,
   showMessage = true,
-  initState
+  initState,
 }: Props) {
   const [checked, setChecked] = React.useState<boolean>(initState||false);
   const handlePress = () => {
@@ -35,10 +35,13 @@ export default function ChannelItemCheckbox({
   };
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
-      <View style={[styles.infoCtn,{backgroundColor:"lightgray",borderRadius:10}]}>
-        {
-          channel?.group && <GroupAvatar role={channel?.group?.role|| "MENTEE"} avatar={channel?.group?.imageUrl} />
-        }
+      <View style={[styles.infoCtn,{backgroundColor: checked ? "#D2DCFE" : "white",borderRadius:10}]}>
+        { channel?.group && (
+          <GroupAvatar
+            role={channel?.group?.role || "MENTEE"}
+            avatar={channel?.group?.imageUrl}
+          />
+        )}
         <View style={styles.flexRowBetween}>
           <View style={[styles.detailCtn]}>
             <View style={styles.categoryCtn}>
@@ -47,7 +50,10 @@ export default function ChannelItemCheckbox({
                   styles.textInfo,
                   styles.displayName,
                   styles.boldText,
-                ]}>
+                  {flex:3}
+                ]}
+                numberOfLines={1}
+                >
                 {channel.name}
               </Text>
               <Text
@@ -57,7 +63,7 @@ export default function ChannelItemCheckbox({
                 ]}>
                 {channel?.group?.name}
               </Text>
-              <TouchableOpacity onPress={handlePress}>
+              <TouchableOpacity onPress={handlePress} style={[styles.itemsCenter]}>
                 {checked ? (
                   <CheckBoxActiveIcon width={24} height={24} />
                 ) : (
