@@ -11,6 +11,7 @@ import UserReacted from "./UserReacted";
 import { ChoiceResultList } from "./ChoiceResultList";
 import StatusBox from "./StatusBox";
 import GroupChatThreads from "./GroupChatThreads";
+import VotingReact from "./VotingReact/VotingReact";
 
 const BottomSheetModal = (_, ref) => {
   const [visible, setVisible] = useState<boolean>(false);
@@ -54,6 +55,8 @@ const BottomSheetModal = (_, ref) => {
         return <StatusBox taskId={data} />;
       case "group_chat_threads":
         return <GroupChatThreads taskId="" />;
+      case "voting_detail":
+        return <VotingReact data={data} />;
       default:
         return <></>;
     }

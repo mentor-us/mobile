@@ -73,6 +73,7 @@ export interface MessageModel {
   uploadFailed?: boolean;
   status?: "SENT" | "EDITED" | "DELETED";
   reply?: ReplyMessageModel | undefined;
+  editedAt?: string;
 }
 
 export interface MessagesSectionModel {

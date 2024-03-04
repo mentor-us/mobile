@@ -12,6 +12,7 @@ import { DefaultUserAvatar } from "~/assets/images";
 import { useNavigation } from "@react-navigation/native";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
+import Feather from "react-native-vector-icons/Feather";
 
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -26,12 +27,12 @@ import { EntryAnimationsValues } from "react-native-reanimated";
 import TotalEmojiReacted from "~/components/TotalEmojiReacted";
 import { EmoijType } from "~/constants/Emoijs";
 
-import _ from "lodash";
 import { observer } from "mobx-react-lite";
 import { useChatScreenState } from "~/context/chat";
 import GroupApi from "~/api/remote/GroupApi";
 import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import EventEmitterNames from "~/constants/EventEmitterNames";
+import SizedBox from "~/components/SizedBox";
 
 interface Props {
   message: MessageModel;
@@ -165,72 +166,96 @@ const TextContent = ({ message }: Props) => {
   const trimmedContent = message.content ?? "";
 
   return (
-    <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
-      {/* User Avatar */}
-      {!isOwner && (
-        <TouchableOpacity onPress={onPressAvatar}>
-          <Image
-            source={
-              message.sender.imageUrl
-                ? { uri: message.sender.imageUrl }
-                : DefaultUserAvatar
-            }
-            style={commonStyles.avatar}
+    <View>
+      {message.status === "EDITED" && (
+        <View
+          style={isOwner ? commonStyles.editCtn : commonStyles.otherEditCtn}>
+          <Feather
+            name={"edit-2"}
+            size={commonStyles.replyMessage.fontSize}
+            color={commonStyles.replyMessage.color}
           />
-        </TouchableOpacity>
+          <SizedBox width={5} />
+          <TextFormatRenderer
+            text={
+              isOwner
+                ? "Bạn đã chỉnh sửa tin nhắn"
+                : `${message.sender.name} đã chỉnh sửa tin nhắn`
+            }
+            style={commonStyles.replyMessage}
+            numberOfLines={1}
+          />
+        </View>
       )}
+      <Animated.View
+        style={[styles.root, commonStyles.root]}
+        entering={entering}>
+        {/* User Avatar */}
+        {!isOwner && (
+          <TouchableOpacity onPress={onPressAvatar}>
+            <Image
+              source={
+                message.sender.imageUrl
+                  ? { uri: message.sender.imageUrl }
+                  : DefaultUserAvatar
+              }
+              style={commonStyles.avatar}
+            />
+          </TouchableOpacity>
+        )}
 
-      {/* Message Content */}
-      <GestureDetector gesture={composed}>
-        <TouchableOpacity
-          style={[commonStyles.container, styles.container]}
-          disabled={message.status == "DELETED"}>
-          {!isOwner && (
-            <View style={GlobalStyles.flexRow}>
-              <Text style={otherStyle.senderName}>{message.sender.name}</Text>
-            </View>
-          )}
+        {/* Message Content */}
+        <GestureDetector gesture={composed}>
+          <TouchableOpacity
+            style={[commonStyles.container, styles.container]}
+            disabled={message.status === "DELETED"}>
+            {!isOwner && (
+              <View style={GlobalStyles.flexRow}>
+                <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+              </View>
+            )}
 
-          {message.reply && (
-            <View style={commonStyles.card}>
-              <Text style={commonStyles.name} numberOfLines={1}>
-                {message.reply.senderName}
-              </Text>
+            {message.reply && (
+              <View style={commonStyles.card}>
+                <Text style={commonStyles.name} numberOfLines={1}>
+                  {message.reply.senderName}
+                </Text>
+                <TextFormatRenderer
+                  text={message.reply.content || ""}
+                  style={commonStyles.replyMessage}
+                  numberOfLines={1}
+                />
+              </View>
+            )}
+
+            {message.status === "DELETED" ? (
               <TextFormatRenderer
-                text={message.reply.content || ""}
-                style={commonStyles.replyMessage}
-                numberOfLines={1}
+                text={trimmedContent}
+                style={commonStyles.dimmedText}
               />
-            </View>
-          )}
+            ) : (
+              <TextFormatRenderer
+                text={trimmedContent}
+                style={commonStyles.text}
+                isFullDetail
+              />
+            )}
 
-          {message.status == "DELETED" ? (
-            <TextFormatRenderer
-              text={trimmedContent}
-              style={commonStyles.dimmedText}
-            />
-          ) : (
-            <TextFormatRenderer
-              text={trimmedContent}
-              style={commonStyles.text}
-              isFullDetail
-            />
-          )}
+            <Text style={otherStyle.sentTime}>
+              {Helper.getTime(message.createdDate)}
+            </Text>
 
-          <Text style={otherStyle.sentTime}>
-            {Helper.getTime(message.createdDate)}
-          </Text>
-
-          {message.status != "DELETED" && (
-            <TouchableOpacity
-              onPress={showUserReacted}
-              style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
-              <TotalEmojiReacted reaction={message.totalReaction} />
-            </TouchableOpacity>
-          )}
-        </TouchableOpacity>
-      </GestureDetector>
-    </Animated.View>
+            {message.status !== "DELETED" && (
+              <TouchableOpacity
+                onPress={showUserReacted}
+                style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
+                <TotalEmojiReacted reaction={message.totalReaction} />
+              </TouchableOpacity>
+            )}
+          </TouchableOpacity>
+        </GestureDetector>
+      </Animated.View>
+    </View>
   );
 };
 
