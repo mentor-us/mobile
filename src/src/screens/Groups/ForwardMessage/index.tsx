@@ -81,7 +81,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return listChannelChoosen.map(item => {
       return (
         <View key={item.id} style={[styles.itemCtn]}>
-          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true} hiddenImage={true}/>
+          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true}/>
         </View>
       );
     });

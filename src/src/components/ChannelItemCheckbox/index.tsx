@@ -6,14 +6,13 @@ import { Color } from "~/constants/Color";
 
 import CheckBox from "@react-native-community/checkbox";
 import { CheckBoxActiveIcon, CheckBoxInactiveIcon } from "~/assets/svgs";
-import GroupAvatar from "../GroupItem/GroupAvatar";
+import GroupAvatar from "./GroupAvatar";
 interface Props {
   channel?: GroupChannel;
   onPress?: (channel: GroupChannel) => void;
   backgroudColor?: string;
   showMessage?: boolean;
   initState?: boolean;
-  hiddenImage?: boolean;
 }
 
 export default function ChannelItemCheckbox({
@@ -22,7 +21,6 @@ export default function ChannelItemCheckbox({
   backgroudColor = Color.white,
   showMessage = true,
   initState,
-  hiddenImage= false
 }: Props) {
   const [checked, setChecked] = React.useState<boolean>(initState||false);
   const handlePress = () => {
@@ -38,7 +36,7 @@ export default function ChannelItemCheckbox({
   return (
     <TouchableOpacity style={[]} onPress={handlePress}>
       <View style={[styles.infoCtn,{backgroundColor: checked ? "#D2DCFE" : "white",borderRadius:10}]}>
-        {hiddenImage == false && channel?.group && (
+        { channel?.group && (
           <GroupAvatar
             role={channel?.group?.role || "MENTEE"}
             avatar={channel?.group?.imageUrl}
