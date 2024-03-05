@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 import React, { useState } from "react";
 import styles from "./styles";
 import { ArrowheadDownIcon } from "~/assets/svgs";
@@ -77,11 +77,11 @@ const PinnedMessages = () => {
 
   return (
     <>
-      <ContextMenuModal
+      {/* <ContextMenuModal
         visible={visible}
         onDismiss={hideModal}
         containerStyle={containerStyle}
-      />
+      /> */}
       <Animated.View
         testID="pinned-msg"
         style={[styles.container, expanding && styles.expandCtn]}
