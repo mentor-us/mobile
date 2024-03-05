@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
     marginLeft: 1,
-    gap: 5
+    gap: 1
   },
   descCtn: {
     flexDirection: "row",
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   textInfo: {
-    fontSize: FontSize.small,
+    fontSize: FontSize.smaller,
     color: Color.text[4],
     flex: 1,
   },
@@ -58,13 +58,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   displayName: {
-    fontSize: FontSize.larger,
+    fontSize: FontSize.large,
     color: Color.text[0],
   },
   flexRowBetween: {
     justifyContent: "space-between",
     flexDirection: "row",
     flex: 1,
+  },
+  itemsCenter: {
+    justifyContent: "center",
+    alignItems: 'center',
+    // flex: 1,
   },
   pinIcon: {
     position: "absolute",

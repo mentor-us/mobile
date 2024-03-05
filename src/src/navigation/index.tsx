@@ -85,7 +85,7 @@ const RootNavigator = () => {
       onReady={() => RNBootSplash.hide()}
       linking={navigationLinking}
       fallback={<LoadingFullSreen />}>
-      {!authStore.userToken  ? (
+      {!authStore.userToken ? (
         <UnAuthorizedStack />
       ) : (
         <>

@@ -81,7 +81,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return listChannelChoosen.map(item => {
       return (
         <View key={item.id} style={[styles.itemCtn]}>
-          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true} />
+          <ChannelItemCheckbox onPress={onPress} channel={item} initState={true}/>
         </View>
       );
     });
@@ -108,14 +108,10 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   };
 
   const handleSubmit = listChannelId => {
-    console.log("handleSubmit");
-    console.log(messageId);
-    console.log(listChannelId);
     ChannelService.forward(
       messageId,
       listChannelId
     ).then((res:any)=>{
-      console.log("Submit success")
       Toast.show("Chuyển tiếp tin nhắn thành công", {
         position: Toast.positions.BOTTOM
       })
@@ -123,7 +119,6 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
         navigation.goBack()
       }
     }).catch((err)=>{
-      console.log("Submit fail")
 
     })
   };
@@ -179,7 +174,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       // Send Axios request here
-      if(search!=searchTerm){
+      if (search != searchTerm) {
         setSearch(searchTerm);
       }
     }, 500);
@@ -198,61 +193,28 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     setSearch("");
   }, []);
   return (
-    <SafeAreaView style={[]}>
-      <View style={[styles.reviewMessageContainer]}>
+    <SafeAreaView style={[{backgroundColor: "#E2E9F3",flex:1}]}>
+      <View style={styles.reviewMessageContainer}>
         <Text style={[styles.textInfo, styles.displayName, styles.boldText]}>
           Xem trước tin nhắn
         </Text>
-        {messageType == "TEXT" && (
+        {["IMAGE", "TEXT", "FILE"].includes(messageType) && (
           <GestureDetector gesture={composed}>
-            <TouchableWithoutFeedback style={[styles.messageContainer]}>
+            <TouchableWithoutFeedback style={styles.messageContainer}>
               <TextFormatRenderer
-                text={result.join('<br>')}
+                text={result.join("<br>")}
                 style={styles.dimmedText}
                 numberOfLines={4}
               />
             </TouchableWithoutFeedback>
           </GestureDetector>
         )}
-        {/* {messageType == "IMAGE" && (
-          <GridThumbnail
-          useSkeletonWhenLoad
-          maxWidth={screenWidth * 0.8}
-          mediaData={images || []}
-        />
-          // <ImageList message={message} key={message.id} />
-        )} */}
       </View>
-      {/* <Text>{trimmedContent}</Text> */}
-      {/* <View
-        style={[
-          styles.fieldContainer,
-          styles.paddingItem,
-          { width: "100%", borderRadius: 5 },
-        ]}>
-        <View>
-          <SizedBox height={16} />
-          <PencilBlack width={24} height={24} />
-        </View>
-        <SizedBox width={16} />
-        <MUITextInput
-          label="Thêm Nhận xét"
-          keyboardType={"default"}
-          value={comment.current}
-          onChangeText={text => {
-            comment.current = text;
-          }}
-          multiline
-          numberOfLines={2}
-          errorText={""}
-          style={{ textAlignVertical: "top" }}
-        />
-      </View> */}
       <View
         style={[
           styles.fieldContainer,
           styles.paddingItem,
-          { width: "100%", marginTop: 10 },
+          { width: "100%", marginTop: 10,backgroundColor: "#E2E9F3" },
         ]}>
         <View>
           <SizedBox height={16} />
