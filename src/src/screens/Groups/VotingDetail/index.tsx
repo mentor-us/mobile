@@ -432,7 +432,7 @@ const VotingDetail = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
-            {vote.multiple ? (
+            {!vote.multiple ? (
               <RadioButton.Group
                 onValueChange={newValue => {
                   onPressRadioButton(newValue);
