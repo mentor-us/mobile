@@ -26,7 +26,7 @@ import Helper from "~/utils/Helper";
 import MUITextInput from "~/components/MUITextInput";
 import uuid from "react-native-uuid";
 import Feather from "react-native-vector-icons/Feather";
-import { Checkbox, FAB, Snackbar } from "react-native-paper";
+import { Checkbox, FAB, RadioButton, Snackbar } from "react-native-paper";
 import VoteService from "~/services/vote";
 import { useAppSelector } from "~/redux";
 import { ColumnChartImage, DefaultUserAvatar } from "~/assets/images";
@@ -195,19 +195,33 @@ const VotingDetail = ({ route }) => {
 
   const pressCheckBox = (choiceId: string) => {
     const newChoices = vote.choiceResult.map(choice => {
-      if (choice.id != choiceId) {
+      if (choice.id !== choiceId) {
         return choice;
       }
 
       return {
         ...choice,
-        status: choice.status == "checked" ? "unchecked" : "checked",
+        status: choice.status === "checked" ? "unchecked" : "checked",
       } as ChoiceResult;
     });
     setVote({
       ...vote,
       choiceResult: newChoices,
     });
+  };
+
+  const onPressRadioButton = (choiceId: string) => {
+    const newChoices = vote.choices.find(choice => choice.id === choiceId);
+
+    // setVote({
+    //   ...vote,
+    //   choiceResult: [
+    //     {
+    //       ...newChoices,
+    //       status: "checked",
+    //     },
+    //   ],
+    // });
   };
 
   const openChoiceResult = useCallback(
@@ -376,65 +390,141 @@ const VotingDetail = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
-            {vote.choiceResult.map((item, index) => {
-              const votePercent = item.voters.length
-                ? ((item.voters.length / voterNumber) * 103).toFixed(2) + "%"
-                : "0%";
+            {true ? (
+              <RadioButton.Group
+                onValueChange={newValue => {
+                  onPressRadioButton(newValue);
+                }}
+                value={vote?.choiceResult[0]?.id ?? ""}>
+                {vote.choiceResult.map((item, index) => {
+                  const votePercent = item.voters.length
+                    ? ((item.voters.length / voterNumber) * 103).toFixed(2) +
+                      "%"
+                    : "0%";
 
-              return (
-                <View style={styles.optionItem} key={item.id}>
-                  <View
-                    style={[
-                      styles.percentView,
-                      {
-                        width: votePercent,
-                      },
-                    ]}
-                  />
-                  {/* <MarkTitleIcon width={20} height={20} /> */}
-                  <View style={styles.fieldInput}>
-                    <View style={styles.checkboxCtn}>
-                      <Checkbox
-                        onPress={() => pressCheckBox(item.id)}
-                        status={item.status}
-                        color={Color.primary}
-                        disabled={vote.status === "CLOSED"}
+                  return (
+                    <View style={styles.optionItem} key={item.id}>
+                      <View
+                        style={[
+                          styles.percentView,
+                          {
+                            width: votePercent,
+                          },
+                        ]}
                       />
+                      {/* <MarkTitleIcon width={20} height={20} /> */}
+                      <View style={styles.fieldInput}>
+                        <View style={styles.checkboxCtn}>
+                          <RadioButton
+                            value={item.id}
+                            status={
+                              item.status === "checked"
+                                ? "checked"
+                                : "unchecked"
+                            }
+                            color={Color.primary}
+                            disabled={vote.status === "CLOSED"}
+                          />
+                        </View>
+
+                        {newChoiceIds.includes(item.id) ? (
+                          <MUITextInput
+                            label={"Lựa chọn mới"}
+                            keyboardType={"default"}
+                            value={item.name}
+                            onChangeText={text => {
+                              changeName(item.id, text);
+                            }}
+                            multiline
+                            errorText={errors[index]}
+                          />
+                        ) : (
+                          <Text style={styles.choiceContent}>{item.name}</Text>
+                        )}
+                      </View>
+                      {newChoiceIds.includes(item.id) && (
+                        <FAB
+                          icon="close"
+                          style={styles.fieldIcon}
+                          small
+                          onPress={() => removeChoice(item.id)}
+                        />
+                      )}
+                      {item.voters.length !== 0 && (
+                        <TouchableOpacity
+                          style={styles.voterCtn}
+                          onPress={() => openChoiceResult(item)}>
+                          <VoterThumbnail voters={item.voters} />
+                        </TouchableOpacity>
+                      )}
                     </View>
+                  );
+                })}
+              </RadioButton.Group>
+            ) : (
+              <>
+                {vote.choiceResult.map((item, index) => {
+                  const votePercent = item.voters.length
+                    ? ((item.voters.length / voterNumber) * 103).toFixed(2) +
+                      "%"
+                    : "0%";
 
-                    {newChoiceIds.includes(item.id) ? (
-                      <MUITextInput
-                        label={"Lựa chọn mới"}
-                        keyboardType={"default"}
-                        value={item.name}
-                        onChangeText={text => {
-                          changeName(item.id, text);
-                        }}
-                        multiline
-                        errorText={errors[index]}
+                  return (
+                    <View style={styles.optionItem} key={item.id}>
+                      <View
+                        style={[
+                          styles.percentView,
+                          {
+                            width: votePercent,
+                          },
+                        ]}
                       />
-                    ) : (
-                      <Text style={styles.choiceContent}>{item.name}</Text>
-                    )}
-                  </View>
-                  {newChoiceIds.includes(item.id) && (
-                    <FAB
-                      icon="close"
-                      style={styles.fieldIcon}
-                      small
-                      onPress={() => removeChoice(item.id)}
-                    />
-                  )}
-                  {item.voters.length !== 0 && (
-                    <TouchableOpacity
-                      style={styles.voterCtn}
-                      onPress={() => openChoiceResult(item)}>
-                      <VoterThumbnail voters={item.voters} />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            })}
+                      {/* <MarkTitleIcon width={20} height={20} /> */}
+                      <View style={styles.fieldInput}>
+                        <View style={styles.checkboxCtn}>
+                          <Checkbox
+                            onPress={() => pressCheckBox(item.id)}
+                            status={item.status}
+                            color={Color.primary}
+                            disabled={vote.status === "CLOSED"}
+                          />
+                        </View>
+
+                        {newChoiceIds.includes(item.id) ? (
+                          <MUITextInput
+                            label={"Lựa chọn mới"}
+                            keyboardType={"default"}
+                            value={item.name}
+                            onChangeText={text => {
+                              changeName(item.id, text);
+                            }}
+                            multiline
+                            errorText={errors[index]}
+                          />
+                        ) : (
+                          <Text style={styles.choiceContent}>{item.name}</Text>
+                        )}
+                      </View>
+                      {newChoiceIds.includes(item.id) && (
+                        <FAB
+                          icon="close"
+                          style={styles.fieldIcon}
+                          small
+                          onPress={() => removeChoice(item.id)}
+                        />
+                      )}
+                      {item.voters.length !== 0 && (
+                        <TouchableOpacity
+                          style={styles.voterCtn}
+                          onPress={() => openChoiceResult(item)}>
+                          <VoterThumbnail voters={item.voters} />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  );
+                })}
+              </>
+            )}
           </ScrollView>
 
           <View style={styles.lineSeparator} />
