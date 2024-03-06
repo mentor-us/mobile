@@ -18,6 +18,8 @@ import { useChatScreenState } from "~/context/chat";
 import File from "~/components/File";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
+import GroupApi from "~/api/remote/GroupApi";
+import { EmoijType } from "~/constants/Emoijs";
 
 interface Props {
   message: MessageModel;
@@ -75,6 +77,41 @@ const FileItem = ({ message }: Props) => {
       images: message.images,
     });
   };
+  const reactEmojiAction = (emoji: EmoijType) => {
+    const newTotalReaction = Helper.addEmoji(message.totalReaction, emoji);
+    state.setTotalReaction(newTotalReaction, message.id);
+
+    state.setReactions(
+      Helper.addUserEmoji(message.reactions, emoji, userData),
+      message.id,
+    );
+  };
+  const deleteEmoji = () => {
+    state.setTotalReaction(
+      Helper.removeEmoji(message.totalReaction),
+      message.id,
+    );
+
+    state.setReactions(
+      Helper.removeUserEmoji(message.reactions, userData),
+      message.id,
+    );
+  };
+  const pinMessage = async () => {
+    const isSuccess = state.addPinnedMessage(message);
+    if (isSuccess) {
+      await GroupApi.pinMessage(state._groupDetail.id, message.id);
+
+      const regex = /(<[^>]+>|<[^>]>|<\/[^>]>)/g;
+      const sanitizedContent = message.content?.replace(regex, " ");
+      // const newMessage = `${state._currentUser.name} đã ghim tin nhắn "${sanitizedContent}"`;
+      // queryAction.updateGroupNewMessage(
+      //   state._groupDetail.id,
+      //   newMessage,
+      //   false,
+      // );
+    }
+  };
   const longPressGesture = Gesture.LongPress()
     .runOnJS(true)
     .onStart(e => {
@@ -84,6 +121,9 @@ const FileItem = ({ message }: Props) => {
         { ...message, totalReaction: message.totalReaction } as MessageModel,
         {
           forwardMessage: forwardMessage,
+          reactEmojiAction: reactEmojiAction,
+          deleteEmoji: deleteEmoji,
+          pinMessage: pinMessage
         },
       );
     })
@@ -118,7 +158,7 @@ const FileItem = ({ message }: Props) => {
               {"Bạn đã chuyển tiếp một file"}
             </Text>
           )}
-          <File file={message.file} />
+          <File file={message.file} isDownloadable={true} />
           <Text style={otherStyle.sentTime}>
             {Helper.getTime(message.createdDate)}
           </Text>
