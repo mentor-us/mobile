@@ -213,31 +213,21 @@ const VotingDetail = ({ route }) => {
 
   const onPressRadioButton = (choiceId: string) => {
     // const newChoices = vote.choices.find(choice => choice.id === choiceId);
-    console.log(myVote);
     const newChoices = vote.choiceResult.map(choice => {
+      let newVoter = [...choice.voters];
       if (choice.id !== choiceId) {
+        if (myVote) newVoter = newVoter.filter(voter => voter.id != myVote.id);
         return {
           ...choice,
           status: "unchecked",
-          voters: myVote
-            ? [
-                ...choice.voters.filter(voter => {
-                  voter.id != myVote.id;
-                }),
-              ]
-            : [...choice.voters],
+          voters: newVoter,
         } as ChoiceResult;
       }
-      let newVoter = [...choice.voters];
       if (myVote) {
         if (choice.status === "checked") {
-          newVoter = [
-            ...choice.voters.filter(voter => {
-              voter.id != myVote.id;
-            }),
-          ];
+          newVoter = newVoter.filter(voter => voter.id != myVote.id);
         } else {
-          newVoter = [...choice.voters, myVote];
+          newVoter = [...newVoter, myVote];
         }
       }
       return {
