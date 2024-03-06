@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import {
-  Animated,
   Image,
   ImageProps,
   ImageRequireSource,

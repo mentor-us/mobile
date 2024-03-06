@@ -1,22 +1,34 @@
-import {View, StyleSheet, Image} from "react-native";
-import React, {memo} from "react";
-import {DefaultGroupNotification} from "~/assets/images";
-import {StudentReadingIcon, TeacherIcon} from "~/assets/svgs";
-import {Color} from "~/constants/Color";
-import {RoleType} from "~/models/commonTypes";
+import { View, StyleSheet, Image } from "react-native";
+import React, { memo } from "react";
+import { DefaultGroupNotification } from "~/assets/images";
+import { StudentReadingIcon, TeacherIcon } from "~/assets/svgs";
+import { Color } from "~/constants/Color";
+import { RoleType } from "~/models/commonTypes";
+import { BASE_URL } from "@env";
+import { useMobxStore } from "~/mobx/store";
 
 interface Props {
   avatar?: string;
   online?: boolean;
   role?: RoleType;
 }
-const GroupAvatar = ({avatar, online = true, role = "MENTEE"}: Props) => {
+const GroupAvatar = ({ avatar, online = true, role = "MENTEE" }: Props) => {
+  const store = useMobxStore();
+  const searchParams = new URLSearchParams();
+  searchParams.append("key", avatar ?? "");
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>
         <Image
+          source={{
+            uri: `${BASE_URL}/api/files?${searchParams}`,
+
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${store.authStore.userToken}`,
+            },
+          }}
           style={styles.avatar}
-          source={avatar ? {uri: avatar} : DefaultGroupNotification}
         />
         <View style={styles.roleType}>
           {role == "MENTEE" ? (
@@ -60,5 +72,10 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     justifyContent: "center",
     alignItems: "center",
+  },
+  imageMessageImage: {
+    flex: 1,
+    height: undefined,
+    width: undefined,
   },
 });

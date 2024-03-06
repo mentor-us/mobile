@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 export const commonStyles = StyleSheet.create({
@@ -15,6 +15,25 @@ export const commonStyles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     borderWidth: 0.5,
+  },
+  otherEditCtn: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingStart: 55,
+    marginTop: 0,
+  },
+  editCtn: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    alignSelf: "flex-end",
+    paddingHorizontal: 10,
+    marginTop: 0,
   },
   ownerContainer: {},
   otherContainer: {},
