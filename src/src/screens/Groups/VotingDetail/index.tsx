@@ -124,11 +124,11 @@ const VotingDetail = ({ route }) => {
     goBack();
   };
 
-  const calculateVoterNumber = (voteDetail: VoteDetail) => {
+  const calculateVoterNumber = (voteDetail: VoteResult) => {
     if (!voteDetail) {
       return 0;
     }
-    return voteDetail.choices
+    return voteDetail.choiceResult
       .flatMap(choice => choice.voters)
       .flatMap(voter => voter.id)
       .filter((value, index, array) => array.indexOf(value) === index).length;
@@ -199,10 +199,18 @@ const VotingDetail = ({ route }) => {
       if (choice.id !== choiceId) {
         return choice;
       }
-
+      let newVoter = [...choice.voters];
+      if (myVote) {
+        if (choice.status === "checked") {
+          newVoter = newVoter.filter(voter => voter.id != myVote.id);
+        } else {
+          newVoter = [...newVoter, myVote];
+        }
+      }
       return {
         ...choice,
         status: choice.status === "checked" ? "unchecked" : "checked",
+        voters: newVoter,
       } as ChoiceResult;
     });
     setVote({
@@ -325,14 +333,10 @@ const VotingDetail = ({ route }) => {
     setCurrentValueRadio(
       indexChoice != -1 ? vote.choiceResult[indexChoice].id : "",
     );
-    vote?.choiceResult.forEach(choice => {
-      choice.voters.forEach(voter => {
-        if (!myVote && voter.id == currentUser.id) {
-          setMyVote(voter);
-          return;
-        }
-      });
-    });
+    if (!myVote) {
+      setMyVote({ ...currentUser });
+    }
+    setVoterNumber(calculateVoterNumber(vote));
   }, [vote, refreshing]);
 
   const VoterThumbnail = ({ voters }) => {
@@ -428,7 +432,7 @@ const VotingDetail = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
-            {!vote.multiple ? (
+            {vote.multiple ? (
               <RadioButton.Group
                 onValueChange={newValue => {
                   onPressRadioButton(newValue);
