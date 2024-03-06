@@ -45,6 +45,7 @@ export interface VoteDetail {
   status: "OPEN" | "CLOSED";
   closedDate: string;
   canEdit: boolean;
+  multiple?: boolean;
 }
 
 export interface ChoiceDetail {

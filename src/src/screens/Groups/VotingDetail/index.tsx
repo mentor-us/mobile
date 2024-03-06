@@ -35,6 +35,7 @@ import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderRight from "./HeaderRight";
 import VotingApi from "~/api/remote/VotingApi";
+import { ShortProfileUserModel } from "~/models/user";
 
 const VotingDetail = ({ route }) => {
   /* Data in need */
@@ -50,6 +51,7 @@ const VotingDetail = ({ route }) => {
   const [snackBar, setSnackBar] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [currentValueRadio, setCurrentValueRadio] = useState<string>("");
+  const [myVote, setMyVote] = useState<ShortProfileUserModel | null>(null);
   const onDismissSnackBar = () => {
     setMessage("");
     setSnackBar(false);
@@ -210,18 +212,38 @@ const VotingDetail = ({ route }) => {
   };
 
   const onPressRadioButton = (choiceId: string) => {
-    console.log("onPressRadioButton");
-    console.log(vote.choiceResult[0]?.voters);
     // const newChoices = vote.choices.find(choice => choice.id === choiceId);
-
+    console.log(myVote);
     const newChoices = vote.choiceResult.map(choice => {
       if (choice.id !== choiceId) {
-        return { ...choice, status: "unchecked" } as ChoiceResult;
+        return {
+          ...choice,
+          status: "unchecked",
+          voters: myVote
+            ? [
+                ...choice.voters.filter(voter => {
+                  voter.id != myVote.id;
+                }),
+              ]
+            : [...choice.voters],
+        } as ChoiceResult;
       }
-
+      let newVoter = [...choice.voters];
+      if (myVote) {
+        if (choice.status === "checked") {
+          newVoter = [
+            ...choice.voters.filter(voter => {
+              voter.id != myVote.id;
+            }),
+          ];
+        } else {
+          newVoter = [...choice.voters, myVote];
+        }
+      }
       return {
         ...choice,
         status: choice.status === "checked" ? "unchecked" : "checked",
+        voters: newVoter,
       } as ChoiceResult;
     });
 
@@ -313,6 +335,14 @@ const VotingDetail = ({ route }) => {
     setCurrentValueRadio(
       indexChoice != -1 ? vote.choiceResult[indexChoice].id : "",
     );
+    vote?.choiceResult.forEach(choice => {
+      choice.voters.forEach(voter => {
+        if (!myVote && voter.id == currentUser.id) {
+          setMyVote(voter);
+          return;
+        }
+      });
+    });
   }, [vote, refreshing]);
 
   const VoterThumbnail = ({ voters }) => {
@@ -343,7 +373,7 @@ const VotingDetail = ({ route }) => {
     return `${hh}:${mm}, ${Helper.getMomentTime(src)}`;
   };
   useEffect(() => {
-    console.log(currentValueRadio);
+    // console.log(currentValueRadio);
   }, [currentValueRadio]);
   return (
     <SafeAreaView style={styles.container}>
@@ -383,7 +413,9 @@ const VotingDetail = ({ route }) => {
               <View style={styles.headerTitle}>
                 <SortIcon />
                 <Text style={styles.openTitleText}>
-                  Chọn được nhiều lựa chọn
+                  {vote.multiple
+                    ? "Chọn được nhiều lựa chọn"
+                    : "Chọn được nhiều nhất 1 bình chọn"}
                 </Text>
               </View>
             </>
@@ -406,7 +438,7 @@ const VotingDetail = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
-            {true ? (
+            {!vote.multiple ? (
               <RadioButton.Group
                 onValueChange={newValue => {
                   onPressRadioButton(newValue);
