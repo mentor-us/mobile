@@ -49,11 +49,11 @@ const VotingDetail = ({ route }) => {
   const [newChoiceIds, setNewChoiceIds] = useState<any[]>([]);
   const [snackBar, setSnackBar] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [currentValueRadio, setCurrentValueRadio] = useState<string>("");
   const onDismissSnackBar = () => {
     setMessage("");
     setSnackBar(false);
   };
-
   /* Error handling */
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -192,7 +192,6 @@ const VotingDetail = ({ route }) => {
       choiceResult: newChoices,
     });
   };
-
   const pressCheckBox = (choiceId: string) => {
     const newChoices = vote.choiceResult.map(choice => {
       if (choice.id !== choiceId) {
@@ -211,17 +210,25 @@ const VotingDetail = ({ route }) => {
   };
 
   const onPressRadioButton = (choiceId: string) => {
-    const newChoices = vote.choices.find(choice => choice.id === choiceId);
+    console.log("onPressRadioButton");
+    console.log(vote.choiceResult[0]?.voters);
+    // const newChoices = vote.choices.find(choice => choice.id === choiceId);
 
-    // setVote({
-    //   ...vote,
-    //   choiceResult: [
-    //     {
-    //       ...newChoices,
-    //       status: "checked",
-    //     },
-    //   ],
-    // });
+    const newChoices = vote.choiceResult.map(choice => {
+      if (choice.id !== choiceId) {
+        return { ...choice, status: "unchecked" } as ChoiceResult;
+      }
+
+      return {
+        ...choice,
+        status: choice.status === "checked" ? "unchecked" : "checked",
+      } as ChoiceResult;
+    });
+
+    setVote({
+      ...vote,
+      choiceResult: newChoices,
+    });
   };
 
   const openChoiceResult = useCallback(
@@ -230,6 +237,7 @@ const VotingDetail = ({ route }) => {
         choice: choice,
         groupId: vote.groupId,
       });
+      setCurrentValueRadio(choice.id);
     },
     [vote.choiceResult],
   );
@@ -299,6 +307,12 @@ const VotingDetail = ({ route }) => {
     navigation.setOptions({
       headerRight: headerRight,
     } as StackNavigationOptions);
+    const indexChoice = vote.choiceResult.findIndex(
+      choice => choice.status == "checked",
+    );
+    setCurrentValueRadio(
+      indexChoice != -1 ? vote.choiceResult[indexChoice].id : "",
+    );
   }, [vote, refreshing]);
 
   const VoterThumbnail = ({ voters }) => {
@@ -328,7 +342,9 @@ const VotingDetail = ({ route }) => {
 
     return `${hh}:${mm}, ${Helper.getMomentTime(src)}`;
   };
-
+  useEffect(() => {
+    console.log(currentValueRadio);
+  }, [currentValueRadio]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -395,7 +411,7 @@ const VotingDetail = ({ route }) => {
                 onValueChange={newValue => {
                   onPressRadioButton(newValue);
                 }}
-                value={vote?.choiceResult[0]?.id ?? ""}>
+                value={currentValueRadio}>
                 {vote.choiceResult.map((item, index) => {
                   const votePercent = item.voters.length
                     ? ((item.voters.length / voterNumber) * 103).toFixed(2) +
@@ -416,6 +432,7 @@ const VotingDetail = ({ route }) => {
                       <View style={styles.fieldInput}>
                         <View style={styles.checkboxCtn}>
                           <RadioButton
+                            // onValueChange={() => pressRadioInput(item.id)}
                             value={item.id}
                             status={
                               item.status === "checked"
