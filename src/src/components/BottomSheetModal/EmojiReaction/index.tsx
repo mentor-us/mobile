@@ -9,6 +9,7 @@ import Helper from "~/utils/Helper";
 
 import {
   ForwardMessageModel,
+  MessageEnumType,
   MessageModel,
   ReplyMessageModel,
 } from "~/models/message";
@@ -31,7 +32,7 @@ import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
 import TextMessage from "./TextMessage";
 import ImageMessage from "./ImageMessage";
-
+import File from "~/components/File";
 interface Props {
   message: MessageModel;
   action: any;
@@ -129,12 +130,14 @@ const EmojiReation = ({ message, action }: Props) => {
 
   const renderMessage = () => {
     switch (message.type) {
-      case "TEXT":
+      case MessageEnumType.Text:
         return (
           <TextMessage isOwner={isOwner} message={message} styles={styles} />
         );
-      case "IMAGE":
+      case MessageEnumType.Image:
         return <ImageMessage isOwner={isOwner} message={message} />;
+      case MessageEnumType.File:
+        return <File file={message.file!} isDownloadable={false}/> 
       default:
         return null;
     }
