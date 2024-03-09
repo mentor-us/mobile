@@ -18,7 +18,6 @@ import {
   EMPTY_VOTE_RESULT,
   NEW_VOTE_SAMPLE,
   Vote,
-  VoteDetail,
   VoteResult,
 } from "~/models/vote";
 import { ScrollView } from "react-native-gesture-handler";
@@ -82,17 +81,17 @@ const VotingDetail = ({ route }) => {
     const oldChoices = vote.choices;
     const newChoices = newVote.choices;
 
-    if (oldChoices.length != newChoices.length) {
+    if (oldChoices.length !== newChoices.length) {
       return true;
     }
 
-    let isUpdated: boolean = false;
+    let isUpdated = false;
     oldChoices.forEach(oldChoice => {
       const oldVoterIds = oldChoice.voters.map(voter => voter.id);
       const isSelectedOldChoice = oldVoterIds.includes(currentUser.id);
 
       const newChoice = newVote.choices.find(
-        choice => choice.id == oldChoice.id,
+        choice => choice.id === oldChoice.id,
       );
       if (!newChoice) {
         isUpdated = true;
@@ -366,9 +365,7 @@ const VotingDetail = ({ route }) => {
 
     return `${hh}:${mm}, ${Helper.getMomentTime(src)}`;
   };
-  useEffect(() => {
-    // console.log(currentValueRadio);
-  }, [currentValueRadio]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -391,7 +388,9 @@ const VotingDetail = ({ route }) => {
           <View style={styles.header}>
             <View style={styles.headerTitle}>
               <Image source={ColumnChartImage} style={styles.headerIcon} />
-              <Text style={styles.formTitle}>{vote?.question}</Text>
+              <Text numberOfLines={3} style={styles.formTitle}>
+                {vote?.question}
+              </Text>
             </View>
 
             <Text style={styles.info}>
@@ -407,7 +406,7 @@ const VotingDetail = ({ route }) => {
               <View style={styles.headerTitle}>
                 <SortIcon />
                 <Text style={styles.openTitleText}>
-                  {vote.multiple
+                  {vote.isMultipleChoice
                     ? "Chọn được nhiều lựa chọn"
                     : "Chọn được nhiều nhất 1 bình chọn"}
                 </Text>
@@ -432,7 +431,7 @@ const VotingDetail = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
-            {!vote.multiple ? (
+            {!vote.isMultipleChoice ? (
               <RadioButton.Group
                 onValueChange={newValue => {
                   onPressRadioButton(newValue);

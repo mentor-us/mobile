@@ -2,37 +2,37 @@ import { CheckBoxType } from "./commonTypes";
 import { ShortProfileUserModel, USER_PROFILE_SAMPLE } from "./user";
 
 export interface Vote {
-    id: string,
-    question: string;
-    choices: Choice[];
-    groupId: string;
-    creatorId: string;
-    timeEnd: string;
-    createdDate: string;
-    closedDate: string;
-    status: "OPEN" | "CLOSED";
+  id: string;
+  question: string;
+  choices: Choice[];
+  groupId: string;
+  creatorId: string;
+  timeEnd: string;
+  createdDate: string;
+  closedDate: string;
+  status: "OPEN" | "CLOSED";
 }
 
 export interface Choice {
-    id: string;
-    name: string;
-    voters: string[];
+  id: string;
+  name: string;
+  voters: string[];
 }
 
 export const NEW_VOTE_SAMPLE: Vote = {
-    id: "",
-    creatorId: "",
-    createdDate: "",
-    question: "",
-    choices: [
-      {id: "1", name: "", voters: []},
-      {id: "2", name: "", voters: []},
-    ],
-    groupId: "",
-    timeEnd: "",
-    status: "OPEN",
-    closedDate: "",
-  };
+  id: "",
+  creatorId: "",
+  createdDate: "",
+  question: "",
+  choices: [
+    { id: "1", name: "", voters: [] },
+    { id: "2", name: "", voters: [] },
+  ],
+  groupId: "",
+  timeEnd: "",
+  status: "OPEN",
+  closedDate: "",
+};
 
 export interface VoteDetail {
   id: string;
@@ -45,7 +45,7 @@ export interface VoteDetail {
   status: "OPEN" | "CLOSED";
   closedDate: string;
   canEdit: boolean;
-  multiple?: boolean;
+  isMultipleChoice: boolean;
 }
 
 export interface ChoiceDetail {
@@ -55,11 +55,11 @@ export interface ChoiceDetail {
 }
 
 export interface VoteResult extends VoteDetail {
-  choiceResult: ChoiceResult[]
+  choiceResult: ChoiceResult[];
 }
 
 export interface ChoiceResult extends ChoiceDetail {
-  status: CheckBoxType
+  status: CheckBoxType;
 }
 
 export const EMPTY_VOTE_DETAIL = {
@@ -82,7 +82,7 @@ export const EMPTY_VOTE_RESULT = {
   groupId: "",
   creator: USER_PROFILE_SAMPLE,
   timeEnd: "",
-  createdDate: (new Date()).toString(),
+  createdDate: new Date().toString(),
   status: "OPEN",
   closedDate: "",
   choiceResult: [],

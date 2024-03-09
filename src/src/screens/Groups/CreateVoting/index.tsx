@@ -2,27 +2,20 @@ import {
   View,
   Text,
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
   Alert,
-  FlatList,
   ScrollView,
   DeviceEventEmitter,
   Keyboard,
 } from "react-native";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
-import VotingApi from "~/api/remote/VotingApi";
 import { Color } from "~/constants/Color";
 import Feather from "react-native-vector-icons/Feather";
 import { useEffect, useState } from "react";
-import { useForm, Controller, SubmitErrorHandler } from "react-hook-form";
-import { VoteModel, VOTE_SAMPLE } from "~/models/message";
 import { ScreenProps } from "~/types/navigation";
 import SizedBox from "~/components/SizedBox";
 import {
-  ClockGrayIcon,
-  ClockIcon,
   ClockPrimaryIcon,
   MarkTitleIcon,
   VotingQuestionIcon,
@@ -30,11 +23,11 @@ import {
 import MUITextInput from "~/components/MUITextInput";
 import { useAppSelector } from "~/redux";
 import { UserProfileModel } from "~/models/user";
-import { Choice, Vote, VoteDetail } from "~/models/vote";
+import { Choice, VoteDetail } from "~/models/vote";
 import uuid from "react-native-uuid";
 import DatePicker from "react-native-date-picker";
 import Helper from "~/utils/Helper";
-import { FAB, Snackbar, Divider, Switch } from "react-native-paper";
+import { FAB, Snackbar, Switch } from "react-native-paper";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 import VoteService from "~/services/vote";
 import { useUpdateQueryGroupList } from "~/screens/Home/queries";
@@ -52,7 +45,7 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
 
   /* Form state */
   const [question, setQuestion] = useState<string>("");
-  const [isMultiplyChoices, setIsMultiplyChoices] = useState(true);
+  const [isMultipleChoice, setIsMultipleChoice] = useState(true);
 
   const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
   const [time, setTime] = useState<Date | undefined>(undefined);
@@ -73,8 +66,7 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
   };
 
   /* Choice manipulation */
-  const onToggleMultiplyChoices = () =>
-    setIsMultiplyChoices(!isMultiplyChoices);
+  const onToggleMultiplyChoices = () => setIsMultipleChoice(!isMultipleChoice);
 
   const addChoice = () => {
     setChoices([
@@ -111,7 +103,7 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
   };
 
   const onSubmit = async () => {
-    if (question == "") {
+    if (question === "") {
       setErrorQuestion("Không được rỗng");
     } else {
       setErrorQuestion("");
@@ -123,14 +115,14 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
     }
     let hasErrorItems = false;
     const errorItems = choices.map(choice => {
-      if (choice.name == "") {
+      if (choice.name === "") {
         hasErrorItems = true;
         return "Không được rỗng";
       }
       return "";
     });
     setErrors(errorItems);
-    if (errorQuestion != "" || errorTime != "" || hasErrorItems) {
+    if (errorQuestion !== "" || errorTime !== "" || hasErrorItems) {
       return;
     }
 
@@ -140,7 +132,7 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
       creatorId: currentUser.id,
       timeEnd: time,
       choices: choices,
-      isSingleChoice: !isMultiplyChoices,
+      isMultipleChoice,
     };
 
     const newVote: VoteDetail = await VoteService.createVoting(
@@ -258,7 +250,7 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
               <View style={[styles.fieldContainer, styles.switchCtn]}>
                 <Text style={styles.switchTitle}>Chọn nhiều phương án</Text>
                 <Switch
-                  value={isMultiplyChoices}
+                  value={isMultipleChoice}
                   onValueChange={onToggleMultiplyChoices}
                   color={styles.switchBtn.color}
                 />
