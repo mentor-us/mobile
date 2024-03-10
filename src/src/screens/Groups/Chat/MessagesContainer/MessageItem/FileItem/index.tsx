@@ -20,6 +20,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import GroupApi from "~/api/remote/GroupApi";
 import { EmoijType } from "~/constants/Emoijs";
+import TotalEmojiReacted from "~/components/TotalEmojiReacted";
 
 interface Props {
   message: MessageModel;
@@ -97,6 +98,11 @@ const FileItem = ({ message }: Props) => {
       message.id,
     );
   };
+
+  const showUserReacted = useCallback(() => {
+    BottomSheetModalRef.current?.show("user_reacted", message.reactions);
+  }, [message.reactions]);
+
   const pinMessage = async () => {
     const isSuccess = state.addPinnedMessage(message);
     if (isSuccess) {
@@ -123,13 +129,14 @@ const FileItem = ({ message }: Props) => {
           forwardMessage: forwardMessage,
           reactEmojiAction: reactEmojiAction,
           deleteEmoji: deleteEmoji,
-          pinMessage: pinMessage
+          pinMessage: pinMessage,
         },
       );
     })
     .minDuration(200);
 
   const composed = Gesture.Simultaneous(longPressGesture);
+
   return (
     <GestureDetector gesture={composed}>
       <Animated.View
@@ -162,6 +169,14 @@ const FileItem = ({ message }: Props) => {
           <Text style={otherStyle.sentTime}>
             {Helper.getTime(message.createdDate)}
           </Text>
+
+          {message.status !== "DELETED" && (
+            <TouchableOpacity
+              onPress={showUserReacted}
+              style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
+              <TotalEmojiReacted reaction={message.totalReaction} />
+            </TouchableOpacity>
+          )}
         </View>
       </Animated.View>
     </GestureDetector>
