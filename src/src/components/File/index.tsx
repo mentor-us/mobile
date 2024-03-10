@@ -133,7 +133,6 @@ const File = ({
       <View style={[styles.fileItemContainer, { width: ITEM_WIDTH }]}>
         <View style={styles.rowCtn}>
           {renderIcon(file.filename)}
-
           <View style={styles.fileCtn}>
             <View style={styles.infoCtn}>
               <Text numberOfLines={1} style={styles.fileName}>
@@ -143,36 +142,34 @@ const File = ({
                 {Helper.formatFileSize(file.size)}
               </Text>
             </View>
-
-            {isDownloadable && file.uploadStatus === "Success" && (
-              <TouchableOpacity
-                style={styles.downloadBtn}
-                disabled={isDownloading}
-                onPress={download}>
-                {isDownloading ? (
-                  <ActivityIndicator size={"small"} color={Color.primary} />
-                ) : (
-                  <DownloadIcon />
-                )}
-              </TouchableOpacity>
-            )}
           </View>
+          {isDownloadable && file.uploadStatus === "Success" && (
+            <TouchableOpacity
+              style={styles.downloadBtn}
+              disabled={isDownloading}
+              onPress={download}>
+              {isDownloading ? (
+                <ActivityIndicator size={"small"} color={Color.primary} />
+              ) : (
+                <DownloadIcon />
+              )}
+            </TouchableOpacity>
+          )}
         </View>
+
+        {isDownloadable && file.uploadStatus === "Uploading" && (
+          <View style={styles.statusLayer}>
+            <ActivityIndicator size={"small"} color={Color.primary} />
+          </View>
+        )}
+
+        {isDownloadable && file.uploadStatus === "Fail" && (
+          <View style={styles.failedLayer}>
+            <NotiFailed />
+            <Text style={styles.failedText}>Gửi file thất bại</Text>
+          </View>
+        )}
       </View>
-
-      {isDownloadable && file.uploadStatus === "Uploading" && (
-        <View style={styles.statusLayer}>
-          <ActivityIndicator size={"small"} color={Color.primary} />
-        </View>
-      )}
-
-      {isDownloadable && file.uploadStatus === "Fail" && (
-        <View style={styles.failedLayer}>
-          {/* <ActivityIndicator size={"small"} color={Color.primary} /> */}
-          <NotiFailed />
-          <Text style={styles.failedText}>Gửi file thất bại</Text>
-        </View>
-      )}
     </View>
   );
 };
