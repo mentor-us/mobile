@@ -28,6 +28,10 @@ if (__DEV__) {
   });
 }
 
+if (__DEV__) {
+  import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
+}
+
 const App = () => {
   useEffect(() => {
     const checkPermission = async () => {
