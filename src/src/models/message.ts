@@ -85,7 +85,7 @@ export interface MessageModel {
   uploadFailed?: boolean;
   status?: "SENT" | "EDITED" | "DELETED";
   reply?: ReplyMessageModel | undefined;
-  forward?: boolean;
+  isForward?: boolean;
   editedAt?: string;
 }
 

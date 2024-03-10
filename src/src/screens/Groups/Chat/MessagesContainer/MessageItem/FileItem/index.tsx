@@ -160,7 +160,7 @@ const FileItem = ({ message }: Props) => {
               <Text style={otherStyle.senderName}>{message.sender.name}</Text>
             </View>
           )}
-          {message.forward && isOwner && (
+          {message.isForward && isOwner && (
             <Text style={otherStyle.senderName} numberOfLines={1}>
               {"Bạn đã chuyển tiếp một file"}
             </Text>
