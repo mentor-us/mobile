@@ -230,7 +230,7 @@ const TextContent = ({ message }: Props) => {
               </View>
             )}
 
-            {message.forward && isOwner && (
+            {message.isForward && isOwner && (
               <Text style={commonStyles.name} numberOfLines={1}>
                 {"Bạn đã chuyển tiếp một tin nhắn"}
               </Text>
