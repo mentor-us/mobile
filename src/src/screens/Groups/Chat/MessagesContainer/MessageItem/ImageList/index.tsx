@@ -87,7 +87,7 @@ const ImageList = ({ message }: Props) => {
     );
   };
 
-  const editMessage = () => {};
+  const editMessage = () => { };
   const pinMessage = async () => {
     const isSuccess = state.addPinnedMessage(message);
     if (isSuccess) {
@@ -104,9 +104,8 @@ const ImageList = ({ message }: Props) => {
     console.log(message);
     console.log(message.images);
     navigation.navigate("forwardMessage", {
-      message: `Chuyển tiếp ${
-        message?.images ? message.images.length : 0
-      } hình`,
+      message: `Chuyển tiếp ${message?.images ? message.images.length : 0
+        } hình`,
       messageID: message.id,
       messageType: message.type,
     });
@@ -169,6 +168,11 @@ const ImageList = ({ message }: Props) => {
           <View style={GlobalStyles.flexRow}>
             <Text style={otherStyle.senderName}>{message.sender.name}</Text>
           </View>
+        )}
+        {message.isForward && isOwner && (
+          <Text style={otherStyle.senderName} numberOfLines={1}>
+            {`Bạn đã chuyển ${message.images?.length} hình ảnh`}
+          </Text>
         )}
         <SizedBox height={4} />
         <View>

@@ -121,6 +121,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     }).catch((err)=>{
 
     })
+    
   };
   const headerRight = useCallback(listChannelId => {
     if (!listChannelId.length) return;
