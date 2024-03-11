@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from "react";
-import {Animated, Easing, StyleSheet, View, ViewStyle} from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, Easing, StyleSheet, View, ViewStyle } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 
 const AnimatedLG = Animated.createAnimatedComponent(LinearGradient);
 
@@ -61,10 +61,10 @@ const Skeleton: React.FC<Props> = ({
       <AnimatedLG
         style={{
           ...StyleSheet.absoluteFillObject,
-          transform: [{translateX}],
+          transform: [{ translateX }],
         }}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
         colors={[mainColor, "rgba(255,255,255, 0.6)", mainColor]}
       />
     </View>

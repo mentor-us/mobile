@@ -34,6 +34,8 @@ import Permission from "~/utils/PermissionStrategies";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import MUITextInput from "~/components/MUITextInput";
+import CacheImage from "~/components/CacheImage";
+import FastImage from "react-native-fast-image";
 
 const MyProfile = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -44,7 +46,7 @@ const MyProfile = () => {
   const [loadingWallpaper, setLoadingWallpaper] = useState<boolean>(false);
   const [loadingAvatar, setLoadingAvatar] = useState<boolean>(false);
 
-  const { data: myProfile } = useCurrentUser();
+  const { data: myProfile, refetch: refetchMyProfile } = useCurrentUser();
 
   const infoItems: InfoItemModel[] = useMemo(() => {
     if (!myProfile) return [] as InfoItemModel[];
@@ -85,6 +87,7 @@ const MyProfile = () => {
         run: async (image: StorageMediaAttachemt) => {
           const data = await ToolApi.updateAvatar(image);
           if (data) {
+            await refetchMyProfile();
             dispatcher(UserActions.updateAvatar(data));
           }
           setLoadingAvatar(false);
@@ -104,6 +107,7 @@ const MyProfile = () => {
         run: async (image: StorageMediaAttachemt) => {
           const data = await ToolApi.updateWallpaper(image);
           if (data) {
+            await refetchMyProfile();
             dispatcher(UserActions.updateWallpaper(data));
           }
           setLoadingWallpaper(false);
@@ -157,17 +161,13 @@ const MyProfile = () => {
         <View style={styles.avatar_coverphoto_ctn}>
           {/* Wallpaper */}
           <View style={styles.coverphoto_ctn}>
-            <SingleThumbnail
+            <CacheImage
               style={styles.coverphoto}
-              media={{
-                type: "IMAGE",
-                url: myProfile.wallpaper,
-                assetLocal: DefaultWallPaperGroup,
-                isLoading: loadingWallpaper,
-              }}
-              width={screenWidth}
-              height={screenWidth / 2.5}
+              url={Helper.getImageUrl(myProfile.wallpaper)}
+              defaultSource={DefaultWallPaperGroup}
+              resizeMode={FastImage.resizeMode.cover}
             />
+
             <TouchableOpacity
               style={styles.cameraIcon}
               onPress={updateWallpaper}>
@@ -177,15 +177,14 @@ const MyProfile = () => {
           {/* Avatar */}
           <View style={styles.avatar_ctn}>
             <View style={styles.avatar}>
-              <SingleThumbnail
-                media={{
-                  type: "IMAGE",
-                  url: myProfile.imageUrl,
-                  assetLocal: DefaultUserAvatar,
-                  isLoading: loadingAvatar,
+              <CacheImage
+                style={{
+                  width: AVATAR_SIZE,
+                  height: AVATAR_SIZE,
                 }}
-                width={AVATAR_SIZE}
-                height={AVATAR_SIZE}
+                url={Helper.getImageUrl(myProfile.wallpaper)}
+                defaultSource={DefaultUserAvatar}
+                resizeMode={FastImage.resizeMode.cover}
               />
             </View>
             <TouchableOpacity style={styles.cameraIcon} onPress={updateAvatar}>

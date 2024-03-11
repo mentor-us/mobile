@@ -35,6 +35,7 @@ import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderRight from "./HeaderRight";
 import VotingApi from "~/api/remote/VotingApi";
 import { ShortProfileUserModel } from "~/models/user";
+import CacheImage from "~/components/CacheImage";
 
 const VotingDetail = ({ route }) => {
   /* Data in need */
@@ -339,20 +340,31 @@ const VotingDetail = ({ route }) => {
   }, [vote, refreshing]);
 
   const VoterThumbnail = ({ voters }) => {
-    return voters.slice(0, 3).map(voter => (
-      <Image
-        key={voter.id}
-        source={
-          voter.imageUrl &&
-          voter.imageUrl !== "https://graph.microsoft.com/v1.0/me/photo/$value"
-            ? {
-                uri: voter.imageUrl,
-              }
-            : DefaultUserAvatar
-        }
-        style={styles.avatar}
-      />
-    ));
+    // return voters.slice(0, 3).map(voter => (
+    //   <Image
+    //     key={voter.id}
+    //     source={
+    //       voter.imageUrl &&
+    //       voter.imageUrl !== "https://graph.microsoft.com/v1.0/me/photo/$value"
+    //         ? {
+    //             uri: voter.imageUrl,
+    //           }
+    //         : DefaultUserAvatar
+    //     }
+    //     style={styles.avatar}
+    //   />
+    // ));
+
+    return voters
+      .slice(0, 3)
+      .map(voter => (
+        <CacheImage
+          defaultSource={DefaultUserAvatar}
+          url={Helper.getImageUrl(voter.imageUrl)}
+          key={voter.id}
+          style={styles.avatar}
+        />
+      ));
   };
 
   const formatTime = (src: string): string => {

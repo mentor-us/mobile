@@ -1,12 +1,12 @@
-import React, {memo, useCallback, useMemo} from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import equals from "react-fast-compare";
-import {View, Text, SafeAreaView, FlatList} from "react-native";
+import { View, Text, SafeAreaView, FlatList } from "react-native";
 
-import {ShortMedia} from "~/models/media";
+import { ShortMedia } from "~/models/media";
 import styles from "./styles";
 import GalleryItem from "./GalleryItem";
 import SizedBox from "~/components/SizedBox";
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 
 interface Props {
   data: ShortMedia[];
@@ -14,22 +14,22 @@ interface Props {
   refresh: () => void;
 }
 
-const ImageGallery = ({data, loading, refresh}: Props) => {
+const ImageGallery = ({ data, loading, refresh }: Props) => {
   const images = useMemo(() => {
     return data.map(item => {
-      return {...item, url: item.imageUrl} as Social.MediaItem;
+      return { ...item, url: item.imageUrl } as Social.MediaItem;
     });
   }, [data]);
 
   const onChooseImage = (index: number) => {
     BottomSheetModalRef.current?.show("image_slider", {
-      images: images || [],
-      index: index,
+      images: [images[index]] || [],
+      index: 0,
     });
   };
 
   const _renderMediaItem = useCallback(
-    ({item, index}: RenderItemType<Social.MediaItem>) => {
+    ({ item, index }: RenderItemType<Social.MediaItem>) => {
       return <GalleryItem data={item} onPress={() => onChooseImage(index)} />;
     },
     [images],
