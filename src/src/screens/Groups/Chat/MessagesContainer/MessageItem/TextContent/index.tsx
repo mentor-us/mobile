@@ -126,9 +126,11 @@ const TextContent = ({ message }: Props) => {
     DeviceEventEmitter.emit(EventEmitterNames.refreshHomePage);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const replyMessage = (message: ReplyMessageModel) => {
     state.setReplying(message);
   };
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
     navigation.navigate("forwardMessage", {
@@ -226,6 +228,12 @@ const TextContent = ({ message }: Props) => {
                   numberOfLines={1}
                 />
               </View>
+            )}
+
+            {message.isForward && isOwner && (
+              <Text style={commonStyles.name} numberOfLines={1}>
+                {"Bạn đã chuyển tiếp một tin nhắn"}
+              </Text>
             )}
 
             {message.status === "DELETED" ? (

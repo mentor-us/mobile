@@ -54,6 +54,10 @@ const PinnedItem = ({
   if (message.type === "VOTE") {
     message.content = message.vote?.question || "";
   }
+  if(message.type === 'FILE')
+  {
+    message.content = message.file?.filename || "";
+  }
   const content = formatContent(message.content, expanding, isDeleted, message.type);
   const store = useMobxStore();
 
@@ -139,6 +143,24 @@ const PinnedItem = ({
           </>
         );
       }
+      case "FILE":
+        return (
+          <>
+          <PinnedMessageIcon />
+          <SizedBox width={8} />
+          <View style={styles.messageContent}>
+            <TextFormatRenderer
+              text={content}
+              style={styles.message}
+              numberOfLines={expanding ? 10 : 1}
+            />
+            <Text
+              style={
+                styles.ownerText
+              }>{`Tin nhắn của ${message.sender.name}`}</Text>
+          </View>
+        </>
+        );
 
       default:
         return null;

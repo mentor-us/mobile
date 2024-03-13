@@ -1,15 +1,18 @@
-import {StyleSheet} from 'react-native';
-import {Color} from '~/constants/Color';
-import FontSize from '~/constants/FontSize';
+import { StyleSheet } from "react-native";
+import { Color } from "~/constants/Color";
+import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  switchCtn: { paddingVertical: 8, width: "100%" },
+  switchTitle: { flex: 1, color: Color.black },
+  switchBtn: { color: "#006EDC" },
   formTitle: {
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 22,
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.black,
   },
   titleContainer: {
@@ -18,36 +21,36 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontSize: FontSize.large,
-    fontWeight: '500',
+    fontWeight: "500",
     marginTop: 10,
-    color: Color.primary
+    color: Color.primary,
   },
 
   icon: {
     marginRight: 5,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   lineSeparator: {
     height: 0.5,
     backgroundColor: Color.lineSeparator,
     elevation: 1,
-    marginVertical: 5
+    marginVertical: 5,
   },
-  questionInput:{
+  questionInput: {
     marginTop: 20,
-    color: Color.black, 
-    fontWeight: '500',
+    color: Color.black,
+    fontWeight: "500",
     padding: 10,
     paddingTop: 20,
     borderWidth: 2,
-    borderColor: '#E2E2EA',
+    borderColor: "#E2E2EA",
     borderRadius: 5,
-    backgroundColor: '#F7F7F7',
-    textAlignVertical: 'top',
+    backgroundColor: "#F7F7F7",
+    textAlignVertical: "top",
   },
   plus: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingBottom: 10,
     marginTop: 10,
     marginLeft: 5,
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   numberOfVote: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   optionItemList: {
     marginTop: 4,
@@ -69,27 +72,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   optionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 5,
     padding: 4,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#E2E2EA',
+    borderColor: "#E2E2EA",
   },
   btn: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#006EDC',
+    backgroundColor: "#006EDC",
     borderRadius: 20,
     marginTop: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   textBtn: {
     fontSize: FontSize.large,
     color: Color.white,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   inputContainer: {
     width: "100%",
@@ -109,8 +112,8 @@ const styles = StyleSheet.create({
     elevation: 0,
     shadowOpacity: 0,
     padding: 0,
-    margin: 0
-  }
+    margin: 0,
+  },
 });
 
 export default styles;

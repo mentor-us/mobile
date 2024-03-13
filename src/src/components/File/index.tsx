@@ -24,16 +24,22 @@ import Permission from "~/utils/PermissionStrategies";
 import LOG from "~/utils/Logger";
 import Toast from "react-native-root-toast";
 
-interface Props {
+interface FileProps {
   file: FileModel;
   onRemove?: (attachmentID: string) => void;
   containerStyle?: StyleProp<ViewStyle>;
+  isDownloadable: Boolean;
 }
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = 0.7 * width;
 
-const File = ({ file, containerStyle, onRemove = () => {} }: Props) => {
+const File = ({
+  file,
+  containerStyle,
+  onRemove = () => {},
+  isDownloadable,
+}: FileProps) => {
   const [isDownloading, setIsDownloading] = React.useState(false);
 
   const renderIcon = (fileName: string) => {
@@ -127,7 +133,6 @@ const File = ({ file, containerStyle, onRemove = () => {} }: Props) => {
       <View style={[styles.fileItemContainer, { width: ITEM_WIDTH }]}>
         <View style={styles.rowCtn}>
           {renderIcon(file.filename)}
-
           <View style={styles.fileCtn}>
             <View style={styles.infoCtn}>
               <Text numberOfLines={1} style={styles.fileName}>
@@ -137,36 +142,34 @@ const File = ({ file, containerStyle, onRemove = () => {} }: Props) => {
                 {Helper.formatFileSize(file.size)}
               </Text>
             </View>
-
-            {file.uploadStatus === "Success" && (
-              <TouchableOpacity
-                style={styles.downloadBtn}
-                disabled={isDownloading}
-                onPress={download}>
-                {isDownloading ? (
-                  <ActivityIndicator size={"small"} color={Color.primary} />
-                ) : (
-                  <DownloadIcon />
-                )}
-              </TouchableOpacity>
-            )}
           </View>
+          {isDownloadable && file.uploadStatus === "Success" && (
+            <TouchableOpacity
+              style={styles.downloadBtn}
+              disabled={isDownloading}
+              onPress={download}>
+              {isDownloading ? (
+                <ActivityIndicator size={"small"} color={Color.primary} />
+              ) : (
+                <DownloadIcon />
+              )}
+            </TouchableOpacity>
+          )}
         </View>
+
+        {isDownloadable && file.uploadStatus === "Uploading" && (
+          <View style={styles.statusLayer}>
+            <ActivityIndicator size={"small"} color={Color.primary} />
+          </View>
+        )}
+
+        {isDownloadable && file.uploadStatus === "Fail" && (
+          <View style={styles.failedLayer}>
+            <NotiFailed />
+            <Text style={styles.failedText}>Gửi file thất bại</Text>
+          </View>
+        )}
       </View>
-
-      {file.uploadStatus === "Uploading" && (
-        <View style={styles.statusLayer}>
-          <ActivityIndicator size={"small"} color={Color.primary} />
-        </View>
-      )}
-
-      {file.uploadStatus === "Fail" && (
-        <View style={styles.failedLayer}>
-          {/* <ActivityIndicator size={"small"} color={Color.primary} /> */}
-          <NotiFailed />
-          <Text style={styles.failedText}>Gửi file thất bại</Text>
-        </View>
-      )}
     </View>
   );
 };

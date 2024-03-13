@@ -8,7 +8,7 @@ import Helper from "~/utils/Helper";
 
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { MessageModel } from "~/models/message";
+import { ForwardMessageModel, MessageModel } from "~/models/message";
 import { useAppSelector } from "~/redux";
 import Animated, { withTiming } from "react-native-reanimated";
 import { EntryAnimationsValues } from "react-native-reanimated";
@@ -87,7 +87,7 @@ const ImageList = ({ message }: Props) => {
     );
   };
 
-  const editMessage = () => {};
+  const editMessage = () => { };
   const pinMessage = async () => {
     const isSuccess = state.addPinnedMessage(message);
     if (isSuccess) {
@@ -98,7 +98,18 @@ const ImageList = ({ message }: Props) => {
   const deleteMessage = (messageId: string) => {
     state.deleteMessage(messageId);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const forwardMessage = (message: ForwardMessageModel) => {
+    // state.setReplying(message);
+    console.log(message);
+    console.log(message.images);
+    navigation.navigate("forwardMessage", {
+      message: `Chuyển tiếp ${message?.images ? message.images.length : 0
+        } hình`,
+      messageID: message.id,
+      messageType: message.type,
+    });
+  };
   const showUserReacted = useCallback(() => {
     BottomSheetModalRef.current?.show("user_reacted", message.reactions);
   }, [message.reactions]);
@@ -121,6 +132,7 @@ const ImageList = ({ message }: Props) => {
         deleteEmoji: deleteEmoji,
         deleteMessage: deleteMessage,
         pinMessage: pinMessage,
+        forwardMessage: forwardMessage
       },
     );
   };
@@ -156,6 +168,11 @@ const ImageList = ({ message }: Props) => {
           <View style={GlobalStyles.flexRow}>
             <Text style={otherStyle.senderName}>{message.sender.name}</Text>
           </View>
+        )}
+        {message.isForward && isOwner && (
+          <Text style={otherStyle.senderName} numberOfLines={1}>
+            {`Bạn đã chuyển ${message.images?.length} hình ảnh`}
+          </Text>
         )}
         <SizedBox height={4} />
         <View>
