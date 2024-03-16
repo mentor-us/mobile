@@ -1,14 +1,13 @@
-import React, {useState} from "react";
-import {useWindowDimensions, _Text, SafeAreaView} from "react-native";
-import {SceneMap, TabView} from "react-native-tab-view";
-import {ScreenProps} from "~/types/navigation";
+import React, { useState } from "react";
+import { useWindowDimensions, _Text, SafeAreaView } from "react-native";
+import { SceneMap, TabView } from "react-native-tab-view";
+import { ScreenProps } from "~/types/navigation";
 import CustomTabView from "./CustomTabView";
 import CustomTabBar from "./CustomTabBar";
 import styles from "./styles";
-import {RoutesData, TabType} from "./index.props";
+import { RoutesData, TabType } from "./index.props";
 
-const GroupNotes: ScreenProps<"groupNote"> = ({route}) => {
-
+const GroupNotes: ScreenProps<"groupNote"> = ({ route }) => {
   /* Data in need */
   const groupId = route.params.groupId;
   const layout = useWindowDimensions();
@@ -16,7 +15,9 @@ const GroupNotes: ScreenProps<"groupNote"> = ({route}) => {
   /* State */
   const [index, setIndex] = useState(0);
 
-  const renderTabView = (type: TabType) => <CustomTabView groupId={groupId} type={type} />;
+  const renderTabView = (type: TabType) => (
+    <CustomTabView groupId={groupId} type={type} />
+  );
 
   const renderScene = SceneMap({
     voting: () => renderTabView("voting"),
@@ -27,11 +28,11 @@ const GroupNotes: ScreenProps<"groupNote"> = ({route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <TabView
-        navigationState={{index, routes: RoutesData}}
+        navigationState={{ index, routes: RoutesData }}
         renderScene={renderScene}
         renderTabBar={CustomTabBar}
         onIndexChange={setIndex}
-        initialLayout={{width: layout.width}}
+        initialLayout={{ width: layout.width }}
       />
     </SafeAreaView>
   );

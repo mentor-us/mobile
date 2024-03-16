@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
-import {Color} from '~/constants/Color';
-import FontSize from '~/constants/FontSize';
+import { StyleSheet } from "react-native";
+import { Color } from "~/constants/Color";
+import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
   container: {
@@ -9,16 +9,15 @@ const styles = StyleSheet.create({
     backgroundColor: Color.backgroundChat,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   emptyText: {
     textAlign: "center",
     fontSize: FontSize.larger,
     marginBottom: 10,
-    color: Color.black
+    color: Color.black,
   },
-  emptyBtn: {
-  },
+  emptyBtn: {},
   floatingButtonImage: {
     position: "absolute",
     marginRight: 16,

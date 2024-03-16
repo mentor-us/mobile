@@ -111,7 +111,6 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
           buttonNegative: "Từ chối",
         },
       );
-
       switch (requestResult) {
         case RESULTS.GRANTED:
           return true;
@@ -120,7 +119,7 @@ export class AndroidPermissionStrategy implements PermissionStrategy {
       }
 
       // If permission denied then show alert
-      Alert.alert("Lỗi tải xuống", "Ứng dụng không có quyền truy cập bộ nhớ", [
+      Alert.alert("Lỗi", "Ứng dụng không có quyền truy cập bộ nhớ", [
         {
           text: "Mở cài đặt",
           onPress: () => {

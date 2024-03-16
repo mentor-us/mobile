@@ -1,7 +1,7 @@
-import {ColumnChartImage, NoteImage, PinImage} from '~/assets/images';
-import { ChartIcon } from '~/assets/svgs';
+import { ColumnChartImage, NoteImage, PinImage } from "~/assets/images";
+import { ChartIcon } from "~/assets/svgs";
 
-export type TabType = 'voting' | 'pin' | 'note';
+export type TabType = "voting" | "pin" | "note";
 
 export interface TabModel {
   key: TabType;
@@ -9,17 +9,17 @@ export interface TabModel {
 }
 
 export const RoutesData: TabModel[] = [
-  {key: 'voting', title: 'Bình chọn'},
-  {key: 'pin', title: 'Tin ghim'},
-  {key: 'note', title: 'Ghi chú'},
+  { key: "voting", title: "Bình chọn" },
+  // {key: 'pin', title: 'Tin ghim'},
+  // {key: 'note', title: 'Ghi chú'},
 ];
 
 export const Actions = [
   {
-    text: 'Tạo bình chọn',
+    text: "Tạo bình chọn",
     icon: ChartIcon,
     color: "white",
-    name: 'voting',
+    name: "voting",
     position: 1,
   },
   // {
