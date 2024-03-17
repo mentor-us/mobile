@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.MentorUS</string>
+	<string>vn.edu.hcmus.mentorus</string>
 	<key>PROJECT_ID</key>
 	<string>mentorus-5d1n</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:656800775099:ios:da50f131d0a5016dbb629e</string>
+	<string>1:656800775099:ios:68b47ef4f94d8493bb629e</string>
 </dict>
 </plist>

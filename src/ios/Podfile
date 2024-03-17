@@ -6,25 +6,10 @@ platform :ios, '12.4'
 install! 'cocoapods', :deterministic_uuids => false
 
 setup_permissions([
-  # 'AppTrackingTransparency',
-  # 'BluetoothPeripheral',
   'Calendars',
-  # 'Camera',
-  # 'Contacts',
-  # 'FaceID',
-  # 'LocationAccuracy',
-  # 'LocationAlways',
-  # 'LocationWhenInUse',
-  # 'MediaLibrary',
-  # 'Microphone',
-  # 'Motion',
+  'MediaLibrary',
   'Notifications',
   'PhotoLibrary',
-  # 'PhotoLibraryAddOnly',
-  # 'Reminders',
-  # 'Siri',
-  # 'SpeechRecognition',
-  # 'StoreKit',
 ])
 
 target 'MentorUS' do
