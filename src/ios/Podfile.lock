@@ -447,7 +447,7 @@ PODS:
     - glog
   - react-native-cameraroll (5.6.1):
     - React-Core
-  - react-native-date-picker (4.3.7):
+  - react-native-date-picker (4.4.1):
     - React-Core
   - react-native-document-picker (8.2.2):
     - React-Core
@@ -951,7 +951,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 26c42646ab0bb69e29e837e23754fe7121eeaf94
   React-logger: 1bfd109a0ffa4c0989bbfac0c2d8c4abe4637faa
   react-native-cameraroll: 2f08db1ecc9b73dbc01f89335d6d5179fac2894c
-  react-native-date-picker: 5637f417bb0c1981bc9d483324d5eb5929a1651c
+  react-native-date-picker: 28e4e57f16e869fa34907a0c6cdbecc1667f63c3
   react-native-document-picker: cd4d6b36a5207ad7a9e599ebb9eb0c2e84fa0b87
   react-native-flipper: 3d9e214b412b3ce81e0d73bdcdc8097c0b0e8578
   react-native-flipper-performance-plugin: 42ec5017abd26e7c5a1f527f2db92c14a90cabdb
