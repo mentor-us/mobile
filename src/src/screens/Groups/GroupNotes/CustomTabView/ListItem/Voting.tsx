@@ -1,36 +1,33 @@
-import {View, Text, TouchableOpacity, Image} from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import {StyleSheet} from "react-native";
-import {Color} from "~/constants/Color";
-import {DefaultUserAvatar} from "~/assets/images";
+import { StyleSheet } from "react-native";
+import { Color } from "~/constants/Color";
+import { DefaultUserAvatar } from "~/assets/images";
 import FontSize from "~/constants/FontSize";
-import {useNavigation} from "@react-navigation/native";
-import {VoteDetail} from "~/models/vote";
+import { useNavigation } from "@react-navigation/native";
+import { VoteDetail } from "~/models/vote";
 import Helper from "~/utils/Helper";
+import CacheImage from "~/components/CacheImage";
 
 interface Props {
   item: VoteDetail;
 }
 
-const Voting = ({item}: Props) => {
-
+const Voting = ({ item }: Props) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-    navigation.navigate("votingDetail", {voteId: item.id});
+    navigation.navigate("votingDetail", { voteId: item.id });
   };
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       {/* Creator */}
       <View style={styles.creatorCtn}>
-        <Image
-          source={
-            item.creator.imageUrl
-              ? {uri: item.creator.imageUrl}
-              : DefaultUserAvatar
-          }
+        <CacheImage
           style={styles.avatar}
+          url={Helper.getImageUrl(item.creator.imageUrl)}
+          defaultSource={DefaultUserAvatar}
         />
         <View style={styles.creatorInfoCtn}>
           <Text style={styles.creatorName}>{item.creator.name}</Text>
@@ -52,24 +49,26 @@ const Voting = ({item}: Props) => {
                   {choice.name}
                 </Text>
               </View>
-              <Text numberOfLines={1} style={styles.choiceNumber}>{choice.voters.length}</Text>
+              <Text numberOfLines={1} style={styles.choiceNumber}>
+                {choice.voters.length}
+              </Text>
             </View>
           );
         })}
       </View>
       {item.status == "OPEN" ? (
-          <TouchableOpacity style={styles.btn} onPress={onPress}>
-            <Text numberOfLines={1} style={styles.textBtn}>
-              BÌNH CHỌN
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.endBtn} onPress={onPress}>
-            <Text numberOfLines={1} style={styles.endTextBtn}>
-              XEM BÌNH CHỌN
-            </Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={styles.btn} onPress={onPress}>
+          <Text numberOfLines={1} style={styles.textBtn}>
+            BÌNH CHỌN
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.endBtn} onPress={onPress}>
+          <Text numberOfLines={1} style={styles.endTextBtn}>
+            XEM BÌNH CHỌN
+          </Text>
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
   );
 };
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   choiceCtn: {
-    width: "90%"
+    width: "90%",
   },
   choiceContent: {
     color: "#000",
@@ -147,11 +146,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    color: Color.white
+    color: Color.white,
   },
   textBtn: {
     fontSize: FontSize.large,
-    color: Color.white
+    color: Color.white,
   },
   endBtn: {
     paddingHorizontal: 12,
@@ -163,10 +162,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    color: Color.white
+    color: Color.white,
   },
   endTextBtn: {
     fontSize: FontSize.large,
-    color: Color.text[0]
+    color: Color.text[0],
   },
 });
