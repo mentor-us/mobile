@@ -8,6 +8,7 @@
     "android:prod": "cp ./.env.prod ./.env && npx react-native run-android",
     "note7": "npx react-native run-android --deviceId=be2f2a9",
     "ios": "npx react-native run-ios",
+    "bundle:ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
     "start": "npx react-native start",
     "all": "watchman watch-del-all && rm -rf package-lock.json && rm -rf yarn.lock && rm -rf node_modules/ && rm -fr $TMPDIR/metro* && yarn install && cd android && ./gradlew clean && cd .. && cd ios && rm -rf Pods && rm -rf Podfile.lock && pod install && cd ..",
     "all-android": "watchman watch-del-all && rm -rf package-lock.json && rm -rf yarn.lock && rm -rf node_modules/ && rm -fr $TMPDIR/metro* && yarn install && cd android && ./gradlew clean && cd ..",

@@ -10,6 +10,7 @@
 		00E356F31AD99517003FC87E /* MentorUSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MentorUSTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1CED57B42BA75B96009EC73A /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CED57B32BA75B96009EC73A /* main.jsbundle */; };
 		26D67F31299A279E007C3DDC /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26D67F21299A279E007C3DDC /* Fontisto.ttf */; };
 		26D67F32299A279E007C3DDC /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26D67F22299A279E007C3DDC /* Octicons.ttf */; };
 		26D67F33299A279E007C3DDC /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26D67F23299A279E007C3DDC /* Feather.ttf */; };
@@ -28,9 +29,9 @@
 		26D67F40299A279E007C3DDC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26D67F30299A279E007C3DDC /* MaterialIcons.ttf */; };
 		26F705C6291C09EA006E8A4F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F705C5291C09EA006E8A4F /* Images.xcassets */; };
 		26F705D0291C1172006E8A4F /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26F705CF291C1172006E8A4F /* BootSplash.storyboard */; };
-		765A198D0CBBEC84104B8FE0 /* libPods-MentorUS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7B6D644CD51031F8216C78 /* libPods-MentorUS.a */; };
+		4EA8ABA04C37A1899648C748 /* libPods-MentorUS-MentorUSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D680FEAE062E96A7A9BDDC9 /* libPods-MentorUS-MentorUSTests.a */; };
 		822CACD62B11F8AC007846B9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 822CACD52B11F8AC007846B9 /* GoogleService-Info.plist */; };
-		B2B6F8D667BAD67A0A9270F9 /* libPods-MentorUS-MentorUSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E3C01448EF230910F8DB64D /* libPods-MentorUS-MentorUSTests.a */; };
+		FED912077D70155FD78B2B4F /* libPods-MentorUS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F70BC51A66EEBC9BE5A7F6 /* libPods-MentorUS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MentorUS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MentorUS/main.m; sourceTree = "<group>"; };
 		1C7E72E02B94941100633723 /* MentorUS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MentorUS.entitlements; path = MentorUS/MentorUS.entitlements; sourceTree = "<group>"; };
+		1CED57B32BA75B96009EC73A /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		1D680FEAE062E96A7A9BDDC9 /* libPods-MentorUS-MentorUSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MentorUS-MentorUSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26D67F21299A279E007C3DDC /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		26D67F22299A279E007C3DDC /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		26D67F23299A279E007C3DDC /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -71,14 +74,13 @@
 		26D67F30299A279E007C3DDC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		26F705C5291C09EA006E8A4F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		26F705CF291C1172006E8A4F /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = MentorUS/BootSplash.storyboard; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-MentorUS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS.debug.xcconfig"; path = "Target Support Files/Pods-MentorUS/Pods-MentorUS.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-MentorUS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS.release.xcconfig"; path = "Target Support Files/Pods-MentorUS/Pods-MentorUS.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-MentorUS-MentorUSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS-MentorUSTests.debug.xcconfig"; path = "Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		7E3C01448EF230910F8DB64D /* libPods-MentorUS-MentorUSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MentorUS-MentorUSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28F76A19C89F01D7CC2D93B4 /* Pods-MentorUS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS.debug.xcconfig"; path = "Target Support Files/Pods-MentorUS/Pods-MentorUS.debug.xcconfig"; sourceTree = "<group>"; };
+		73F2FA82D3D3CEB98C4E948E /* Pods-MentorUS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS.release.xcconfig"; path = "Target Support Files/Pods-MentorUS/Pods-MentorUS.release.xcconfig"; sourceTree = "<group>"; };
 		822CACD52B11F8AC007846B9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-MentorUS-MentorUSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS-MentorUSTests.release.xcconfig"; path = "Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests.release.xcconfig"; sourceTree = "<group>"; };
-		AA7B6D644CD51031F8216C78 /* libPods-MentorUS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MentorUS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D185078D277DCBE86685BA4C /* Pods-MentorUS-MentorUSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS-MentorUSTests.release.xcconfig"; path = "Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests.release.xcconfig"; sourceTree = "<group>"; };
+		E6834DFC8767850CAC3D4DCE /* Pods-MentorUS-MentorUSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS-MentorUSTests.debug.xcconfig"; path = "Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F5F70BC51A66EEBC9BE5A7F6 /* libPods-MentorUS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MentorUS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2B6F8D667BAD67A0A9270F9 /* libPods-MentorUS-MentorUSTests.a in Frameworks */,
+				4EA8ABA04C37A1899648C748 /* libPods-MentorUS-MentorUSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				765A198D0CBBEC84104B8FE0 /* libPods-MentorUS.a in Frameworks */,
+				FED912077D70155FD78B2B4F /* libPods-MentorUS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,8 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				AA7B6D644CD51031F8216C78 /* libPods-MentorUS.a */,
-				7E3C01448EF230910F8DB64D /* libPods-MentorUS-MentorUSTests.a */,
+				F5F70BC51A66EEBC9BE5A7F6 /* libPods-MentorUS.a */,
+				1D680FEAE062E96A7A9BDDC9 /* libPods-MentorUS-MentorUSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -176,6 +178,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				1CED57B32BA75B96009EC73A /* main.jsbundle */,
 				822CACD52B11F8AC007846B9 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* MentorUS */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -201,10 +204,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-MentorUS.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-MentorUS.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-MentorUS-MentorUSTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-MentorUS-MentorUSTests.release.xcconfig */,
+				28F76A19C89F01D7CC2D93B4 /* Pods-MentorUS.debug.xcconfig */,
+				73F2FA82D3D3CEB98C4E948E /* Pods-MentorUS.release.xcconfig */,
+				E6834DFC8767850CAC3D4DCE /* Pods-MentorUS-MentorUSTests.debug.xcconfig */,
+				D185078D277DCBE86685BA4C /* Pods-MentorUS-MentorUSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -216,12 +219,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MentorUSTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				3BF3E356803D4DC8A242F3C3 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				0E3E932438298DD7E53D96C4 /* [CP] Copy Pods Resources */,
+				B19D3376884BD9DDB68F25DE /* [CP] Embed Pods Frameworks */,
+				717711FA935A109041D0123A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -237,15 +240,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MentorUS" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				6EAA3B91F8BB2CFF300B9CB7 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				F20E80D09720D5695666AD89 /* [CP-User] [RNFB] Core Configuration */,
-				85904E5045AB80D56F79AB9F /* [CP] Copy Pods Resources */,
+				A0C46A2FAC416BED242CC564 /* [CP] Embed Pods Frameworks */,
+				CA8069E74885F270BF4292F0 /* [CP] Copy Pods Resources */,
+				DC5A21A31C92608A5C1DBC71 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -304,6 +307,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CED57B42BA75B96009EC73A /* main.jsbundle in Resources */,
 				26D67F31299A279E007C3DDC /* Fontisto.ttf in Resources */,
 				26D67F3C299A279E007C3DDC /* FontAwesome.ttf in Resources */,
 				26D67F38299A279E007C3DDC /* Foundation.ttf in Resources */,
@@ -343,60 +347,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n\ncd $PROJECT_DIR/..\nexport NODE_BINARY=node\n./node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0E3E932438298DD7E53D96C4 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		85904E5045AB80D56F79AB9F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		3BF3E356803D4DC8A242F3C3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -418,7 +371,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		6EAA3B91F8BB2CFF300B9CB7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -440,7 +393,39 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		717711FA935A109041D0123A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A0C46A2FAC416BED242CC564 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B19D3376884BD9DDB68F25DE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -457,7 +442,22 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F20E80D09720D5695666AD89 /* [CP-User] [RNFB] Core Configuration */ = {
+		CA8069E74885F270BF4292F0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MentorUS/Pods-MentorUS-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DC5A21A31C92608A5C1DBC71 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -522,7 +522,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-MentorUS-MentorUSTests.debug.xcconfig */;
+			baseConfigurationReference = E6834DFC8767850CAC3D4DCE /* Pods-MentorUS-MentorUSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -549,7 +549,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-MentorUS-MentorUSTests.release.xcconfig */;
+			baseConfigurationReference = D185078D277DCBE86685BA4C /* Pods-MentorUS-MentorUSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -573,7 +573,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-MentorUS.debug.xcconfig */;
+			baseConfigurationReference = 28F76A19C89F01D7CC2D93B4 /* Pods-MentorUS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -605,7 +605,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-MentorUS.release.xcconfig */;
+			baseConfigurationReference = 73F2FA82D3D3CEB98C4E948E /* Pods-MentorUS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
