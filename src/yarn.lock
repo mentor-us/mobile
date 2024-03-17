@@ -8832,10 +8832,10 @@ react-native-device-info@^10.6.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.13.1.tgz#f87f44ba7b67933248be10ca302a4f2f6dbbdd4f"
   integrity sha512-j/7Z+Yl9Cesjp8vKaVzbuJQKJSVs4ojXATt5WjwipZ0Ss0mBJjqtbc4x5dfZLmQ4y55VVa7c0v8KHca1iqY/TQ==
 
-react-native-document-picker@^8.2.0:
-  version "8.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-8.2.2.tgz#f59448957818b7ce8f2f6288f7a4268ecf3ba997"
-  integrity sha512-5xYoueCDaeU+eZLJM4AxGPedublk4w3YzpdoQR9ayd4E5AdLt1uY1ruK8HoZ/+G4v97o2cFlxfYcuw9QWVMUDA==
+react-native-document-picker@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-9.1.1.tgz#54390c500396b61ed697095ef8a6f9cbe0977bc9"
+  integrity sha512-BW+7DbsILuFThlBm7NUFVUmKKf6Awkcf9R0q8wiCU2DlGGtAKQTt2iHpO5+Dn/7WMPB+rqNv3X1HsmJQ0t5R3g==
   dependencies:
     invariant "^2.2.4"
 
