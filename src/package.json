@@ -115,7 +115,7 @@
     "react-native-video": "^5.2.1",
     "react-native-video-cache": "^2.7.3",
     "react-native-webview": "^11.26.0",
-    "react-redux": "^8.0.5",
+    "react-redux": "^9.1.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.2.0",
     "rn-fetch-blob": "^0.12.0",
