@@ -25,15 +25,12 @@ import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StorageMediaAttachemt } from "~/models/media";
 import ToolApi from "~/api/remote/ToolApi";
 import { UserActions } from "~/redux/features/user/slice";
-import SingleThumbnail from "~/components/SingleThumbnail";
-import { screenWidth } from "~/constants";
 import { SecureStore } from "~/api/local/SecureStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "~/app/server/users/queries";
 import Permission from "~/utils/PermissionStrategies";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
-import MUITextInput from "~/components/MUITextInput";
 import CacheImage from "~/components/CacheImage";
 import FastImage from "react-native-fast-image";
 
@@ -68,9 +65,6 @@ const MyProfile = () => {
       await NotificationApi.updateToken(myProfile.id, "");
     }
 
-    /**
-     * @author Dqvinh - MailEdu: <dqvinh20@clc.fitus.edu.vn> Personal: <duongquangvinh2210@gmail.com>
-     */
     await SecureStore.removeToken();
     authStore.signOut();
     queryClient.clear();
@@ -182,7 +176,7 @@ const MyProfile = () => {
                   width: AVATAR_SIZE,
                   height: AVATAR_SIZE,
                 }}
-                url={Helper.getImageUrl(myProfile.wallpaper)}
+                url={Helper.getImageUrl(myProfile.imageUrl)}
                 defaultSource={DefaultUserAvatar}
                 resizeMode={FastImage.resizeMode.cover}
               />
