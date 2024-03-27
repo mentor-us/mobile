@@ -28,10 +28,6 @@ const CacheImage: FC<CacheImageProps> = ({ ...props }) => {
         headers: headers,
         priority: props.priority ?? FastImage.priority.normal,
       }}
-      onProgress={e => console.log(e.nativeEvent.loaded / e.nativeEvent.total)}
-      onError={() => {
-        console.log("ON ERROR");
-      }}
     />
   );
 };

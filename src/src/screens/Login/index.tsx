@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CurrentUserQueryKey } from "~/app/server/users/queries";
 import { useMobxStore } from "~/mobx/store";
 import { observer } from "mobx-react-lite";
+import { createAxiosResponseInterceptor } from "~/api/remote/AxiosClient";
 
 interface LoginRouteParamsProps extends Readonly<object> {
   token?: string;

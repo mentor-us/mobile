@@ -136,7 +136,7 @@ const TextEditor = () => {
 
   const updateLastMessage = (content: string) => {
     queryAction.updateGroupNewMessage(
-      state._groupDetail.id as string,
+      state._groupDetail.parentId as string,
       content,
       false,
     );
