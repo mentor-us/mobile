@@ -32,12 +32,6 @@ const LoginScreen: ScreenProps<"loginScreen"> = () => {
 
   useEffect(() => {
     const login = async (token: string) => {
-      // Register axios callback when token is expired
-      createAxiosResponseInterceptor(() => {
-        authStore.restoreToken(null);
-        authStore.setError("Phiên đăng nhập đã hết hạn");
-      });
-
       await SecureStore.saveToken(token);
       await queryClient.invalidateQueries({
         queryKey: CurrentUserQueryKey,

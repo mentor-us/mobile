@@ -39,9 +39,13 @@ const createAxiosResponseInterceptor = onUnauthorizeCallback => {
       // Do something with response error
       if (error?.response?.status === 401) {
         axiosClient.interceptors.response.eject(interceptor);
-        onUnauthorizeCallback();
+        if (onUnauthorizeCallback) {
+          onUnauthorizeCallback();
+        }
         // Auto Remove Token
-        await SecureStore.removeToken();
+        await SecureStore.removeToken().then(() =>
+          createAxiosResponseInterceptor(onUnauthorizeCallback),
+        );
       }
       return Promise.reject(error);
     },

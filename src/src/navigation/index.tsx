@@ -14,6 +14,7 @@ import RNBootSplash from "react-native-bootsplash";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import { SecureStore } from "~/api/local/SecureStore";
+import { createAxiosResponseInterceptor } from "~/api/remote/AxiosClient";
 
 const styles = StyleSheet.create({
   container: {
@@ -62,6 +63,12 @@ const RootNavigator = () => {
       authStore.restoreToken(
         !userToken || userToken.length === 0 ? null : userToken,
       );
+
+      // Register axios callback when token is expired
+      createAxiosResponseInterceptor(() => {
+        authStore.restoreToken(null);
+        authStore.setError("Phiên đăng nhập đã hết hạn");
+      });
     };
 
     bootstrapAsync().finally(async () => {
