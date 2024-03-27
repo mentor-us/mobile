@@ -27,7 +27,7 @@ axiosClient.interceptors.request.use(
   },
 );
 
-const createAxiosResponseInterceptor = () => {
+const createAxiosResponseInterceptor = onUnauthorizeCallback => {
   const interceptor = axiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
@@ -39,8 +39,9 @@ const createAxiosResponseInterceptor = () => {
       // Do something with response error
       if (error?.response?.status === 401) {
         axiosClient.interceptors.response.eject(interceptor);
+        onUnauthorizeCallback();
         // Auto Remove Token
-        await SecureStore.removeToken().finally(createAxiosResponseInterceptor);
+        await SecureStore.removeToken();
       }
       return Promise.reject(error);
     },
@@ -48,6 +49,6 @@ const createAxiosResponseInterceptor = () => {
 };
 
 // Add a response interceptor
-createAxiosResponseInterceptor();
+export { createAxiosResponseInterceptor };
 
 export default axiosClient;

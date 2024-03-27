@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CurrentUserQueryKey } from "~/app/server/users/queries";
 import { useMobxStore } from "~/mobx/store";
 import { observer } from "mobx-react-lite";
+import { createAxiosResponseInterceptor } from "~/api/remote/AxiosClient";
 
 interface LoginRouteParamsProps extends Readonly<object> {
   token?: string;
@@ -31,6 +32,12 @@ const LoginScreen: ScreenProps<"loginScreen"> = () => {
 
   useEffect(() => {
     const login = async (token: string) => {
+      // Register axios callback when token is expired
+      createAxiosResponseInterceptor(() => {
+        authStore.restoreToken(null);
+        authStore.setError("Phiên đăng nhập đã hết hạn");
+      });
+
       await SecureStore.saveToken(token);
       await queryClient.invalidateQueries({
         queryKey: CurrentUserQueryKey,

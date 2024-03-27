@@ -14,7 +14,6 @@ import RNBootSplash from "react-native-bootsplash";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import { SecureStore } from "~/api/local/SecureStore";
-import LOG from "~/utils/Logger";
 
 const styles = StyleSheet.create({
   container: {
