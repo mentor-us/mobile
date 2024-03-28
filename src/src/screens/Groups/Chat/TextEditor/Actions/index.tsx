@@ -1,4 +1,4 @@
-import {View, TouchableOpacity, Text} from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import styles from "./styles";
 import SizedBox from "~/components/SizedBox";
@@ -11,14 +11,14 @@ import {
   ChartSquareIcon,
 } from "~/assets/svgs";
 import GlobalStyles from "~/constants/GlobalStyles";
-import {useNavigation} from "@react-navigation/native";
-import {useChatScreenState} from "~/context/chat";
-import {observer} from "mobx-react-lite";
-import {runWithLayoutAnimation} from "~/hooks/LayoutAnimation";
-import {handleReadStoragePermission} from "~/utils/Permission";
+import { useNavigation } from "@react-navigation/native";
+import { useChatScreenState } from "~/context/chat";
+import { observer } from "mobx-react-lite";
+import { runWithLayoutAnimation } from "~/hooks/LayoutAnimation";
+import { handleReadStoragePermission } from "~/utils/Permission";
 import DocumentPicker from "react-native-document-picker";
-import {SUPPORT_FILE_TYPES} from "~/constants";
-import {MediaAttachment} from "~/models/media";
+import { SUPPORT_FILE_TYPES } from "~/constants";
+import { MediaAttachment } from "~/models/media";
 import Helper from "~/utils/Helper";
 import SubmitButton from "../SubmitButton";
 import {
@@ -33,8 +33,7 @@ interface Props {
   onChooseImage: any;
 }
 
-const Actions = ({onSend, groupId, onChooseImage}: Props) => {
-  
+const Actions = ({ onSend, groupId, onChooseImage }: Props) => {
   // Needed data
   const navigation = useNavigation();
   const queryAction = useUpdateQueryGroupList();
@@ -52,15 +51,15 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
     state._groupDetail.permissions?.includes("FAQ_MANAGEMENT");
 
   const onCreateVoting = () => {
-    navigation.navigate("createVoting", {groupId: groupId});
+    navigation.navigate("createVoting", { groupId: groupId });
   };
 
   const onCreateMeeting = () => {
-    navigation.navigate("createMeeting", {groupId: groupId});
+    navigation.navigate("createMeeting", { groupId: groupId });
   };
 
   const onCreateTask = () => {
-    navigation.navigate("createTask", {groupId: groupId});
+    navigation.navigate("createTask", { groupId: groupId });
   };
 
   const showRichToolbar = () => {
@@ -100,7 +99,7 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
 
           const newMessage = `${state._currentUser.name} đã gửi tệp đính kèm mới.`;
           queryAction.updateGroupNewMessage(
-            state._groupDetail.id as string,
+            state._groupDetail.parentId as string,
             newMessage,
             false,
           );
@@ -143,7 +142,7 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
           )}
           {taskManagement && (
             <>
-              <TouchableOpacity testID="task-icon"  onPress={onCreateTask}>
+              <TouchableOpacity testID="task-icon" onPress={onCreateTask}>
                 <TaskSquareIcon width={30} height={30} />
               </TouchableOpacity>
               <SizedBox width={10} />
@@ -151,7 +150,7 @@ const Actions = ({onSend, groupId, onChooseImage}: Props) => {
           )}
           {boardManagement && (
             <>
-              <TouchableOpacity testID="vote-icon"  onPress={onCreateVoting}>
+              <TouchableOpacity testID="vote-icon" onPress={onCreateVoting}>
                 <ChartSquareIcon width={32} height={32} />
               </TouchableOpacity>
               <SizedBox width={10} />

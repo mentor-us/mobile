@@ -21,6 +21,7 @@ import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import GroupApi from "~/api/remote/GroupApi";
 import { EmoijType } from "~/constants/Emoijs";
 import TotalEmojiReacted from "~/components/TotalEmojiReacted";
+import CacheImage from "~/components/CacheImage";
 
 interface Props {
   message: MessageModel;
@@ -144,12 +145,9 @@ const FileItem = ({ message }: Props) => {
         entering={entering}>
         {!isOwner && (
           <TouchableOpacity onPress={onPressAvatar}>
-            <Image
-              source={
-                message.sender.imageUrl
-                  ? { uri: message.sender.imageUrl }
-                  : DefaultUserAvatar
-              }
+            <CacheImage
+              url={message.sender.imageUrl}
+              defaultSource={DefaultUserAvatar}
               style={commonStyles.avatar}
             />
           </TouchableOpacity>

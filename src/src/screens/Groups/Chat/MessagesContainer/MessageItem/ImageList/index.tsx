@@ -22,6 +22,7 @@ import { observer } from "mobx-react-lite";
 import { useChatScreenState } from "~/context/chat";
 import { NotiFailed } from "~/assets/svgs";
 import GroupApi from "~/api/remote/GroupApi";
+import CacheImage from "~/components/CacheImage";
 
 interface Props {
   message: MessageModel;
@@ -87,7 +88,7 @@ const ImageList = ({ message }: Props) => {
     );
   };
 
-  const editMessage = () => { };
+  const editMessage = () => {};
   const pinMessage = async () => {
     const isSuccess = state.addPinnedMessage(message);
     if (isSuccess) {
@@ -104,8 +105,9 @@ const ImageList = ({ message }: Props) => {
     console.log(message);
     console.log(message.images);
     navigation.navigate("forwardMessage", {
-      message: `Chuyển tiếp ${message?.images ? message.images.length : 0
-        } hình`,
+      message: `Chuyển tiếp ${
+        message?.images ? message.images.length : 0
+      } hình`,
       messageID: message.id,
       messageType: message.type,
     });
@@ -132,7 +134,7 @@ const ImageList = ({ message }: Props) => {
         deleteEmoji: deleteEmoji,
         deleteMessage: deleteMessage,
         pinMessage: pinMessage,
-        forwardMessage: forwardMessage
+        forwardMessage: forwardMessage,
       },
     );
   };
@@ -148,12 +150,9 @@ const ImageList = ({ message }: Props) => {
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
       {!isOwner && (
         <TouchableOpacity onPress={onPressAvatar}>
-          <Image
-            source={
-              message.sender.imageUrl
-                ? { uri: message.sender.imageUrl }
-                : DefaultUserAvatar
-            }
+          <CacheImage
+            url={message.sender.imageUrl}
+            defaultSource={DefaultUserAvatar}
             style={commonStyles.avatar}
           />
         </TouchableOpacity>
