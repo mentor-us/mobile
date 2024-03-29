@@ -14,7 +14,10 @@ import RNBootSplash from "react-native-bootsplash";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import { SecureStore } from "~/api/local/SecureStore";
-import { createAxiosResponseInterceptor } from "~/api/remote/AxiosClient";
+import {
+  removeAxiosResponseInterceptor,
+  setupAxiosResponseInterceptor,
+} from "~/api/remote/AxiosClient";
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +41,8 @@ const RootNavigator = () => {
   const { isConnected } = useNetInfo();
 
   useEffect(() => {
+    let interceptor;
+
     const bootstrapAsync = async () => {
       const userToken = await SecureStore.getToken();
       if (isConnected === false) {
@@ -65,7 +70,7 @@ const RootNavigator = () => {
       );
 
       // Register axios callback when token is expired
-      createAxiosResponseInterceptor(() => {
+      interceptor = setupAxiosResponseInterceptor(() => {
         authStore.restoreToken(null);
         authStore.setError("Phiên đăng nhập đã hết hạn");
       });
@@ -75,6 +80,10 @@ const RootNavigator = () => {
       // Hide splash screen after token is restored
       await RNBootSplash.hide({ fade: true, duration: 500 });
     });
+
+    return () => {
+      removeAxiosResponseInterceptor(interceptor);
+    };
   }, []);
 
   if (authStore.isLoading) {
