@@ -8,7 +8,6 @@ import { Deeplink, config, config_auth } from "~/utils/Deeplink";
 import BottomSheetModal from "~/components/BottomSheetModal";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { useCurrentUser } from "~/app/server/users/queries";
-import { AxiosError } from "axios";
 import { useNetInfo } from "@react-native-community/netinfo";
 import RNBootSplash from "react-native-bootsplash";
 import { observer } from "mobx-react-lite";
@@ -41,7 +40,13 @@ const RootNavigator = () => {
   const { isConnected } = useNetInfo();
 
   useEffect(() => {
-    let interceptor;
+    // let interceptor;
+
+    // Register axios callback when token is expired
+    const interceptor = setupAxiosResponseInterceptor(() => {
+      authStore.restoreToken(null);
+      authStore.setError("Phiên đăng nhập đã hết hạn");
+    });
 
     const bootstrapAsync = async () => {
       const userToken = await SecureStore.getToken();
@@ -50,30 +55,24 @@ const RootNavigator = () => {
         return;
       }
 
-      if (userToken) {
-        // Check token is valid or not, expired or not
-        const res = await refetch();
-        if (res.isError && res.error instanceof AxiosError) {
-          const resStatus = res.error.response?.status;
-          if (resStatus === 401) {
-            authStore.restoreToken(null);
-            authStore.setError("Phiên đăng nhập đã hết hạn");
-            return;
-          }
-        }
-      }
+      // if (userToken) {
+      //   // Check token is valid or not, expired or not
+      //   const res = await refetch();
+      //   if (res.isError && res.error instanceof AxiosError) {
+      //     const resStatus = res.error.response?.status;
+      //     if (resStatus === 401) {
+      //       authStore.restoreToken(null);
+      //       authStore.setError("Phiên đăng nhập đã hết hạn");
+      //       return;
+      //     }
+      //   }
+      // }
 
       // Save token to store
       authStore.setError(null);
       authStore.restoreToken(
         !userToken || userToken.length === 0 ? null : userToken,
       );
-
-      // Register axios callback when token is expired
-      interceptor = setupAxiosResponseInterceptor(() => {
-        authStore.restoreToken(null);
-        authStore.setError("Phiên đăng nhập đã hết hạn");
-      });
     };
 
     bootstrapAsync().finally(async () => {
@@ -85,6 +84,13 @@ const RootNavigator = () => {
       removeAxiosResponseInterceptor(interceptor);
     };
   }, []);
+
+  useEffect(() => {
+    console.log("authStore.userToken", authStore.userToken);
+    if (authStore.userToken) {
+      refetch();
+    }
+  }, [authStore.userToken]);
 
   if (authStore.isLoading) {
     return <LoadingFullSreen />;
