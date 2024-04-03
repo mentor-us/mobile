@@ -158,3 +158,4 @@ package-lock.json
 
 src/.env
 src/.detoxrc.js
+src/android/app/google-services.json
