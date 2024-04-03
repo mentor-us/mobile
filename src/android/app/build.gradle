@@ -1,4 +1,3 @@
-
 plugins {
   id 'com.android.application'
   // Add the Google services Gradle plugin
@@ -17,7 +16,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  * bundle directly from the development server. Below you can see all the possible configurations
  * and their defaults. If you decide to add a configuration block, make sure to add it before the
  * `apply from: "../../node_modules/react-native/react.gradle"` line.
- * 
+ *
  * project.ext.react = [
  *   // the name of the generated asset file containing your JS bundle
  *   bundleAssetName: "index.android.bundle",
@@ -135,10 +134,45 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+apply plugin: "com.android.application"
+
+project.ext.envConfigFiles = [
+   productiondebug: ".env.prod",
+   productionrelease: ".env.prod",
+   developmentrelease: ".env.dev",
+   developmentdebug: ".env.dev",
+   localrelease: ".env.local",
+   localdebug: ".env.loca"
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+    flavorDimensions "default"
+    productFlavors {
+        prod {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "vn.edu.hcmus.mentorus"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "vn.edu.hcmus.mentorus"
+        }
+        dev {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "vn.edu.hcmus.mentorus.dev"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "vn.edu.hcmus.mentorus"
+        }
+        local {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "vn.edu.hcmus.mentorus.local"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "vn.edu.hcmus.mentorus"
+        }
+    }
 
     defaultConfig {
         applicationId "vn.edu.hcmus.mentorus"
@@ -238,6 +272,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            matchingFallbacks = ['debug', 'release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -276,7 +311,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation "androidx.core:core-splashscreen:1.0.0"
-    
+
     //implementation 'com.facebook.fresco:animated-gif:1.12.0' //instead of
     implementation 'com.facebook.fresco:animated-gif:2.0.0'   //use
 

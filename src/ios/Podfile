@@ -12,7 +12,7 @@ setup_permissions([
   'PhotoLibrary',
 ])
 
-target 'MentorUS' do
+abstract_target 'MentorUSCommonPods' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -46,6 +46,15 @@ target 'MentorUS' do
   target 'MentorUSTests' do
     inherit! :complete
     # Pods for testing
+  end
+
+  target 'MentorUSLocal' do
+  end
+
+  target 'MentorUSDev' do
+  end
+
+  target 'MentorUS' do
   end
 
   use_flipper!({ 'Flipper' => '0.125.0' })
