@@ -1,14 +1,14 @@
-import {FlatList} from "react-native";
-import React, {useCallback, useEffect, useState} from "react";
-import {ScreenProps} from "~/types/navigation";
-import {GroupMemberModel} from "~/models/group";
+import { FlatList } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ScreenProps } from "~/types/navigation";
+import { GroupMemberModel } from "~/models/group";
 import GroupMember from "~/components/GroupMember";
 import styles from "./styles";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import MeetingServices from "~/services/meeting";
 
-const MeetingAttendees: ScreenProps<"meetingAttendees"> = ({route}) => {
+const MeetingAttendees: ScreenProps<"meetingAttendees"> = ({ route }) => {
   const meetingId = route.params.meetingId;
   const groupId = route.params.groupId;
   const navigation = useNavigation();
@@ -16,12 +16,16 @@ const MeetingAttendees: ScreenProps<"meetingAttendees"> = ({route}) => {
 
   // render item
   const renderItem = useCallback(
-    ({index, item}: {index: number; item: GroupMemberModel}) => {
+    ({ index, item }: { index: number; item: GroupMemberModel }) => {
       return (
         <GroupMember
           onPress={() => {
-            navigation.navigate("otherProfile", {userId: item.id, groupId: groupId});
+            navigation.navigate("otherProfile", {
+              userId: item.id,
+              groupId: groupId,
+            });
           }}
+          markable={false}
           member={item}
         />
       );

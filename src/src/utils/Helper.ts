@@ -19,7 +19,7 @@ export default class Helper {
       return "";
     }
 
-    if (key.startsWith("https")) {
+    if (key.startsWith("https") || key.startsWith("file")) {
       return key;
     }
 

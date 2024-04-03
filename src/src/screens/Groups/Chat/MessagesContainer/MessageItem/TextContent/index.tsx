@@ -33,6 +33,7 @@ import GroupApi from "~/api/remote/GroupApi";
 import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 import SizedBox from "~/components/SizedBox";
+import CacheImage from "~/components/CacheImage";
 
 interface Props {
   message: MessageModel;
@@ -195,12 +196,9 @@ const TextContent = ({ message }: Props) => {
         {/* User Avatar */}
         {!isOwner && (
           <TouchableOpacity onPress={onPressAvatar}>
-            <Image
-              source={
-                message.sender.imageUrl
-                  ? { uri: message.sender.imageUrl }
-                  : DefaultUserAvatar
-              }
+            <CacheImage
+              url={message.sender.imageUrl}
+              defaultSource={DefaultUserAvatar}
               style={commonStyles.avatar}
             />
           </TouchableOpacity>

@@ -6,17 +6,17 @@ import {
   DeviceEventEmitter,
   RefreshControl,
 } from "react-native";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles";
 import GlobalStyles from "~/constants/GlobalStyles";
 import InfoItem from "./InfoItem";
-import {InfoItemModel} from "./index.props";
+import { InfoItemModel } from "./index.props";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
-import {HeaderEditButton} from "~/components/Header";
-import {ScreenProps} from "~/types/navigation";
-import {MarkTitleIcon} from "~/assets/svgs";
-import {StackNavigationOptions} from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+import { HeaderEditButton } from "~/components/Header";
+import { ScreenProps } from "~/types/navigation";
+import { MarkTitleIcon } from "~/assets/svgs";
+import { StackNavigationOptions } from "@react-navigation/stack";
 import {
   MeetingModel,
   MeetingRepeatedObject,
@@ -24,11 +24,11 @@ import {
 } from "~/models/meeting";
 import MeetingServices from "~/services/meeting";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import {ActivityIndicator, Snackbar} from "react-native-paper";
+import { ActivityIndicator, Snackbar } from "react-native-paper";
 import Timeline from "react-native-timeline-flatlist";
-import {Color} from "~/constants/Color";
+import { Color } from "~/constants/Color";
 
-const MeetingDetail: ScreenProps<"meetingDetail"> = ({route}) => {
+const MeetingDetail: ScreenProps<"meetingDetail"> = ({ route }) => {
   const navigation = useNavigation();
   const meetingId = route.params.meetingId;
   const [meetingData, setMeetingData] = useState<MeetingModel>(MEETING_SAMPLE);
@@ -42,14 +42,14 @@ const MeetingDetail: ScreenProps<"meetingDetail"> = ({route}) => {
         type: "description",
         text: meetingData.description || "",
       },
-      {type: "meetingTime", text: meetingData.time.display},
+      { type: "meetingTime", text: meetingData.time.display },
       // {
       //   type: "repeated",
       //   text: MeetingRepeatedObject[meetingData.repeated].value,
       // },
-      {type: "place", text: meetingData.place},
-      {type: "organizer", text: meetingData.organizer.name},
-      {type: "attendee", text: `${meetingData.totalAttendees} thành viên`},
+      { type: "place", text: meetingData.place },
+      { type: "organizer", text: meetingData.organizer.name },
+      { type: "attendee", text: `${meetingData.totalAttendees} thành viên` },
     ] as InfoItemModel[];
   }, [meetingData]);
 
@@ -96,7 +96,7 @@ const MeetingDetail: ScreenProps<"meetingDetail"> = ({route}) => {
   useEffect(() => {
     const subcribe = DeviceEventEmitter.addListener(
       EventEmitterNames.refreshMeetingDetail,
-      ({status, message}: {status: boolean; message: string}) => {
+      ({ status, message }: { status: boolean; message: string }) => {
         setTimeout(() => {
           setMessage(message);
           setLoading(status);
@@ -121,7 +121,9 @@ const MeetingDetail: ScreenProps<"meetingDetail"> = ({route}) => {
   if (!meetingData.id) {
     return (
       <SafeAreaView style={GlobalStyles.fullFlexFocus}>
-        <Text style={styles.error}>Lịch hẹn này không tồn tại hoặc đã bị xóa</Text>
+        <Text style={styles.error}>
+          Lịch hẹn này không tồn tại hoặc đã bị xóa
+        </Text>
       </SafeAreaView>
     );
   }
@@ -168,9 +170,15 @@ const MeetingDetail: ScreenProps<"meetingDetail"> = ({route}) => {
             data={meetingData.histories}
             isUsingFlatlist={false}
             innerCircle={"dot"}
-            descriptionStyle={{color: Color.text[3]}}
-            titleStyle={{color: Color.black, fontWeight: "500"}}
+            separator
+            timeContainerStyle={{ minWidth: 72, marginTop: -2 }}
+            descriptionStyle={{ color: Color.text[3] }}
+            titleStyle={{
+              color: Color.black,
+              fontWeight: "500",
+            }}
             timeStyle={{
+              textAlign: "center",
               color: Color.red,
             }}
           />
