@@ -25,6 +25,8 @@ target 'MentorUS' do
   pod 'GoogleUtilities', :modular_headers => true
   pod 'nanopb', :modular_headers => true
 
+  pod 'SDWebImagePhotosPlugin'
+
   $RNFirebaseAsStaticFramework = true
 
   use_react_native!(

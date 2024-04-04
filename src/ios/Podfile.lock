@@ -578,6 +578,8 @@ PODS:
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
+  - SDWebImagePhotosPlugin (1.2.0):
+    - SDWebImage/Core (~> 5.10)
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
@@ -684,6 +686,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - SDWebImagePhotosPlugin
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -716,6 +719,7 @@ SPEC REPOS:
     - OpenSSL-Universal
     - PromisesObjC
     - SDWebImage
+    - SDWebImagePhotosPlugin
     - SDWebImageWebPCoder
     - SocketRocket
     - YogaKit
@@ -951,11 +955,12 @@ SPEC CHECKSUMS:
   RNScreens: fa9b582d85ae5d62c91c66003b5278458fed7aaa
   RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImagePhotosPlugin: 7d52495711a00637da16bbd7098a634f524c8d7e
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 043f8eb97345d0171f27fead4d1849cacf0472a5
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 1de7c61b9724722e32ad51a97379dd31617247c9
+PODFILE CHECKSUM: ed357b83ff30829e6eec60dc30c897d5d1891fe6
 
 COCOAPODS: 1.15.2
