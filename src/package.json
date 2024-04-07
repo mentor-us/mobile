@@ -1,6 +1,6 @@
 {
   "name": "MentorUS",
-  "version": "1.8.0",
+  "version": "0.4",
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",

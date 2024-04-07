@@ -86,7 +86,6 @@ const RootNavigator = () => {
   }, []);
 
   useEffect(() => {
-    console.log("authStore.userToken", authStore.userToken);
     if (authStore.userToken) {
       refetch();
     }

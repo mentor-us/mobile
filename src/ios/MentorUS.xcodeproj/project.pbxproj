@@ -10,6 +10,7 @@
 		00E356F31AD99517003FC87E /* MentorUSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MentorUSTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1C09B76F2BC2F8980007FD28 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1C09B76E2BC2F8980007FD28 /* PrivacyInfo.xcprivacy */; };
 		1C4151BB2BBC65330085183A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C4151BA2BBC65330085183A /* GoogleService-Info.plist */; };
 		1CED57B42BA75B96009EC73A /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CED57B32BA75B96009EC73A /* main.jsbundle */; };
 		24E5536489D71571F491CF1B /* libPods-MentorUS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7F6395B9E10F287495A22F3 /* libPods-MentorUS.a */; };
@@ -53,6 +54,7 @@
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = MentorUS/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MentorUS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MentorUS/main.m; sourceTree = "<group>"; };
+		1C09B76E2BC2F8980007FD28 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1C4151BA2BBC65330085183A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1C7E72E02B94941100633723 /* MentorUS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MentorUS.entitlements; path = MentorUS/MentorUS.entitlements; sourceTree = "<group>"; };
 		1CED57B32BA75B96009EC73A /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				1C09B76E2BC2F8980007FD28 /* PrivacyInfo.xcprivacy */,
 				1C4151BA2BBC65330085183A /* GoogleService-Info.plist */,
 				1CED57B32BA75B96009EC73A /* main.jsbundle */,
 				13B07FAE1A68108700A75B9A /* MentorUS */,
@@ -322,6 +325,7 @@
 				26D67F32299A279E007C3DDC /* Octicons.ttf in Resources */,
 				26D67F35299A279E007C3DDC /* FontAwesome5_Brands.ttf in Resources */,
 				26D67F37299A279E007C3DDC /* AntDesign.ttf in Resources */,
+				1C09B76F2BC2F8980007FD28 /* PrivacyInfo.xcprivacy in Resources */,
 				26D67F40299A279E007C3DDC /* MaterialIcons.ttf in Resources */,
 				26D67F3A299A279E007C3DDC /* FontAwesome5_Solid.ttf in Resources */,
 				1C4151BB2BBC65330085183A /* GoogleService-Info.plist in Resources */,
@@ -583,7 +587,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MentorUS/MentorUS.entitlements;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = S466HT9VB4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MentorUS/Info.plist;
@@ -593,7 +597,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -615,7 +619,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MentorUS/MentorUS.entitlements;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = S466HT9VB4;
 				INFOPLIST_FILE = MentorUS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MentorUS;
@@ -624,7 +628,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
