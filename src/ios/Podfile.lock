@@ -22,6 +22,8 @@ PODS:
   - ExpoModulesCore (1.1.1):
     - React-Core
     - ReactCommon/turbomodule/core
+  - ExpoWebBrowser (12.0.0):
+    - ExpoModulesCore
   - FBLazyVector (0.70.8)
   - FBReactNativeSpec (0.70.8):
     - RCT-Folly (= 2021.07.22.00)
@@ -623,6 +625,7 @@ DEPENDENCIES:
   - Expo (from `../node_modules/expo`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - FirebaseCore
@@ -778,6 +781,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
+  ExpoWebBrowser:
+    :path: "../node_modules/expo-web-browser/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -921,6 +926,7 @@ SPEC CHECKSUMS:
   Expo: 5f4240506a147162542178989696e56e3dd72924
   ExpoKeepAwake: 69b59d0a8d2b24de9f82759c39b3821fec030318
   ExpoModulesCore: 485dff3a59b036a33b6050c0a5aea3cf1037fdd1
+  ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
   FBLazyVector: ce6c993e675c5e9684e3b83aa0c346eb116c3ec6
   FBReactNativeSpec: d8772db98ada3c2daf8f65e2105ada77bf209c02
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
