@@ -1,6 +1,7 @@
 import LogoApp from "./_raw/logo.svg";
 import GoogleLogo from "./_raw/google.svg";
 import MicrosoftLogo from "./_raw/microsoft.svg";
+import AppleLogo from "./_raw/apple.svg";
 import ArrowDropDown from "./_raw/ArrowDropDown.svg";
 import CheckIcon from "./_raw/check.svg";
 import BlankFile from "./_raw/blank-file.svg";
@@ -133,6 +134,7 @@ export {
   LogoApp,
   GoogleLogo,
   MicrosoftLogo,
+  AppleLogo,
   EditIcon,
   SearchIcon,
   SearchBlackIcon,
@@ -233,5 +235,5 @@ export {
   SendIcon,
   ScheduleIcon,
   CalendarModeIcon,
-  MarkIcon
+  MarkIcon,
 };
