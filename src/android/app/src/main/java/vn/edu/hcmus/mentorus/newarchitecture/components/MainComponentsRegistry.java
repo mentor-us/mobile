@@ -1,4 +1,4 @@
-package com.mentorus.newarchitecture.components;
+package vn.edu.hcmus.mentorus.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

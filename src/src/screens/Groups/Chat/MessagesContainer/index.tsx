@@ -1,5 +1,5 @@
 import { Alert, DeviceEventEmitter, FlatList } from "react-native";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import styles from "./styles";
 import { observer } from "mobx-react-lite";
 
@@ -70,6 +70,7 @@ const MessagesContainer = ({ groupType }: MessagesContainerProps) => {
 
   return (
     <FlatList
+      ref={state._messageFlatlistRef}
       testID="message-container"
       style={styles.container}
       renderItem={renderItem}

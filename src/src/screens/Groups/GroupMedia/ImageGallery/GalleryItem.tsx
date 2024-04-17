@@ -1,23 +1,28 @@
-import React, {memo} from "react";
+import React, { memo } from "react";
 import equals from "react-fast-compare";
-import {TouchableOpacity} from "react-native";
+import { TouchableOpacity } from "react-native";
 
-import styles, {MEDIA_SIZE} from "./styles";
+import styles, { MEDIA_SIZE } from "./styles";
 import SingleThumbnail from "~/components/SingleThumbnail";
+import CacheImage from "~/components/CacheImage";
+import Helper from "~/utils/Helper";
 
 interface Props {
   data: Social.MediaItem;
   onPress: () => void;
 }
 
-const GalleryItem = ({data, onPress}: Props) => {
+const GalleryItem = ({ data, onPress }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <SingleThumbnail
-        media={data}
-        width={MEDIA_SIZE}
-        height={MEDIA_SIZE}
-        style={styles.mediaContainer}
+      <CacheImage
+        style={{
+          ...styles.mediaContainer,
+          width: MEDIA_SIZE,
+          height: MEDIA_SIZE,
+        }}
+        url={Helper.getImageUrl(data.url)}
+        defaultSource={data.assetLocal}
       />
     </TouchableOpacity>
   );

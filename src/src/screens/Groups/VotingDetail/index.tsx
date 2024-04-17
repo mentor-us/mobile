@@ -18,7 +18,6 @@ import {
   EMPTY_VOTE_RESULT,
   NEW_VOTE_SAMPLE,
   Vote,
-  VoteDetail,
   VoteResult,
 } from "~/models/vote";
 import { ScrollView } from "react-native-gesture-handler";
@@ -26,7 +25,7 @@ import Helper from "~/utils/Helper";
 import MUITextInput from "~/components/MUITextInput";
 import uuid from "react-native-uuid";
 import Feather from "react-native-vector-icons/Feather";
-import { Checkbox, FAB, Snackbar } from "react-native-paper";
+import { Checkbox, FAB, RadioButton, Snackbar } from "react-native-paper";
 import VoteService from "~/services/vote";
 import { useAppSelector } from "~/redux";
 import { ColumnChartImage, DefaultUserAvatar } from "~/assets/images";
@@ -35,6 +34,8 @@ import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderRight from "./HeaderRight";
 import VotingApi from "~/api/remote/VotingApi";
+import { ShortProfileUserModel } from "~/models/user";
+import CacheImage from "~/components/CacheImage";
 
 const VotingDetail = ({ route }) => {
   /* Data in need */
@@ -49,11 +50,12 @@ const VotingDetail = ({ route }) => {
   const [newChoiceIds, setNewChoiceIds] = useState<any[]>([]);
   const [snackBar, setSnackBar] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [currentValueRadio, setCurrentValueRadio] = useState<string>("");
+  const [myVote, setMyVote] = useState<ShortProfileUserModel | null>(null);
   const onDismissSnackBar = () => {
     setMessage("");
     setSnackBar(false);
   };
-
   /* Error handling */
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -80,17 +82,17 @@ const VotingDetail = ({ route }) => {
     const oldChoices = vote.choices;
     const newChoices = newVote.choices;
 
-    if (oldChoices.length != newChoices.length) {
+    if (oldChoices.length !== newChoices.length) {
       return true;
     }
 
-    let isUpdated: boolean = false;
+    let isUpdated = false;
     oldChoices.forEach(oldChoice => {
       const oldVoterIds = oldChoice.voters.map(voter => voter.id);
       const isSelectedOldChoice = oldVoterIds.includes(currentUser.id);
 
       const newChoice = newVote.choices.find(
-        choice => choice.id == oldChoice.id,
+        choice => choice.id === oldChoice.id,
       );
       if (!newChoice) {
         isUpdated = true;
@@ -122,11 +124,11 @@ const VotingDetail = ({ route }) => {
     goBack();
   };
 
-  const calculateVoterNumber = (voteDetail: VoteDetail) => {
+  const calculateVoterNumber = (voteDetail: VoteResult) => {
     if (!voteDetail) {
       return 0;
     }
-    return voteDetail.choices
+    return voteDetail.choiceResult
       .flatMap(choice => choice.voters)
       .flatMap(voter => voter.id)
       .filter((value, index, array) => array.indexOf(value) === index).length;
@@ -192,18 +194,57 @@ const VotingDetail = ({ route }) => {
       choiceResult: newChoices,
     });
   };
-
   const pressCheckBox = (choiceId: string) => {
     const newChoices = vote.choiceResult.map(choice => {
-      if (choice.id != choiceId) {
+      if (choice.id !== choiceId) {
         return choice;
       }
-
+      let newVoter = [...choice.voters];
+      if (myVote) {
+        if (choice.status === "checked") {
+          newVoter = newVoter.filter(voter => voter.id != myVote.id);
+        } else {
+          newVoter = [...newVoter, myVote];
+        }
+      }
       return {
         ...choice,
-        status: choice.status == "checked" ? "unchecked" : "checked",
+        status: choice.status === "checked" ? "unchecked" : "checked",
+        voters: newVoter,
       } as ChoiceResult;
     });
+    setVote({
+      ...vote,
+      choiceResult: newChoices,
+    });
+  };
+
+  const onPressRadioButton = (choiceId: string) => {
+    // const newChoices = vote.choices.find(choice => choice.id === choiceId);
+    const newChoices = vote.choiceResult.map(choice => {
+      let newVoter = [...choice.voters];
+      if (choice.id !== choiceId) {
+        if (myVote) newVoter = newVoter.filter(voter => voter.id != myVote.id);
+        return {
+          ...choice,
+          status: "unchecked",
+          voters: newVoter,
+        } as ChoiceResult;
+      }
+      if (myVote) {
+        if (choice.status === "checked") {
+          newVoter = newVoter.filter(voter => voter.id != myVote.id);
+        } else {
+          newVoter = [...newVoter, myVote];
+        }
+      }
+      return {
+        ...choice,
+        status: choice.status === "checked" ? "unchecked" : "checked",
+        voters: newVoter,
+      } as ChoiceResult;
+    });
+
     setVote({
       ...vote,
       choiceResult: newChoices,
@@ -216,6 +257,7 @@ const VotingDetail = ({ route }) => {
         choice: choice,
         groupId: vote.groupId,
       });
+      setCurrentValueRadio(choice.id);
     },
     [vote.choiceResult],
   );
@@ -285,23 +327,44 @@ const VotingDetail = ({ route }) => {
     navigation.setOptions({
       headerRight: headerRight,
     } as StackNavigationOptions);
+    const indexChoice = vote.choiceResult.findIndex(
+      choice => choice.status == "checked",
+    );
+    setCurrentValueRadio(
+      indexChoice != -1 ? vote.choiceResult[indexChoice].id : "",
+    );
+    if (!myVote) {
+      setMyVote({ ...currentUser });
+    }
+    setVoterNumber(calculateVoterNumber(vote));
   }, [vote, refreshing]);
 
   const VoterThumbnail = ({ voters }) => {
-    return voters.slice(0, 3).map(voter => (
-      <Image
-        key={voter.id}
-        source={
-          voter.imageUrl &&
-          voter.imageUrl !== "https://graph.microsoft.com/v1.0/me/photo/$value"
-            ? {
-                uri: voter.imageUrl,
-              }
-            : DefaultUserAvatar
-        }
-        style={styles.avatar}
-      />
-    ));
+    // return voters.slice(0, 3).map(voter => (
+    //   <Image
+    //     key={voter.id}
+    //     source={
+    //       voter.imageUrl &&
+    //       voter.imageUrl !== "https://graph.microsoft.com/v1.0/me/photo/$value"
+    //         ? {
+    //             uri: voter.imageUrl,
+    //           }
+    //         : DefaultUserAvatar
+    //     }
+    //     style={styles.avatar}
+    //   />
+    // ));
+
+    return voters
+      .slice(0, 3)
+      .map(voter => (
+        <CacheImage
+          defaultSource={DefaultUserAvatar}
+          url={Helper.getImageUrl(voter.imageUrl)}
+          key={voter.id}
+          style={styles.avatar}
+        />
+      ));
   };
 
   const formatTime = (src: string): string => {
@@ -337,7 +400,9 @@ const VotingDetail = ({ route }) => {
           <View style={styles.header}>
             <View style={styles.headerTitle}>
               <Image source={ColumnChartImage} style={styles.headerIcon} />
-              <Text style={styles.formTitle}>{vote?.question}</Text>
+              <Text numberOfLines={3} style={styles.formTitle}>
+                {vote?.question}
+              </Text>
             </View>
 
             <Text style={styles.info}>
@@ -353,7 +418,9 @@ const VotingDetail = ({ route }) => {
               <View style={styles.headerTitle}>
                 <SortIcon />
                 <Text style={styles.openTitleText}>
-                  Chọn được nhiều lựa chọn
+                  {vote.isMultipleChoice
+                    ? "Chọn được nhiều lựa chọn"
+                    : "Chọn được nhiều nhất 1 bình chọn"}
                 </Text>
               </View>
             </>
@@ -376,65 +443,142 @@ const VotingDetail = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={styles.optionItemList}>
-            {vote.choiceResult.map((item, index) => {
-              const votePercent = item.voters.length
-                ? ((item.voters.length / voterNumber) * 103).toFixed(2) + "%"
-                : "0%";
+            {!vote.isMultipleChoice ? (
+              <RadioButton.Group
+                onValueChange={newValue => {
+                  onPressRadioButton(newValue);
+                }}
+                value={currentValueRadio}>
+                {vote.choiceResult.map((item, index) => {
+                  const votePercent = item.voters.length
+                    ? ((item.voters.length / voterNumber) * 103).toFixed(2) +
+                      "%"
+                    : "0%";
 
-              return (
-                <View style={styles.optionItem} key={item.id}>
-                  <View
-                    style={[
-                      styles.percentView,
-                      {
-                        width: votePercent,
-                      },
-                    ]}
-                  />
-                  {/* <MarkTitleIcon width={20} height={20} /> */}
-                  <View style={styles.fieldInput}>
-                    <View style={styles.checkboxCtn}>
-                      <Checkbox
-                        onPress={() => pressCheckBox(item.id)}
-                        status={item.status}
-                        color={Color.primary}
-                        disabled={vote.status === "CLOSED"}
+                  return (
+                    <View style={styles.optionItem} key={item.id}>
+                      <View
+                        style={[
+                          styles.percentView,
+                          {
+                            width: votePercent,
+                          },
+                        ]}
                       />
+                      {/* <MarkTitleIcon width={20} height={20} /> */}
+                      <View style={styles.fieldInput}>
+                        <View style={styles.checkboxCtn}>
+                          <RadioButton
+                            // onValueChange={() => pressRadioInput(item.id)}
+                            value={item.id}
+                            status={
+                              item.status === "checked"
+                                ? "checked"
+                                : "unchecked"
+                            }
+                            color={Color.primary}
+                            disabled={vote.status === "CLOSED"}
+                          />
+                        </View>
+
+                        {newChoiceIds.includes(item.id) ? (
+                          <MUITextInput
+                            label={"Lựa chọn mới"}
+                            keyboardType={"default"}
+                            value={item.name}
+                            onChangeText={text => {
+                              changeName(item.id, text);
+                            }}
+                            multiline
+                            errorText={errors[index]}
+                          />
+                        ) : (
+                          <Text style={styles.choiceContent}>{item.name}</Text>
+                        )}
+                      </View>
+                      {newChoiceIds.includes(item.id) && (
+                        <FAB
+                          icon="close"
+                          style={styles.fieldIcon}
+                          small
+                          onPress={() => removeChoice(item.id)}
+                        />
+                      )}
+                      {item.voters.length !== 0 && (
+                        <TouchableOpacity
+                          style={styles.voterCtn}
+                          onPress={() => openChoiceResult(item)}>
+                          <VoterThumbnail voters={item.voters} />
+                        </TouchableOpacity>
+                      )}
                     </View>
+                  );
+                })}
+              </RadioButton.Group>
+            ) : (
+              <>
+                {vote.choiceResult.map((item, index) => {
+                  const votePercent = item.voters.length
+                    ? ((item.voters.length / voterNumber) * 103).toFixed(2) +
+                      "%"
+                    : "0%";
 
-                    {newChoiceIds.includes(item.id) ? (
-                      <MUITextInput
-                        label={"Lựa chọn mới"}
-                        keyboardType={"default"}
-                        value={item.name}
-                        onChangeText={text => {
-                          changeName(item.id, text);
-                        }}
-                        multiline
-                        errorText={errors[index]}
+                  return (
+                    <View style={styles.optionItem} key={item.id}>
+                      <View
+                        style={[
+                          styles.percentView,
+                          {
+                            width: votePercent,
+                          },
+                        ]}
                       />
-                    ) : (
-                      <Text style={styles.choiceContent}>{item.name}</Text>
-                    )}
-                  </View>
-                  {newChoiceIds.includes(item.id) && (
-                    <FAB
-                      icon="close"
-                      style={styles.fieldIcon}
-                      small
-                      onPress={() => removeChoice(item.id)}
-                    />
-                  )}
-                  {item.voters.length !== 0 && (
-                    <TouchableOpacity
-                      style={styles.voterCtn}
-                      onPress={() => openChoiceResult(item)}>
-                      <VoterThumbnail voters={item.voters} />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            })}
+                      {/* <MarkTitleIcon width={20} height={20} /> */}
+                      <View style={styles.fieldInput}>
+                        <View style={styles.checkboxCtn}>
+                          <Checkbox
+                            onPress={() => pressCheckBox(item.id)}
+                            status={item.status}
+                            color={Color.primary}
+                            disabled={vote.status === "CLOSED"}
+                          />
+                        </View>
+
+                        {newChoiceIds.includes(item.id) ? (
+                          <MUITextInput
+                            label={"Lựa chọn mới"}
+                            keyboardType={"default"}
+                            value={item.name}
+                            onChangeText={text => {
+                              changeName(item.id, text);
+                            }}
+                            multiline
+                            errorText={errors[index]}
+                          />
+                        ) : (
+                          <Text style={styles.choiceContent}>{item.name}</Text>
+                        )}
+                      </View>
+                      {newChoiceIds.includes(item.id) && (
+                        <FAB
+                          icon="close"
+                          style={styles.fieldIcon}
+                          small
+                          onPress={() => removeChoice(item.id)}
+                        />
+                      )}
+                      {item.voters.length !== 0 && (
+                        <TouchableOpacity
+                          style={styles.voterCtn}
+                          onPress={() => openChoiceResult(item)}>
+                          <VoterThumbnail voters={item.voters} />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  );
+                })}
+              </>
+            )}
           </ScrollView>
 
           <View style={styles.lineSeparator} />

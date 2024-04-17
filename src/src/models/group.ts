@@ -51,6 +51,7 @@ export interface GroupModel {
   parentId?: string;
   marked?: boolean;
   timeEnd?: string;
+  defaultChannelId?: string;
 }
 
 export interface GroupMemberModel {

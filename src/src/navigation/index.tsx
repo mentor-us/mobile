@@ -8,13 +8,15 @@ import { Deeplink, config, config_auth } from "~/utils/Deeplink";
 import BottomSheetModal from "~/components/BottomSheetModal";
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { useCurrentUser } from "~/app/server/users/queries";
-import { AxiosError } from "axios";
 import { useNetInfo } from "@react-native-community/netinfo";
 import RNBootSplash from "react-native-bootsplash";
 import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import { SecureStore } from "~/api/local/SecureStore";
-import LOG from "~/utils/Logger";
+import {
+  removeAxiosResponseInterceptor,
+  setupAxiosResponseInterceptor,
+} from "~/api/remote/AxiosClient";
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +40,14 @@ const RootNavigator = () => {
   const { isConnected } = useNetInfo();
 
   useEffect(() => {
+    // let interceptor;
+
+    // Register axios callback when token is expired
+    const interceptor = setupAxiosResponseInterceptor(() => {
+      authStore.restoreToken(null);
+      authStore.setError("Phiên đăng nhập đã hết hạn");
+    });
+
     const bootstrapAsync = async () => {
       const userToken = await SecureStore.getToken();
       if (isConnected === false) {
@@ -45,18 +55,18 @@ const RootNavigator = () => {
         return;
       }
 
-      if (userToken) {
-        // Check token is valid or not, expired or not
-        const res = await refetch();
-        if (res.isError && res.error instanceof AxiosError) {
-          const resStatus = res.error.response?.status;
-          if (resStatus === 401) {
-            authStore.restoreToken(null);
-            authStore.setError("Phiên đăng nhập đã hết hạn");
-            return;
-          }
-        }
-      }
+      // if (userToken) {
+      //   // Check token is valid or not, expired or not
+      //   const res = await refetch();
+      //   if (res.isError && res.error instanceof AxiosError) {
+      //     const resStatus = res.error.response?.status;
+      //     if (resStatus === 401) {
+      //       authStore.restoreToken(null);
+      //       authStore.setError("Phiên đăng nhập đã hết hạn");
+      //       return;
+      //     }
+      //   }
+      // }
 
       // Save token to store
       authStore.setError(null);
@@ -69,7 +79,17 @@ const RootNavigator = () => {
       // Hide splash screen after token is restored
       await RNBootSplash.hide({ fade: true, duration: 500 });
     });
+
+    return () => {
+      removeAxiosResponseInterceptor(interceptor);
+    };
   }, []);
+
+  useEffect(() => {
+    if (authStore.userToken) {
+      refetch();
+    }
+  }, [authStore.userToken]);
 
   if (authStore.isLoading) {
     return <LoadingFullSreen />;
@@ -85,7 +105,7 @@ const RootNavigator = () => {
       onReady={() => RNBootSplash.hide()}
       linking={navigationLinking}
       fallback={<LoadingFullSreen />}>
-      {!authStore.userToken  ? (
+      {!authStore.userToken ? (
         <UnAuthorizedStack />
       ) : (
         <>

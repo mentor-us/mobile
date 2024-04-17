@@ -1,16 +1,16 @@
-import {TouchableOpacity, Text, StyleSheet} from "react-native";
-import React, {memo, useCallback} from "react";
-import {GoogleLogo, MicrosoftLogo} from "~/assets/svgs";
-import {screenWidth} from "~/constants";
-import {useMemo} from "react";
-import {Color} from "~/constants/Color";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import React, { memo, useCallback } from "react";
+import { AppleLogo, GoogleLogo, MicrosoftLogo } from "~/assets/svgs";
+import { screenWidth } from "~/constants";
+import { useMemo } from "react";
+import { Color } from "~/constants/Color";
 
 interface Props {
   onPress: () => void;
-  type: "google" | "microsoft" | undefined;
+  type: "google" | "microsoft" | "apple" | undefined;
 }
 
-const LoginButton = ({onPress, type}: Props) => {
+const LoginButton = ({ onPress, type }: Props) => {
   const renderLogo = useCallback(
     type => {
       switch (type) {
@@ -18,6 +18,8 @@ const LoginButton = ({onPress, type}: Props) => {
           return <GoogleLogo width={24} height={24} />;
         case "microsoft":
           return <MicrosoftLogo width={24} height={24} />;
+        case "apple":
+          return <AppleLogo width={24} height={24} />;
         default:
           return <></>;
       }
@@ -30,7 +32,9 @@ const LoginButton = ({onPress, type}: Props) => {
       case "google":
         return "Đăng nhập với Google";
       case "microsoft":
-        return "Đăng nhập với Microsoft 365";
+        return "Đăng nhập với Microsoft";
+      case "apple":
+        return "Đăng nhập với Apple";
       default:
         return "";
     }
@@ -45,21 +49,21 @@ const LoginButton = ({onPress, type}: Props) => {
 };
 
 const styles = StyleSheet.create({
+  buttonText: {
+    color: Color.text[0],
+    flex: 1,
+    textAlign: "center",
+  },
   loginButton: {
-    padding: 12,
-    marginTop: 8,
-    marginBottom: 8,
+    alignItems: "center",
+    borderRadius: 10,
+    borderWidth: 1,
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 10,
+    marginBottom: 8,
+    marginTop: 8,
+    padding: 12,
     width: screenWidth * 0.7,
-  },
-  buttonText: {
-    textAlign: "center",
-    flex: 1,
-    color: Color.text[0],
   },
 });
 

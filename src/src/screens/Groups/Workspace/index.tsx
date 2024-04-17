@@ -116,8 +116,8 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   if (isError || !workspace) {
     return <ErrorMessage message="Lỗi truy cập nhóm. Vui lòng thử lại sau!" />;
   }
-
-  return (
+  
+    return (
     isSuccess && (
       <SafeAreaView style={styles.container}>
         <ScrollView
@@ -141,7 +141,11 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
         </TouchableOpacity> */}
 
           <TouchableOpacity
-            onPress={() => navigation.navigate("chat", { groupId: groupId })}>
+            onPress={() =>
+              navigation.navigate("chat", {
+                groupId: workspace?.defaultChannelId ?? groupId,
+              })
+            }>
             <View style={styles.commonRoom}>
               <View style={styles.iconBox}>
                 <GroupIcon width={22} height={22} />

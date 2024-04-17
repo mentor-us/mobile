@@ -10,9 +10,24 @@ import { EmojiModel } from "~/constants/Emoijs";
 import { Reaction } from "~/models/reaction";
 import { ShortProfileUserModel } from "~/models/user";
 import { MyMarkedDate, MyMarkingProps, ScheduleModel } from "~/models/schedule";
+import { BASE_URL } from "@env";
 
 const MOV_REG = RegExp(/(.*).mov/i);
 export default class Helper {
+  static getImageUrl(key?: string) {
+    if (!key) {
+      return "";
+    }
+
+    if (key.startsWith("https") || key.startsWith("file")) {
+      return key;
+    }
+
+    const searchParams = new URLSearchParams();
+    searchParams.append("key", key);
+    return `${BASE_URL}/api/files?${searchParams.toString()}`;
+  }
+
   static getBoolean(src: string): boolean {
     return src.toLocaleLowerCase() === "true" ? true : false;
   }

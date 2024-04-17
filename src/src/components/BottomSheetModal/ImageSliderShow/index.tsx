@@ -1,18 +1,21 @@
-import {View, FlatList, Animated, SafeAreaView} from "react-native";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import { View, FlatList, Animated, SafeAreaView } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ListHeader from "./ListHeader";
 import styles from "./styles";
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
-import {ActivityIndicator, Snackbar} from "react-native-paper";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
+import { ActivityIndicator, Snackbar } from "react-native-paper";
 import IMGBase64 from "~/components/IMGBase64";
+import CacheImage from "~/components/CacheImage";
+import Helper from "~/utils/Helper";
+import FastImage from "react-native-fast-image";
 
 interface Props {
   images: Social.MediaItem[];
   index?: number;
 }
 
-const ImageSliderShow = ({images = [], index = 0}: Props) => {
+const ImageSliderShow = ({ images = [], index = 0 }: Props) => {
   const scrollX = new Animated.Value(0);
   const position = Animated.divide(scrollX, screenWidth);
   const [snackBar, setSnackBar] = useState<boolean>(false);
@@ -30,14 +33,13 @@ const ImageSliderShow = ({images = [], index = 0}: Props) => {
     type: "IMAGE",
   } as Social.MediaItem);
 
-  const renderItem = ({item}: {item: Social.MediaItem}) => {
+  const renderItem = ({ item }: { item: Social.MediaItem }) => {
     return (
       <View style={styles.imageCtn}>
-        <IMGBase64
-          url={item.url || ""}
-          useSkeleton
+        <CacheImage
+          url={Helper.getImageUrl(item.url)}
           style={styles.image}
-          resizeMode="contain"
+          resizeMode={FastImage.resizeMode.contain}
         />
       </View>
     );
@@ -53,7 +55,7 @@ const ImageSliderShow = ({images = [], index = 0}: Props) => {
 
   useEffect(() => {
     if (index) {
-      sliderRef.current?.scrollToIndex({index, animated: true});
+      sliderRef.current?.scrollToIndex({ index, animated: true });
     }
   }, []);
 
@@ -93,8 +95,8 @@ const ImageSliderShow = ({images = [], index = 0}: Props) => {
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
         onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {x: scrollX}}}],
-          {useNativeDriver: false},
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false },
         )}
       />
       <View style={styles.dotContainer}>
@@ -107,7 +109,7 @@ const ImageSliderShow = ({images = [], index = 0}: Props) => {
           return (
             <Animated.View
               key={index}
-              style={[styles.dot, {backgroundColor: color}]}
+              style={[styles.dot, { backgroundColor: color }]}
             />
           );
         })}

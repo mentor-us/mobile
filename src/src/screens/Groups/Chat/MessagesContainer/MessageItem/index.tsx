@@ -34,7 +34,7 @@ const MessageItem = ({ message }: Props) => {
     case "TEXT":
       return <TextContent key={message.id} message={message} />;
     case "VOTE":
-      return <Voting data={message.vote} />;
+      return <Voting data={message.vote} message={message} />;
     case "MEETING":
       const meeting = MeetingServices.fulfillMeetingTime(message.meeting);
       return <Meeting data={meeting} />;

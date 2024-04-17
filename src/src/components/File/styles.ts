@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: "row",
-    paddingHorizontal: 5,
+    paddingHorizontal: 8,
     paddingVertical: 10,
   },
 
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   fileCtn: {
+    marginLeft: 8,
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -34,16 +35,13 @@ const styles = StyleSheet.create({
     color: "#444",
     fontSize: 13,
     lineHeight: FontSize.huge,
-    marginLeft: 8,
-    width: "75%",
+    width: "100%",
   },
-
   fileSize: {
     color: "#777",
     fontSize: 11,
     lineHeight: FontSize.huge,
-    marginLeft: 8,
-    maxWidth: "75%",
+    maxWidth: "100%",
   },
 
   iconContainer: {
@@ -71,10 +69,9 @@ const styles = StyleSheet.create({
   },
   downloadBtn: {
     padding: 8,
+    marginLeft: 8,
     borderRadius: 20,
     backgroundColor: Color.gray[0],
-    position: "absolute",
-    right: 2,
   },
   failedLayer: {
     alignItems: "center",

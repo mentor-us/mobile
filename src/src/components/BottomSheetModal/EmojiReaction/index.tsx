@@ -7,7 +7,12 @@ import { DefaultUserAvatar } from "~/assets/images";
 import GlobalStyles from "~/constants/GlobalStyles";
 import Helper from "~/utils/Helper";
 
-import { ForwardMessageModel, MessageModel, ReplyMessageModel } from "~/models/message";
+import {
+  ForwardMessageModel,
+  MessageEnumType,
+  MessageModel,
+  ReplyMessageModel,
+} from "~/models/message";
 import { useAppSelector } from "~/redux";
 import EmojisPane from "~/components/EmoijsPane";
 import { EmoijType } from "~/constants/Emoijs";
@@ -25,7 +30,9 @@ import { RichTextRef } from "~/screens/Groups/Chat/TextEditor/index.props";
 import Clipboard from "@react-native-clipboard/clipboard";
 import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
-
+import TextMessage from "./TextMessage";
+import ImageMessage from "./ImageMessage";
+import File from "~/components/File";
 interface Props {
   message: MessageModel;
   action: any;
@@ -34,8 +41,8 @@ interface Props {
 const EmojiReation = ({ message, action }: Props) => {
   const userId = useAppSelector(state => state.user.data.id);
   const isOwner = useMemo(() => {
-    return userId === message.sender.id;
-  }, [message.sender.id]);
+    return userId === message?.sender?.id;
+  }, [message?.sender?.id]);
 
   const styles = useMemo(() => {
     return isOwner ? ownerStyle : otherStyle;
@@ -57,6 +64,7 @@ const EmojiReation = ({ message, action }: Props) => {
 
     try {
       await MessageApi.removeReaction(message.id || "", userId);
+      // eslint-disable-next-line no-empty
     } catch (error) {
     } finally {
       BottomSheetModalRef.current?.hide();
@@ -68,7 +76,9 @@ const EmojiReation = ({ message, action }: Props) => {
     try {
       await MessageApi.deleteMessage(message.id || "");
       BottomSheetModalRef.current?.hide();
+      // eslint-disable-next-line no-empty
     } catch (error) {
+      // eslint-disable-next-line no-empty
     } finally {
     }
   };
@@ -76,7 +86,8 @@ const EmojiReation = ({ message, action }: Props) => {
   const onEditMessage = async () => {
     action.editMessage();
     BottomSheetModalRef.current?.hide();
-    RichTextRef?.current?.setContentHTML(message.content??"");
+    RichTextRef?.current?.setContentHTML(message.content ?? "");
+    RichTextRef?.current?.setContentHTML(message.content ?? "");
     RichTextRef?.current?.focusContentEditor();
   };
 
@@ -99,7 +110,7 @@ const EmojiReation = ({ message, action }: Props) => {
       id: message.id,
       content: message.content,
       type: message.type,
-      images: message.images
+      images: message.images,
     } as ForwardMessageModel);
     BottomSheetModalRef.current?.hide();
     // RichTextRef?.current?.focusContentEditor();
@@ -117,6 +128,24 @@ const EmojiReation = ({ message, action }: Props) => {
     });
   };
 
+  const renderMessage = () => {
+    switch (message.type) {
+      case MessageEnumType.Text:
+        return (
+          <TextMessage isOwner={isOwner} message={message} styles={styles} />
+        );
+      case MessageEnumType.Image:
+        return <ImageMessage isOwner={isOwner} message={message} />;
+      case MessageEnumType.File:
+        return <File file={message.file!} isDownloadable={false}/> 
+      default:
+        return null;
+    }
+  };
+
+  const isThreeImages =
+    message?.type === "IMAGE" && message?.images?.length === 3;
+
   return (
     <View style={commonStyles.modalCtnStyle}>
       <View style={[styles.root, commonStyles.root]}>
@@ -132,21 +161,8 @@ const EmojiReation = ({ message, action }: Props) => {
             />
           </View>
         )}
-        <View>
-          <TouchableOpacity style={[commonStyles.container, styles.container]}>
-            {!isOwner && (
-              <View style={GlobalStyles.flexRow}>
-                <Text style={otherStyle.senderName}>{message.sender.name}</Text>
-              </View>
-            )}
-            <TextFormatRenderer
-              text={message.content || ""}
-              style={commonStyles.text}
-            />
-            <Text style={otherStyle.sentTime}>
-              {Helper.getTime(message.createdDate)}
-            </Text>
-          </TouchableOpacity>
+        <View style={isThreeImages && commonStyles.imageCtn}>
+          {renderMessage()}
         </View>
       </View>
       <View style={styles.emojiPane}>
@@ -185,12 +201,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            <TouchableOpacity
-              style={commonStyles.actionButton}
-              testID="copy-icon"
-              onPress={onCopy}>
-              <CopyToClipboardIcon width={24} height={24} />
-            </TouchableOpacity>
+            {["TEXT"].includes(message.type) && (
+              <TouchableOpacity
+                testID="copy-icon"
+                style={commonStyles.actionButton}
+                onPress={onCopy}>
+                <CopyToClipboardIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
             {action?.replyMessage && (
               <TouchableOpacity
                 testID="reply-icon"
@@ -199,15 +217,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {
-              message.type=='TEXT' &&
+            {["IMAGE", "TEXT", "FILE"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
                 onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
+                <ForwardMessageIcon width={24} height={24} />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       ) : (
@@ -221,12 +238,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <PinMessageIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            <TouchableOpacity
-              testID="copy-icon"
-              style={commonStyles.actionButton}
-              onPress={onCopy}>
-              <CopyToClipboardIcon width={24} height={24} />
-            </TouchableOpacity>
+            {["TEXT"].includes(message.type) && (
+              <TouchableOpacity
+                testID="copy-icon"
+                style={commonStyles.actionButton}
+                onPress={onCopy}>
+                <CopyToClipboardIcon width={24} height={24} />
+              </TouchableOpacity>
+            )}
             {action?.replyMessage && (
               <TouchableOpacity
                 testID="reply-icon"
@@ -235,15 +254,14 @@ const EmojiReation = ({ message, action }: Props) => {
                 <ReplyIcon width={24} height={24} />
               </TouchableOpacity>
             )}
-            {
-              message.type=='TEXT' &&
+            {["IMAGE", "TEXT", "FILE"].includes(message.type) && (
               <TouchableOpacity
                 style={commonStyles.actionButton}
                 testID="forward-message-icon"
                 onPress={onForwardMessage}>
-                  <ForwardMessageIcon width={24} height={24} />
+                <ForwardMessageIcon width={24} height={24} />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       )}

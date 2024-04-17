@@ -8,7 +8,7 @@ import Helper from "~/utils/Helper";
 
 import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { MessageModel } from "~/models/message";
+import { ForwardMessageModel, MessageModel } from "~/models/message";
 import { useAppSelector } from "~/redux";
 import Animated, { withTiming } from "react-native-reanimated";
 import { EntryAnimationsValues } from "react-native-reanimated";
@@ -22,6 +22,7 @@ import { observer } from "mobx-react-lite";
 import { useChatScreenState } from "~/context/chat";
 import { NotiFailed } from "~/assets/svgs";
 import GroupApi from "~/api/remote/GroupApi";
+import CacheImage from "~/components/CacheImage";
 
 interface Props {
   message: MessageModel;
@@ -98,7 +99,19 @@ const ImageList = ({ message }: Props) => {
   const deleteMessage = (messageId: string) => {
     state.deleteMessage(messageId);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const forwardMessage = (message: ForwardMessageModel) => {
+    // state.setReplying(message);
+    console.log(message);
+    console.log(message.images);
+    navigation.navigate("forwardMessage", {
+      message: `Chuyển tiếp ${
+        message?.images ? message.images.length : 0
+      } hình`,
+      messageID: message.id,
+      messageType: message.type,
+    });
+  };
   const showUserReacted = useCallback(() => {
     BottomSheetModalRef.current?.show("user_reacted", message.reactions);
   }, [message.reactions]);
@@ -106,20 +119,25 @@ const ImageList = ({ message }: Props) => {
   const longPressGesture = Gesture.LongPress()
     .runOnJS(true)
     .onStart(e => {
-      BottomSheetModalRef.current?.show(
-        "emoji_reaction",
-        { ...message, totalReaction: message.totalReaction } as MessageModel,
-        {
-          reactEmojiAction: reactEmojiAction,
-          deleteEmoji: deleteEmoji,
-          deleteMessage: deleteMessage,
-          // pinMessage: pinMessage,
-        },
-      );
+      console.log(e);
     })
     .minDuration(500);
 
   const composed = Gesture.Simultaneous(longPressGesture);
+
+  const onLongPress = () => {
+    BottomSheetModalRef.current?.show(
+      "emoji_reaction",
+      { ...message, totalReaction: message.totalReaction } as MessageModel,
+      {
+        reactEmojiAction: reactEmojiAction,
+        deleteEmoji: deleteEmoji,
+        deleteMessage: deleteMessage,
+        pinMessage: pinMessage,
+        forwardMessage: forwardMessage,
+      },
+    );
+  };
 
   const showImageSlider = () => {
     BottomSheetModalRef.current?.show("image_slider", {
@@ -132,48 +150,50 @@ const ImageList = ({ message }: Props) => {
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
       {!isOwner && (
         <TouchableOpacity onPress={onPressAvatar}>
-          <Image
-            source={
-              message.sender.imageUrl
-                ? { uri: message.sender.imageUrl }
-                : DefaultUserAvatar
-            }
+          <CacheImage
+            url={message.sender.imageUrl}
+            defaultSource={DefaultUserAvatar}
             style={commonStyles.avatar}
           />
         </TouchableOpacity>
       )}
-      <GestureDetector gesture={composed}>
-        <TouchableOpacity
-          style={[commonStyles.container, styles.container]}
-          disabled={message.uploadFailed}
-          onPress={showImageSlider}>
-          {!isOwner && (
-            <View style={GlobalStyles.flexRow}>
-              <Text style={otherStyle.senderName}>{message.sender.name}</Text>
-            </View>
-          )}
-          <SizedBox height={4} />
-          <View>
-            <GridThumbnail
-              useSkeletonWhenLoad
-              maxWidth={screenWidth * 0.8}
-              mediaData={message.images || []}
-            />
-          </View>
-          <SizedBox height={4} />
-          <Text style={otherStyle.sentTime}>
-            {Helper.getTime(message.createdDate)}
-          </Text>
 
-          {message.uploadFailed && (
-            <View style={commonStyles.failedLayer}>
-              {/* <ActivityIndicator size={"small"} color={Color.primary} /> */}
-              <NotiFailed />
-              <Text style={commonStyles.failedText}>Gửi ảnh thất bại</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </GestureDetector>
+      <TouchableOpacity
+        style={[commonStyles.container, styles.container]}
+        disabled={message.uploadFailed}
+        onPress={showImageSlider}
+        onLongPress={onLongPress}>
+        {!isOwner && (
+          <View style={GlobalStyles.flexRow}>
+            <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+          </View>
+        )}
+        {message.isForward && isOwner && (
+          <Text style={otherStyle.senderName} numberOfLines={1}>
+            {`Bạn đã chuyển ${message.images?.length} hình ảnh`}
+          </Text>
+        )}
+        <SizedBox height={4} />
+        <View>
+          <GridThumbnail
+            useSkeletonWhenLoad
+            maxWidth={screenWidth * 0.8}
+            mediaData={message.images || []}
+          />
+        </View>
+        <SizedBox height={4} />
+        <Text style={otherStyle.sentTime}>
+          {Helper.getTime(message.createdDate)}
+        </Text>
+
+        {message.uploadFailed && (
+          <View style={commonStyles.failedLayer}>
+            {/* <ActivityIndicator size={"small"} color={Color.primary} /> */}
+            <NotiFailed />
+            <Text style={commonStyles.failedText}>Gửi ảnh thất bại</Text>
+          </View>
+        )}
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={showUserReacted}
         style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>

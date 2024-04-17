@@ -27,9 +27,10 @@ axiosClient.interceptors.request.use(
   },
 );
 
-const createAxiosResponseInterceptor = () => {
+const createAxiosResponseInterceptor = onUnauthorizeCallback => {
   const interceptor = axiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
+      console.log(response.data);
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
       return response.data;
@@ -38,16 +39,56 @@ const createAxiosResponseInterceptor = () => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       if (error?.response?.status === 401) {
+        console.log("ERROR 401");
         axiosClient.interceptors.response.eject(interceptor);
+        if (onUnauthorizeCallback) {
+          onUnauthorizeCallback();
+        }
         // Auto Remove Token
-        await SecureStore.removeToken().finally(createAxiosResponseInterceptor);
+        await SecureStore.removeToken().then(() =>
+          createAxiosResponseInterceptor(onUnauthorizeCallback),
+        );
       }
       return Promise.reject(error);
     },
   );
 };
 
-// Add a response interceptor
-createAxiosResponseInterceptor();
+export { createAxiosResponseInterceptor };
+
+const setupAxiosResponseInterceptor = onUnauthenticated => {
+  return axiosClient.interceptors.response.use(
+    (response: AxiosResponse) => {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      return response.data;
+    },
+    async (error: AxiosError) => {
+      console.log(error);
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      if (error?.response?.status === 401) {
+        console.log("remove");
+        // Auto Remove Token
+        await SecureStore.removeToken();
+
+        // Dispatch event
+        if (onUnauthenticated) {
+          onUnauthenticated();
+        }
+      }
+      return Promise.reject(error);
+    },
+  );
+};
+
+const removeAxiosResponseInterceptor = interceptor => {
+  if (!interceptor) {
+    axiosClient.interceptors.response.clear();
+  }
+  axiosClient.interceptors.response.eject(interceptor);
+};
 
 export default axiosClient;
+
+export { setupAxiosResponseInterceptor, removeAxiosResponseInterceptor };

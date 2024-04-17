@@ -59,13 +59,16 @@ const GridThumbnail1x1: FC<Props> = ({
   }
 
   if (mediaData.length === 2) {
+    console.log("2 tam anh");
     const itemWidth = (maxWidth - horizonSeparator) / 2;
     return (
       <View style={GlobalStyles.row}>
         <SingleThumbnail
           height={itemWidth}
+          width={itemWidth}
           media={mediaData[0]}
           style={props.styleImage}
+          resizeMode="cover"
           onPress={
             !props.onPressItem
               ? undefined
@@ -75,6 +78,8 @@ const GridThumbnail1x1: FC<Props> = ({
         <SizedBox width={horizonSeparator} />
         <SingleThumbnail
           height={itemWidth}
+          width={itemWidth}
+          resizeMode="cover"
           media={mediaData[1]}
           style={props.styleImage}
           onPress={
@@ -89,7 +94,6 @@ const GridThumbnail1x1: FC<Props> = ({
 
   if (mediaData.length === 3) {
     const itemWidth = maxWidth / 2 - horizonSeparator / 2;
-
     const heightItem = itemWidth - verticalSeparator / 2;
 
     return (

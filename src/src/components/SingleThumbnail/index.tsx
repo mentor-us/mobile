@@ -1,4 +1,4 @@
-import {FC, useRef} from "react";
+import { FC, useRef } from "react";
 import {
   ImageResizeMode,
   Pressable,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
   Text,
 } from "react-native";
-import Video, {OnLoadData} from "react-native-video";
+import Video, { OnLoadData } from "react-native-video";
 import convertToProxyURL from "react-native-video-cache";
 
 import Helper from "~/utils/Helper";
@@ -18,10 +18,12 @@ import FontSize from "~/constants/FontSize";
 
 import ImageCache from "../ImageCache";
 
-import {Color} from "~/constants/Color";
-import {ActivityIndicator} from "react-native-paper";
-import {PlayVideoIcon} from "~/assets/svgs";
+import { Color } from "~/constants/Color";
+import { ActivityIndicator } from "react-native-paper";
+import { PlayVideoIcon } from "~/assets/svgs";
 import IMGBase64 from "../IMGBase64";
+import CacheImage from "../CacheImage";
+import FastImage, { FastImageProps } from "react-native-fast-image";
 
 interface Props {
   media: Social.MediaItem;
@@ -36,10 +38,10 @@ interface Props {
   onError?: () => void;
 
   totalRemaining?: number;
-  resizeMode?: ImageResizeMode;
+  resizeMode?: ImageResizeMode | FastImageProps["resizeMode"];
 }
 
-const SingleThumbnail: FC<Props> = ({...props}) => {
+const SingleThumbnail: FC<Props> = ({ ...props }) => {
   const videoRef = useRef<Video | null>(null);
 
   const remainingComponent = () => {
@@ -106,11 +108,17 @@ const SingleThumbnail: FC<Props> = ({...props}) => {
       disabled={!props.onPress}
       style={[styles.imageView, props.style]}
       onPress={props.onPress}>
-      <IMGBase64
+      {/* <IMGBase64
         useSkeleton
         resizeMode={props.resizeMode ?? "cover"}
-        style={{height: props.height, width: props.width}}
+        style={{ height: props.height, width: props.width }}
         url={(props.media.url || props.media.assetLocal) ?? ""}
+      /> */}
+      <CacheImage
+        resizeMode={props.resizeMode ?? FastImage.resizeMode.cover}
+        style={{ height: props.height, width: props.width }}
+        url={Helper.getImageUrl(props.media.url) ?? ""}
+        defaultSource={props.media.assetLocal}
       />
       {Boolean(props.totalRemaining) && remainingComponent()}
       {Boolean(props.media.isLoading) && loadingView()}
@@ -122,7 +130,8 @@ export default SingleThumbnail;
 
 const styles = StyleSheet.create({
   imageView: {
-    flex: 1,
+    // flex: 1,
+    flexBasis: "auto",
     justifyContent: "center",
   },
   txtTotalRemaining: {

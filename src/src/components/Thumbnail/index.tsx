@@ -1,4 +1,4 @@
-import {FC, useRef} from "react";
+import { FC, useRef } from "react";
 import {
   ImageResizeMode,
   Pressable,
@@ -8,17 +8,17 @@ import {
   ViewStyle,
   Text,
 } from "react-native";
-import Video, {OnLoadData} from "react-native-video";
-import convertToProxyURL from "react-native-video-cache";
+import { OnLoadData } from "react-native-video";
 
 import Helper from "~/utils/Helper";
 import GlobalStyles from "~/constants/GlobalStyles";
 
 import FontSize from "~/constants/FontSize";
 
-import {Color} from "~/constants/Color";
-import {ActivityIndicator} from "react-native-paper";
-import IMGBase64 from "../IMGBase64";
+import { Color } from "~/constants/Color";
+import { ActivityIndicator } from "react-native-paper";
+import CacheImage from "../CacheImage";
+import FastImage, { FastImageProps } from "react-native-fast-image";
 
 interface Props {
   media: Social.MediaItem;
@@ -33,10 +33,10 @@ interface Props {
   onError?: () => void;
 
   totalRemaining?: number;
-  resizeMode?: ImageResizeMode;
+  resizeMode?: ImageResizeMode | FastImageProps["resizeMode"];
 }
 
-const Thumbnail: FC<Props> = ({...props}) => {
+const Thumbnail: FC<Props> = ({ ...props }) => {
   const remainingComponent = () => {
     return (
       <View style={[GlobalStyles.absoluteFullFit, styles.viewTotalRemaining]}>
@@ -58,11 +58,15 @@ const Thumbnail: FC<Props> = ({...props}) => {
       disabled={!props.onPress}
       style={[styles.imageView, props.style]}
       onPress={props.onPress}>
-      <IMGBase64
-        useSkeleton
-        resizeMode={props.resizeMode ?? "cover"}
-        style={{height: props.height, width: props.width}}
-        url={(props.media.url || props.media.assetLocal) ?? ""}
+      <CacheImage
+        resizeMode={
+          props.resizeMode === "repeat"
+            ? FastImage.resizeMode.cover
+            : props.resizeMode
+        }
+        style={{ height: props.height, width: props.width }}
+        url={Helper.getImageUrl(props.media.url)}
+        defaultSource={props.media.assetLocal}
       />
       {Boolean(props.totalRemaining) && remainingComponent()}
       {Boolean(props.media.isLoading) && loadingView()}
