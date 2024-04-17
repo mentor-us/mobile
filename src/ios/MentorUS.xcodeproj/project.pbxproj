@@ -32,6 +32,8 @@
 		26D67F40299A279E007C3DDC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26D67F30299A279E007C3DDC /* MaterialIcons.ttf */; };
 		26F705C6291C09EA006E8A4F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26F705C5291C09EA006E8A4F /* Images.xcassets */; };
 		26F705D0291C1172006E8A4F /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26F705CF291C1172006E8A4F /* BootSplash.storyboard */; };
+		44156215DE22C63F57668A7D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E00FE108247EE68FC08DEED /* ExpoModulesProvider.swift */; };
+		A2D74A32947D345A9504CF8D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CBD46CEBAF457D708BA92F /* ExpoModulesProvider.swift */; };
 		E8947A1E592C24E4FEECA8A3 /* libPods-MentorUS-MentorUSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A34C61629E297DD66FEFD422 /* libPods-MentorUS-MentorUSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -77,7 +79,9 @@
 		26F705C5291C09EA006E8A4F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		26F705CF291C1172006E8A4F /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = MentorUS/BootSplash.storyboard; sourceTree = "<group>"; };
 		33C3D664CB750ED82E877955 /* Pods-MentorUS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS.debug.xcconfig"; path = "Target Support Files/Pods-MentorUS/Pods-MentorUS.debug.xcconfig"; sourceTree = "<group>"; };
+		43CBD46CEBAF457D708BA92F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MentorUS-MentorUSTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		6B1290D6DA2B6876724DBEFA /* Pods-MentorUS-MentorUSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS-MentorUSTests.debug.xcconfig"; path = "Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7E00FE108247EE68FC08DEED /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MentorUS/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		A34C61629E297DD66FEFD422 /* libPods-MentorUS-MentorUSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MentorUS-MentorUSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF97B65ED6038AF45029C1B5 /* Pods-MentorUS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS.release.xcconfig"; path = "Target Support Files/Pods-MentorUS/Pods-MentorUS.release.xcconfig"; sourceTree = "<group>"; };
 		C71E7085B744549BFACF4E5E /* Pods-MentorUS-MentorUSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MentorUS-MentorUSTests.release.xcconfig"; path = "Target Support Files/Pods-MentorUS-MentorUSTests/Pods-MentorUS-MentorUSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -177,6 +181,14 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
+		835632806EA762A6ABDDFECE /* MentorUS */ = {
+			isa = PBXGroup;
+			children = (
+				7E00FE108247EE68FC08DEED /* ExpoModulesProvider.swift */,
+			);
+			name = MentorUS;
+			sourceTree = "<group>";
+		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +201,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				9C391725CC8E7AF28406133D /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -202,6 +215,23 @@
 				00E356EE1AD99517003FC87E /* MentorUSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9C391725CC8E7AF28406133D /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				835632806EA762A6ABDDFECE /* MentorUS */,
+				B72AE2AF89070E7AA23283E1 /* MentorUSTests */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		B72AE2AF89070E7AA23283E1 /* MentorUSTests */ = {
+			isa = PBXGroup;
+			children = (
+				43CBD46CEBAF457D708BA92F /* ExpoModulesProvider.swift */,
+			);
+			name = MentorUSTests;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -505,6 +535,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* MentorUSTests.m in Sources */,
+				A2D74A32947D345A9504CF8D /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +545,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				44156215DE22C63F57668A7D /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,7 +570,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = MentorUSTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -549,6 +581,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MentorUS.app/MentorUS";
@@ -562,7 +595,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = MentorUSTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -573,6 +606,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MentorUS.app/MentorUS";
@@ -587,7 +621,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MentorUS/MentorUS.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = S466HT9VB4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MentorUS/Info.plist;
@@ -603,6 +637,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = vn.edu.hcmus.mentorus;
 				PRODUCT_NAME = MentorUS;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -619,7 +654,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MentorUS/MentorUS.entitlements;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = S466HT9VB4;
 				INFOPLIST_FILE = MentorUS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MentorUS;
@@ -634,6 +669,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = vn.edu.hcmus.mentorus;
 				PRODUCT_NAME = MentorUS;
 				SWIFT_VERSION = 5.0;
@@ -690,7 +726,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -755,7 +791,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
