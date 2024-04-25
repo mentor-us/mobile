@@ -67,7 +67,7 @@ const PinnedMessages = () => {
     state.setScrollToId(id);
     let index = state._messageList.findIndex(item => item.id === id);
     if (index === -1) {
-     return;
+      return;
     }
     state._messageFlatlistRef.current?.scrollToIndex({
       index: index,

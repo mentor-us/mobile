@@ -1,19 +1,19 @@
-import {View, Text, TouchableOpacity} from "react-native";
-import React, {useMemo} from "react";
-import {incommingStyles, normalStyles} from "./styles";
-import {TaskModel, TaskStatusObject, TASK_SAMPLE} from "~/models/task";
-import {useNavigation} from "@react-navigation/native";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useMemo } from "react";
+import { incommingStyles, normalStyles } from "./styles";
+import { TaskModel, TaskStatusObject, TASK_SAMPLE } from "~/models/task";
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
   data?: TaskModel;
   isIncomming?: boolean;
 }
 
-const TaskItem = ({data = TASK_SAMPLE, isIncomming = false}: Props) => {
+const TaskItem = ({ data = TASK_SAMPLE, isIncomming = false }: Props) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-    navigation.navigate("taskDetail", {taskId: data.id});
+    navigation.navigate("taskDetail", { taskId: data.id });
   };
   const styles = useMemo(() => {
     return isIncomming ? incommingStyles : normalStyles;
@@ -32,11 +32,11 @@ const TaskItem = ({data = TASK_SAMPLE, isIncomming = false}: Props) => {
           {data.title}
         </Text>
         <View style={styles.descCtn}>
-          <Text style={styles.group}>{`Nhóm: ${data.group.name}`}</Text>
+          <Text style={styles.group}>{`Nhóm: ${data.title}`}</Text>
           <Text
             style={[
               styles.status,
-              {color: TaskStatusObject[data.status].color},
+              { color: TaskStatusObject[data.status].color },
             ]}>
             {TaskStatusObject[data.status].displayName}
           </Text>
