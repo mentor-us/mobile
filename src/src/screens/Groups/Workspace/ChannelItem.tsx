@@ -22,7 +22,11 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
   // Action
   const openChannel = () => {
     chooseChannel("");
-    navigation.navigate("chat", { groupId: channel.id, type: "channel" });
+    navigation.navigate("chat", {
+      groupId: channel.id,
+      parentId: channel.parentId || "",
+      type: "channel",
+    });
   };
 
   const updateChannel = () =>

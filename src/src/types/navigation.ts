@@ -1,5 +1,5 @@
-import {StackScreenProps} from "@react-navigation/stack";
-import {RoleType} from "~/models/commonTypes";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RoleType } from "~/models/commonTypes";
 import { MessageType } from "~/models/message";
 
 export namespace MentorUsRoutes {
@@ -18,43 +18,53 @@ export namespace MentorUsRoutes {
     bottomTab: undefined;
 
     // Group
-    workspace: {groupId: string};
-    addChannel: {groupId: string; channelId?: string};
-    chat: {groupId: string; type?: "group" | "channel"};
-    createVoting: {groupId: string};
-    groupDetail: {groupId: string; type?: "group" | "channel"};
-    groupNote: {groupId: string};
-    votingDetail: {voteId: string};
-    groupSchedule: {groupId: string; role: RoleType; mode: "task" | "meeting"};
-    groupAttendees: {groupId: string; role: RoleType};
-    groupMedia: {groupId: string; mode: "images" | "files"};
-    groupFAQ: {groupId: string};
+    workspace: { groupId: string };
+    addChannel: { groupId: string; channelId?: string };
+    chat: { groupId: string; type?: "group" | "channel" };
+    createVoting: { groupId: string };
+    groupDetail: { groupId: string; type?: "group" | "channel" };
+    groupNote: { groupId: string };
+    votingDetail: { voteId: string };
+    groupSchedule: {
+      groupId: string;
+      role: RoleType;
+      mode: "task" | "meeting";
+    };
+    groupAttendees: { groupId: string; role: RoleType };
+    groupMedia: { groupId: string; mode: "images" | "files" };
+    groupFAQ: { groupId: string };
 
     // Schedule
     // meeting
-    createMeeting: {groupId: string; meetingId?: string};
-    meetingDetail: {meetingId: string};
-    meetingAttendees: {meetingId: string; groupId: string};
+    createMeeting: { groupId: string; meetingId?: string };
+    meetingDetail: { meetingId: string };
+    meetingAttendees: { meetingId: string; groupId: string };
 
     // task
-    createTask: {groupId: string; taskId?: string};
-    taskDetail: {taskId: string};
-    forwardMessage: {message: string, messageID: string,messageType: MessageType, groupId?: string,images?: Social.MediaItem[]};
-    taskAssignees: {taskId: string; groupId: string};
+    createTask: { groupId: string; taskId?: string };
+    taskDetail: { taskId: string };
+    forwardMessage: {
+      message: string;
+      messageID: string;
+      messageType: MessageType;
+      groupId?: string;
+      images?: Social.MediaItem[];
+    };
+    taskAssignees: { taskId: string; groupId: string };
 
     // Profile
-    otherProfile: {userId: string; groupId: string};
+    otherProfile: { userId: string; groupId: string };
     editProfile: undefined;
     linkEmail: undefined;
     // Notification
     notificationList: undefined;
-    notificationDetail: {id: string};
+    notificationDetail: { id: string };
 
     //FAQ
-    faqDetail: {faqId: string};
-    createFaq: {groupId: string; faqId?: string};
-    selectGroup: {groupId: string};
-    importFaq: {fromGroupId: string; toGroupId: string};
+    faqDetail: { faqId: string };
+    createFaq: { groupId: string; faqId?: string };
+    selectGroup: { groupId: string };
+    importFaq: { fromGroupId: string; toGroupId: string };
   };
 
   export type BottomTab = {

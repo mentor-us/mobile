@@ -1,8 +1,10 @@
 import axiosClient from "./AxiosClient";
 
+const getMeetingBaseUrl = channelId => `/api/channels/${channelId}/meetings`;
+
 const MeetingApi = {
-  getGroupMeeting: async (groupId: string) => {
-    const URL = `/api/meetings?groupId=${groupId}`;
+  getGroupMeeting: async (channelId: string) => {
+    const URL = getMeetingBaseUrl(channelId);
     try {
       const response = await axiosClient.get(URL);
       return response;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   useWindowDimensions,
   Text,
@@ -6,19 +6,19 @@ import {
   DeviceEventEmitter,
   TouchableOpacity,
 } from "react-native";
-import {SceneMap, TabView} from "react-native-tab-view";
-import {ScreenProps} from "~/types/navigation";
+import { SceneMap, TabView } from "react-native-tab-view";
+import { ScreenProps } from "~/types/navigation";
 import CustomTabView from "./CustomTabView";
 import CustomTabBar from "./CustomTabBar";
 import styles from "./styles";
-import {FAB, Snackbar} from "react-native-paper";
-import {useNavigation} from "@react-navigation/native";
+import { FAB, Snackbar } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import MeetingServices from "~/services/meeting";
 
-import {SchedulesList} from "~/models/commonTypes";
+import { SchedulesList } from "~/models/commonTypes";
 import TaskServices from "~/services/task";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import {UserNameIcon, QuickTaskIcon} from "~/assets/svgs";
+import { UserNameIcon, QuickTaskIcon } from "~/assets/svgs";
 import {
   FilterModel,
   FilterType,
@@ -26,9 +26,9 @@ import {
 } from "./FilterBar/FilterModel";
 import FilterBar from "./FilterBar";
 
-const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
+const GroupSchedule: ScreenProps<"groupSchedule"> = ({ route }) => {
   // state
-  const {groupId, mode, role} = route.params;
+  const { groupId, mode, role } = route.params;
   const showFilter = mode == "task";
 
   const [schedules, setSchedules] = useState<SchedulesList>({
@@ -48,8 +48,8 @@ const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
   const navigation = useNavigation();
 
   const [routes] = useState([
-    {key: "upcoming", title: "Sắp tới"},
-    {key: "past", title: "Đã qua"},
+    { key: "upcoming", title: "Sắp tới" },
+    { key: "past", title: "Đã qua" },
   ]);
 
   // function
@@ -61,7 +61,7 @@ const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
         });
         return;
       case "task":
-        navigation.navigate("createTask", {groupId});
+        navigation.navigate("createTask", { groupId });
         return;
       default:
         return;
@@ -74,6 +74,7 @@ const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
   const fetchTask = async (groupId: string) => {
     try {
       let data: SchedulesList;
+      console.log("filter", filter);
       switch (filter) {
         case "OWN_TASK":
           data = await TaskServices.getOwnGroupTask(groupId);
@@ -87,6 +88,7 @@ const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
         default:
           data = await TaskServices.getGroupTask(groupId);
       }
+      console.log("data", data);
       setSchedules(data);
       setLoading(false);
     } catch (error) {
@@ -148,7 +150,7 @@ const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
   useEffect(() => {
     const subcribe = DeviceEventEmitter.addListener(
       EventEmitterNames.refreshScheduleList,
-      ({status, message}: {status: boolean; message: string}) => {
+      ({ status, message }: { status: boolean; message: string }) => {
         setTimeout(() => {
           setLoading(status);
           setMessage(message);
@@ -181,11 +183,11 @@ const GroupSchedule: ScreenProps<"groupSchedule"> = ({route}) => {
         />
       )}
       <TabView
-        navigationState={{index, routes}}
+        navigationState={{ index, routes }}
         renderScene={_renderScene}
         renderTabBar={CustomTabBar}
         onIndexChange={setIndex}
-        initialLayout={{width: layout.width}}
+        initialLayout={{ width: layout.width }}
       />
       <FAB icon={"plus"} style={styles.floatingButtonImage} onPress={onAdd} />
       <Snackbar

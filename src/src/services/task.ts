@@ -1,6 +1,6 @@
 import TaskApi from "~/api/remote/TaskApi";
-import {SchedulesList} from "~/models/commonTypes";
-import {Assignee, TaskModel, TASK_SAMPLE} from "~/models/task";
+import { SchedulesList } from "~/models/commonTypes";
+import { Assignee, TaskModel, TASK_SAMPLE } from "~/models/task";
 import Helper from "~/utils/Helper";
 
 const formatData = (data: any): TaskModel[] => {
@@ -15,11 +15,9 @@ const formatData = (data: any): TaskModel[] => {
       status: item.status || "NULL",
     } as TaskModel;
   });
-}
+};
 
-const toUpcomingOrPassedTasks = (
-  formatData: TaskModel[],
-): SchedulesList => {
+const toUpcomingOrPassedTasks = (formatData: TaskModel[]): SchedulesList => {
   formatData.sort((a, b) => {
     const left = new Date(a.deadline);
     const right = new Date(b.deadline);
@@ -42,7 +40,6 @@ const toUpcomingOrPassedTasks = (
 };
 
 const TaskServices = {
-
   getGroupTask: async (groupId: string): Promise<SchedulesList> => {
     try {
       const data: any = await TaskApi.getGroupTask(groupId);
@@ -194,7 +191,7 @@ const TaskServices = {
       },
       status: !ownAssignee ? "NULL" : ownAssignee.status,
     } as TaskModel;
-  }
+  },
 };
 
 export default TaskServices;

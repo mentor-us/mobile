@@ -3,10 +3,10 @@ import axiosClient from "./AxiosClient";
 const TaskApi = {
   // HAVED
   getGroupTask: async (groupId: string) => {
-    const URL = `/api/tasks/group/${groupId}`;
+    const URL = `/api/channels/${groupId}/tasks`;
     try {
       const response = await axiosClient.get(URL);
-      return response.data;
+      return response;
     } catch (error) {
       console.log("@API_ERROR_TaskApi_getGroupTask: ", error);
     }

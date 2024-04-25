@@ -1,22 +1,22 @@
-import {DeviceEventEmitter, FlatList, View, Text} from "react-native";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {ScreenProps} from "~/types/navigation";
-import {FaqModel, GROUP_FAQ_SAMPLE} from "~/models/faq";
+import { DeviceEventEmitter, FlatList, View, Text } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ScreenProps } from "~/types/navigation";
+import { FaqModel, GROUP_FAQ_SAMPLE } from "~/models/faq";
 import FaqApi from "~/api/remote/FaqApi";
 import FAQItem from "~/components/FAQItem";
 import styles from "./styles";
-import {Button, FAB, Snackbar} from "react-native-paper";
+import { Button, FAB, Snackbar } from "react-native-paper";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import {FloatingAction} from "react-native-floating-action";
-import {Color} from "~/constants/Color";
-import {FaqIcon, ImportFaqIcon} from "~/assets/svgs";
-import {GROUP_SAMPLE, GroupModel} from "~/models/group";
+import { FloatingAction } from "react-native-floating-action";
+import { Color } from "~/constants/Color";
+import { FaqIcon, ImportFaqIcon } from "~/assets/svgs";
+import { GROUP_SAMPLE, GroupModel } from "~/models/group";
 import GroupService from "~/services/group";
 
-const GroupFAQ: ScreenProps<"groupFAQ"> = ({route}) => {
-  const groupId = route.params.groupId;
+const GroupFAQ: ScreenProps<"groupFAQ"> = ({ route }) => {
+  const { groupId } = route.params;
   const navigation = useNavigation();
 
   /* State */
@@ -30,11 +30,11 @@ const GroupFAQ: ScreenProps<"groupFAQ"> = ({route}) => {
 
   // render item
   const renderItem = useCallback(
-    ({index, item}: {index: number; item: FaqModel}) => {
+    ({ index, item }: { index: number; item: FaqModel }) => {
       return (
         <FAQItem
           onPress={() => {
-            navigation.navigate("faqDetail", {faqId: item.id});
+            navigation.navigate("faqDetail", { faqId: item.id });
           }}
           faq={item}
         />
@@ -93,10 +93,10 @@ const GroupFAQ: ScreenProps<"groupFAQ"> = ({route}) => {
     }
     switch (name) {
       case "create":
-        navigation.navigate("createFaq", {groupId: groupId});
+        navigation.navigate("createFaq", { groupId: groupId });
         break;
       case "import":
-        navigation.navigate("selectGroup", {groupId: groupId});
+        navigation.navigate("selectGroup", { groupId: groupId });
         break;
       default:
         break;
@@ -108,7 +108,7 @@ const GroupFAQ: ScreenProps<"groupFAQ"> = ({route}) => {
   useEffect(() => {
     const subcribe = DeviceEventEmitter.addListener(
       EventEmitterNames.refreshFAQList,
-      ({status, message}: {status: boolean; message: string}) => {
+      ({ status, message }: { status: boolean; message: string }) => {
         setTimeout(() => {
           setLoading(status);
           setMessage(message);
@@ -123,7 +123,7 @@ const GroupFAQ: ScreenProps<"groupFAQ"> = ({route}) => {
   }, []);
 
   const onImportFAQ = () => {
-    navigation.navigate("selectGroup", {groupId: groupId});
+    navigation.navigate("selectGroup", { groupId: groupId });
   };
 
   const _ListEmptyComponent = () => {
