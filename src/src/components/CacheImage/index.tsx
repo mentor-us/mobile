@@ -12,7 +12,6 @@ const CacheImage: FC<CacheImageProps> = ({ ...props }) => {
     <FastImage
       {...props}
       defaultSource={props.defaultSource || DefaultUserAvatar}
-      fallback
       source={{
         uri: props.url || "",
         priority: props.priority ?? FastImage.priority.normal,
