@@ -61,11 +61,11 @@ const PinnedMessages = () => {
     await GroupApi.unpinMessage(state._groupDetail.id, messageId);
   };
 
-  const onItemLongPress = () => {};
+  const onItemLongPress = () => { };
 
   const onItemPress = async id => {
     state.setScrollToId(id);
-    let index = state._messageList.findIndex(item => item.id === id);
+    const index = state._messageList.findIndex(item => item.id === id);
     if (index === -1) {
       return;
     }
@@ -97,7 +97,7 @@ const PinnedMessages = () => {
             testID="expand-pin-msg-icon"
             style={[styles.moreBtn, expanding && styles.rotate]}
             onPress={expand}>
-            <ArrowheadDownIcon />
+            <ArrowheadDownIcon fill="black" />
           </TouchableOpacity>
         </View>
         <Animated.View
