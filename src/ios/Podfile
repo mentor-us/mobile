@@ -59,7 +59,7 @@ target 'MentorUS' do
     # Pods for testing
   end
 
-  use_flipper!({ 'Flipper' => '0.125.0' })
+  # use_flipper!({ 'Flipper' => '0.125.0' })
 
   post_install do |installer|
     react_native_post_install(
@@ -72,13 +72,6 @@ target 'MentorUS' do
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
-      end
-    end
-
-    # NOTE: Change IPHONEOS_DEPLOYMENT_TARGET to 12.4.
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.4'
       end
     end
 
