@@ -1,7 +1,6 @@
-import { BASE_URL } from "@env";
 import { FC } from "react";
 import FastImage, { FastImageProps, Priority } from "react-native-fast-image";
-import { useMobxStore } from "~/mobx/store";
+import { DefaultUserAvatar } from "~/assets/images";
 
 interface CacheImageProps extends Omit<FastImageProps, "source"> {
   url: string;
@@ -9,23 +8,13 @@ interface CacheImageProps extends Omit<FastImageProps, "source"> {
 }
 
 const CacheImage: FC<CacheImageProps> = ({ ...props }) => {
-  const { authStore } = useMobxStore();
-
-  const headers: any = props.url.startsWith(BASE_URL)
-    ? {
-        Authorization: authStore.userToken
-          ? `Bearer ${authStore.userToken}`
-          : "",
-      }
-    : {};
-
   return (
     <FastImage
       {...props}
-      defaultSource={props.defaultSource}
+      defaultSource={props.defaultSource || DefaultUserAvatar}
+      fallback
       source={{
-        uri: props.url,
-        headers: headers,
+        uri: props.url || "",
         priority: props.priority ?? FastImage.priority.normal,
       }}
     />
