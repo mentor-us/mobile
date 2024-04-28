@@ -87,7 +87,7 @@ const PinnedMessages = () => {
         testID="pinned-msg"
         style={[styles.container, expanding && styles.expandCtn]}
         layout={CustomLayoutTransition}>
-        <View style={expanding && styles.headerCtn}>
+        <View style={expanding ? styles.headerCtn : { zIndex: 2 }}>
           {expanding && (
             <Animated.Text entering={FadeIn.delay(500)} style={styles.title}>
               Danh sách đã ghim
