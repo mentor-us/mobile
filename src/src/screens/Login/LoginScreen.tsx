@@ -48,16 +48,14 @@ export const LoginScreen: ScreenProps<"loginScreen"> = () => {
     if (error) {
       console.error("ERROR: " + LoginScreen.name, error);
 
-      switch (error) {
-        case "704":
-          setMessage("Tài khoản không tồn tại trên hệ thống");
-          break;
-        case "705":
-          setMessage("Tài khoản bị khoá");
-          break;
-        default:
-          setMessage("Có lỗi xảy ra, vui lòng thử lại");
+      if (error.includes("704")) {
+        setMessage("Tài khoản không tồn tại trên hệ thống");
+      } else if (error.includes("705")) {
+        setMessage("Tài khoản bị khoá");
+      } else {
+        setMessage("Có lỗi xảy ra, vui lòng thử lại");
       }
+
       setSnackBar(true);
       return;
     }

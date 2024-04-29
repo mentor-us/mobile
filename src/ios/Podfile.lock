@@ -537,9 +537,9 @@ PODS:
   - RNCCheckbox (0.5.17):
     - BEMCheckBox (~> 1.4)
     - React-Core
-  - RNCClipboard (1.14.0):
+  - RNCClipboard (1.14.1):
     - React-Core
-  - RNDeviceInfo (10.13.1):
+  - RNDeviceInfo (10.13.2):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -566,7 +566,7 @@ PODS:
     - React-Core
   - RNPermissions (3.10.1):
     - React-Core
-  - RNReanimated (3.8.1):
+  - RNReanimated (3.9.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -1002,8 +1002,8 @@ SPEC CHECKSUMS:
   RNBootSplash: 85f6b879c080e958afdb4c62ee04497b05fd7552
   RNCAsyncStorage: 09fc8595e6d6f6d5abf16b23a56b257d9c6b7c5b
   RNCCheckbox: a3ca9978cb0846b981d28da4e9914bd437403d77
-  RNCClipboard: 090462274cc05b02628bd158baf6d73c3abe8441
-  RNDeviceInfo: 4f9c7cfd6b9db1b05eb919620a001cf35b536423
+  RNCClipboard: 0a720adef5ec193aa0e3de24c3977222c7e52a37
+  RNDeviceInfo: 42aadf1282ffa0a88dc38a504a7be145eb010dfa
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: d59efa0872fff4e27de03cca3c528c203a436ae5
   RNFBMessaging: 216693dd5ba4f18ba65fb39fc73a44a23c26190f
@@ -1012,7 +1012,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 998887f1b2c6098ffa2506402087c0e8ef5d69a1
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNPermissions: 6efc8d935bface880ca070f35156fdd1441803d1
-  RNReanimated: 981959eac3090b406e7e4147179122ebebd2a917
+  RNReanimated: 21bf41a5f23e25ebece945be6f486edb62e3735c
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 07dbd870b0dcdecc99b3a202fa37c8ca163caec2
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
@@ -1022,6 +1022,6 @@ SPEC CHECKSUMS:
   Yoga: d6133108734e69e8c0becc6ba587294b94829687
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 3650eb44045b98745d5cdd1fe4a19fc7c1d564ef
+PODFILE CHECKSUM: ccb5b2eb3740783e3f6971ebc4df9fe88f9c365a
 
 COCOAPODS: 1.15.2
