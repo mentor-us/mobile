@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="vn.edu.hcmus.mentorus">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mentorus">
   <uses-permission android:name="android.permission.INTERNET"/>
 
   <uses-permission android:name="android.permission.CAMERA" />

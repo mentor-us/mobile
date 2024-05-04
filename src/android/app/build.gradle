@@ -17,7 +17,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  * bundle directly from the development server. Below you can see all the possible configurations
  * and their defaults. If you decide to add a configuration block, make sure to add it before the
  * `apply from: "../../node_modules/react-native/react.gradle"` line.
- * 
+ *
  * project.ext.react = [
  *   // the name of the generated asset file containing your JS bundle
  *   bundleAssetName: "index.android.bundle",
@@ -141,7 +141,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "vn.edu.hcmus.mentorus"
+        applicationId "com.mentorus"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 24
@@ -276,7 +276,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation "androidx.core:core-splashscreen:1.0.0"
-    
+
     //implementation 'com.facebook.fresco:animated-gif:1.12.0' //instead of
     implementation 'com.facebook.fresco:animated-gif:2.0.0'   //use
 
