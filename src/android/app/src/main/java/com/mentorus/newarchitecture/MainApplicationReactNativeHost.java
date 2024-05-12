@@ -1,4 +1,4 @@
-package vn.edu.hcmus.mentorus.newarchitecture;
+package com.mentorus.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import vn.edu.hcmus.mentorus.BuildConfig;
-import vn.edu.hcmus.mentorus.newarchitecture.components.MainComponentsRegistry;
-import vn.edu.hcmus.mentorus.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.mentorus.BuildConfig;
+import com.mentorus.newarchitecture.components.MainComponentsRegistry;
+import com.mentorus.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
