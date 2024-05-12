@@ -1,7 +1,7 @@
-name: Deploy to Google Play
+name: Deploy to Production Google Play
 
 on:
-   workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -74,8 +74,13 @@ jobs:
       - name: Inject secret with 1Password
         run: |
             export OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-            op read --out-file ./android/app/google-services.json op://mentorus/firebase-credential/google-services.json
+            op read --out-file ./android/app/google-services.json op://mentorus/firebase-credential/google.com.mentorus/google-services.json
             APP_ENV=prod op inject -i ./.env.tpl -o ./.env
+
+      - name: Update Bundle
+        run: |
+            bundle install
+            bundle update fastlane
 
       - name: Build Android App Bundle Release
         run: yarn android:fastlane:buildRelease
