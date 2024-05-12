@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenHeight, screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenHeight, screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const MEDIA_SIZE = screenWidth / 3;
@@ -77,7 +77,10 @@ const styles = StyleSheet.create({
     top: 8,
     width: FontSize.huge,
   },
-
+  tickIcon: {
+    height: 15,
+    width: 15,
+  },
   unselectedIcon: {
     borderColor: Color.white,
     borderRadius: 50,
