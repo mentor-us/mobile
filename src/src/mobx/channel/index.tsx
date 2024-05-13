@@ -6,7 +6,9 @@ import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import { AssignedCheckList, Assignee } from "~/models/task";
 import { UserProfileModel, USER_PROFILE_SAMPLE } from "~/models/user";
 import GroupService from "~/services/group";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
+import Toast from "react-native-root-toast";
+import { ToastMessage } from "~/constants/ToastMessage";
 
 interface Props {
   groupId: string;
@@ -44,11 +46,11 @@ export class AddChannelScreenState {
     this.currentUser = props.currentUser;
     this.channelId = props.channelId;
     this.fetchOldChannels(props.groupId);
-    props.channelId 
-        ? this.fetchExistedChannel(props.channelId)
-        : this.initCreateMode();
+    props.channelId
+      ? this.fetchExistedChannel(props.channelId)
+      : this.initCreateMode();
 
-        this.fetchAssingees(props.groupId, props.channelId)
+    this.fetchAssingees(props.groupId, props.channelId);
   }
 
   // Getter
@@ -122,7 +124,7 @@ export class AddChannelScreenState {
 
   @action
   setAssignee(data: AssignedCheckList) {
-    this.assignees = {...data};
+    this.assignees = { ...data };
   }
 
   setOldChannels(data: GroupModel[]) {
@@ -154,7 +156,9 @@ export class AddChannelScreenState {
       return;
     }
 
-    const isExisted = this.oldChannels.findIndex(channel => channel.name == this.name);
+    const isExisted = this.oldChannels.findIndex(
+      channel => channel.name == this.name,
+    );
     if (!this.channelId && isExisted > -1) {
       this.setNameError("Tên kênh đã được sử dụng.");
       return;
@@ -178,9 +182,17 @@ export class AddChannelScreenState {
 
   @action
   submitAssignees(data: AssignedCheckList) {
+    if (data.totalChecked < 2) {
+      Toast.show(ToastMessage.channelMiniumMember, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      return false;
+    }
     this.setAssignee(data);
     this.setScreenType("form");
     this.setActionDone(undefined);
+    return true;
   }
 
   @flow
@@ -247,10 +259,10 @@ export class AddChannelScreenState {
   @flow
   private async fetchOldChannels(groupId: string) {
     try {
-        const channels = await GroupApi.getChannels(groupId);
-        this.setOldChannels(channels);
-    } catch(error) {
-        console.log("@MOBX_CHANNEL_ERORR_fetchOldChannels", error);
+      const channels = await GroupApi.getChannels(groupId);
+      this.setOldChannels(channels);
+    } catch (error) {
+      console.log("@MOBX_CHANNEL_ERORR_fetchOldChannels", error);
     }
   }
 
