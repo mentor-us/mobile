@@ -145,10 +145,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   
   const composed = Gesture.Simultaneous();
  
-  const trimmedContent = Helper.trimHTMLContent(message ?? "").replace(
-    /<div><br><\/div>/g,
-    "",
-  );
+  const trimmedContent = message.replace(/<div><br><\/div>/g, "");
   function getContentOfNLines(inputString: string, n: number): string[] {
     if(!inputString || inputString[0] != "<") return [inputString];
     const divRegex = /<div>(.*?)<\/div>/g;
