@@ -42,7 +42,7 @@ const Voting = ({ data = NEW_VOTE_SAMPLE, message }: VotingProps) => {
 
   const voterNumber = data.choices
     .flatMap(choice => choice.voters)
-    .filter((value, index, array) => array.indexOf(value) === index).length;
+    .flatMap(voter => (voter as any)?.id).length;
 
   const renderVoteItems = useMemo(
     () =>

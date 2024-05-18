@@ -124,14 +124,22 @@ const VotingDetail = ({ route }) => {
     goBack();
   };
 
-  const calculateVoterNumber = (voteDetail: VoteResult) => {
+  // const calculateVoterNumber = (voteDetail: VoteResult) => {
+  //   if (!voteDetail) {
+  //     return 0;
+  //   }
+  //   return voteDetail.choiceResult
+  //     .flatMap(choice => choice.voters)
+  //     .flatMap(voter => voter.id)
+  //     .filter((value, index, array) => array.indexOf(value) === index).length;
+  // };
+  const calculateAllVoterNumber = (voteDetail: VoteResult) => {
     if (!voteDetail) {
       return 0;
     }
     return voteDetail.choiceResult
       .flatMap(choice => choice.voters)
-      .flatMap(voter => voter.id)
-      .filter((value, index, array) => array.indexOf(value) === index).length;
+      .flatMap(voter => voter.id).length;
   };
 
   const fetchVoteDetail = async () => {
@@ -140,7 +148,7 @@ const VotingDetail = ({ route }) => {
       currentUser.id,
     );
     setVote(voteDetail);
-    setVoterNumber(calculateVoterNumber(voteDetail));
+    setVoterNumber(calculateAllVoterNumber(voteDetail));
     setRefreshing(false);
   };
 
@@ -336,7 +344,7 @@ const VotingDetail = ({ route }) => {
     if (!myVote) {
       setMyVote({ ...currentUser });
     }
-    setVoterNumber(calculateVoterNumber(vote));
+    setVoterNumber(calculateAllVoterNumber(vote));
   }, [vote, refreshing]);
 
   const VoterThumbnail = ({ voters }) => {
