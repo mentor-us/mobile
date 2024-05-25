@@ -174,21 +174,18 @@ const TextContent = ({ message }: Props) => {
       {message.status === "EDITED" && (
         <View
           style={isOwner ? commonStyles.editCtn : commonStyles.otherEditCtn}>
-          <Feather
+          {/* <Feather
             name={"edit-2"}
             size={commonStyles.replyMessage.fontSize}
             color={commonStyles.replyMessage.color}
-          />
+          /> */}
           <SizedBox width={5} />
-          <TextFormatRenderer
-            text={
-              isOwner
-                ? "Bạn đã chỉnh sửa tin nhắn"
-                : `${message.sender.name} đã chỉnh sửa tin nhắn`
-            }
-            style={commonStyles.replyMessage}
-            numberOfLines={1}
-          />
+          <Text
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={[commonStyles.replyMessage, { color: "gray" }]}
+            numberOfLines={1}>
+            Đã chỉnh sửa
+          </Text>
         </View>
       )}
       <Animated.View
