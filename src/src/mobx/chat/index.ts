@@ -137,7 +137,9 @@ export class ChatScreenState {
   @action
   receiveMessage(response: any) {
     if (
-      (!response.sender.id || response.sender.id == this._currentUser.id) &&
+      (!response.sender.id ||
+        (response.sender.id == this._currentUser.id &&
+          this._messageList.some(item => item.id == response.id))) &&
       response.type != "MEETING" &&
       response.type != "TASK" &&
       response.type != "VOTE"

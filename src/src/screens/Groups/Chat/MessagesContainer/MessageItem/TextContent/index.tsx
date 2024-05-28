@@ -34,6 +34,7 @@ import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 import SizedBox from "~/components/SizedBox";
 import CacheImage from "~/components/CacheImage";
+import { ForwardMessageIcon } from "~/assets/svgs";
 
 interface Props {
   message: MessageModel;
@@ -173,21 +174,18 @@ const TextContent = ({ message }: Props) => {
       {message.status === "EDITED" && (
         <View
           style={isOwner ? commonStyles.editCtn : commonStyles.otherEditCtn}>
-          <Feather
+          {/* <Feather
             name={"edit-2"}
             size={commonStyles.replyMessage.fontSize}
             color={commonStyles.replyMessage.color}
-          />
+          /> */}
           <SizedBox width={5} />
-          <TextFormatRenderer
-            text={
-              isOwner
-                ? "Bạn đã chỉnh sửa tin nhắn"
-                : `${message.sender.name} đã chỉnh sửa tin nhắn`
-            }
-            style={commonStyles.replyMessage}
-            numberOfLines={1}
-          />
+          <Text
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={[commonStyles.replyMessage, { color: "gray" }]}
+            numberOfLines={1}>
+            Đã chỉnh sửa
+          </Text>
         </View>
       )}
       <Animated.View
@@ -206,59 +204,79 @@ const TextContent = ({ message }: Props) => {
 
         {/* Message Content */}
         <GestureDetector gesture={composed}>
-          <TouchableOpacity
-            style={[commonStyles.container, styles.container]}
-            disabled={message.status === "DELETED"}>
-            {!isOwner && (
-              <View style={GlobalStyles.flexRow}>
-                <Text style={otherStyle.senderName}>{message.sender.name}</Text>
-              </View>
-            )}
-
-            {message.reply && (
-              <View style={commonStyles.card}>
-                <Text style={commonStyles.name} numberOfLines={1}>
-                  {message.reply.senderName}
+          <View>
+            {message.isForward && (
+              // eslint-disable-next-line react-native/no-inline-styles
+              <View
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}>
+                <ForwardMessageIcon width={12} height={12} />
+                <Text
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  style={[
+                    commonStyles.name,
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    { paddingBottom: 5, color: "gray" },
+                  ]}
+                  numberOfLines={1}>
+                  {`${
+                    !isOwner ? message.sender.name : "Bạn"
+                  } đã chuyển tiếp một tin nhắn`}
                 </Text>
-                <TextFormatRenderer
-                  text={message.reply.content || ""}
-                  style={commonStyles.replyMessage}
-                  numberOfLines={1}
-                />
               </View>
             )}
+            <TouchableOpacity
+              style={[commonStyles.container, styles.container]}
+              disabled={message.status === "DELETED"}>
+              {!isOwner && (
+                <View style={GlobalStyles.flexRow}>
+                  <Text style={otherStyle.senderName}>
+                    {message.sender.name}
+                  </Text>
+                </View>
+              )}
+              {message.reply && (
+                <View style={commonStyles.card}>
+                  <Text style={commonStyles.name} numberOfLines={1}>
+                    {message.reply.senderName}
+                  </Text>
+                  <TextFormatRenderer
+                    text={message.reply.content || ""}
+                    style={commonStyles.replyMessage}
+                    numberOfLines={1}
+                  />
+                </View>
+              )}
 
-            {message.isForward && isOwner && (
-              <Text style={commonStyles.name} numberOfLines={1}>
-                {"Bạn đã chuyển tiếp một tin nhắn"}
+              {message.status === "DELETED" ? (
+                <TextFormatRenderer
+                  text={trimmedContent}
+                  style={commonStyles.dimmedText}
+                />
+              ) : (
+                <TextFormatRenderer
+                  text={trimmedContent}
+                  style={commonStyles.text}
+                  isFullDetail
+                />
+              )}
+
+              <Text style={otherStyle.sentTime}>
+                {Helper.getTime(message.createdDate)}
               </Text>
-            )}
 
-            {message.status === "DELETED" ? (
-              <TextFormatRenderer
-                text={trimmedContent}
-                style={commonStyles.dimmedText}
-              />
-            ) : (
-              <TextFormatRenderer
-                text={trimmedContent}
-                style={commonStyles.text}
-                isFullDetail
-              />
-            )}
-
-            <Text style={otherStyle.sentTime}>
-              {Helper.getTime(message.createdDate)}
-            </Text>
-
-            {message.status !== "DELETED" && (
-              <TouchableOpacity
-                onPress={showUserReacted}
-                style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
-                <TotalEmojiReacted reaction={message.totalReaction} />
-              </TouchableOpacity>
-            )}
-          </TouchableOpacity>
+              {message.status !== "DELETED" && (
+                <TouchableOpacity
+                  onPress={showUserReacted}
+                  style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
+                  <TotalEmojiReacted reaction={message.totalReaction} />
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+          </View>
         </GestureDetector>
       </Animated.View>
     </View>

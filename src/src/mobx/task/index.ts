@@ -1,10 +1,15 @@
-import {TaskMobx} from "globals";
-import {action, computed, flow, makeAutoObservable} from "mobx";
+import { TaskMobx } from "globals";
+import { action, computed, flow, makeAutoObservable } from "mobx";
 import TaskApi from "~/api/remote/TaskApi";
-import {CheckBoxType, RoleType} from "~/models/commonTypes";
-import {GroupModel, GROUP_SAMPLE} from "~/models/group";
-import {AssignedCheckList, Assignee, TaskModel} from "~/models/task";
-import {UserProfileModel, USER_PROFILE_SAMPLE, ShortProfileUserModel, SHORT_PROFILE_USER_MODEL} from "~/models/user";
+import { CheckBoxType, RoleType } from "~/models/commonTypes";
+import { GroupModel, GROUP_SAMPLE } from "~/models/group";
+import { AssignedCheckList, Assignee, TaskModel } from "~/models/task";
+import {
+  UserProfileModel,
+  USER_PROFILE_SAMPLE,
+  ShortProfileUserModel,
+  SHORT_PROFILE_USER_MODEL,
+} from "~/models/user";
 import GroupService from "~/services/group";
 import TaskServices from "~/services/task";
 import Helper from "~/utils/Helper";
@@ -176,7 +181,7 @@ export class CreateTaskScreenState {
 
   @action
   setAssignee(data: AssignedCheckList) {
-    this.assignees = {...data};
+    this.assignees = { ...data };
   }
 
   @action
@@ -267,24 +272,23 @@ export class CreateTaskScreenState {
         ? await TaskServices.getTaskAssinees(taskId)
         : [];
 
-      const formatAssignees: Assignee[] = groupMember
-        .map(item => {
-          const isJoinned = assignees.findIndex(_item => _item.id === item.id);
+      const formatAssignees: Assignee[] = groupMember.map(item => {
+        const isJoinned = assignees.findIndex(_item => _item.id === item.id);
 
-          const assigned: CheckBoxType =
-            assignees.length === 0
-              ? "checked"
-              : isJoinned >= 0
-              ? "checked"
-              : "unchecked";
+        const assigned: CheckBoxType =
+          assignees.length === 0
+            ? "checked"
+            : isJoinned >= 0
+            ? "checked"
+            : "unchecked";
 
-          return {
-            id: item.id,
-            name: item.name,
-            status: isJoinned >= 0 ? assignees[isJoinned].status : "TO_DO",
-            assigned: assigned,
-          } as Assignee;
-        });
+        return {
+          id: item.id,
+          name: item.name,
+          status: isJoinned >= 0 ? assignees[isJoinned].status : "TO_DO",
+          assigned: assigned,
+        } as Assignee;
+      });
 
       const assigneeCheckList: AssignedCheckList = {
         data: formatAssignees,

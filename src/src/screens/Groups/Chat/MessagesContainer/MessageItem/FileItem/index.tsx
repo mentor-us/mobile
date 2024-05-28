@@ -22,6 +22,7 @@ import GroupApi from "~/api/remote/GroupApi";
 import { EmoijType } from "~/constants/Emoijs";
 import TotalEmojiReacted from "~/components/TotalEmojiReacted";
 import CacheImage from "~/components/CacheImage";
+import { ForwardMessageIcon } from "~/assets/svgs";
 
 interface Props {
   message: MessageModel;
@@ -152,29 +153,50 @@ const FileItem = ({ message }: Props) => {
             />
           </TouchableOpacity>
         )}
-        <View style={[commonStyles.container, styles.container]}>
-          {!isOwner && (
-            <View style={GlobalStyles.flexRow}>
-              <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+        <View>
+          {message.isForward && (
+            // eslint-disable-next-line react-native/no-inline-styles
+            <View
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+              <ForwardMessageIcon width={12} height={12} />
+              <Text
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={[
+                  otherStyle.senderName,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  { color: "gray" },
+                ]}
+                numberOfLines={1}>
+                {`${
+                  !isOwner ? message.sender.name : "Bạn"
+                } đã chuyển tiếp một file`}
+              </Text>
             </View>
           )}
-          {message.isForward && isOwner && (
-            <Text style={otherStyle.senderName} numberOfLines={1}>
-              {"Bạn đã chuyển tiếp một file"}
+          <View style={[commonStyles.container, styles.container]}>
+            {!isOwner && (
+              <View style={GlobalStyles.flexRow}>
+                <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+              </View>
+            )}
+            <File file={message.file} isDownloadable={true} />
+            <Text style={otherStyle.sentTime}>
+              {Helper.getTime(message.createdDate)}
             </Text>
-          )}
-          <File file={message.file} isDownloadable={true} />
-          <Text style={otherStyle.sentTime}>
-            {Helper.getTime(message.createdDate)}
-          </Text>
 
-          {message.status !== "DELETED" && (
-            <TouchableOpacity
-              onPress={showUserReacted}
-              style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
-              <TotalEmojiReacted reaction={message.totalReaction} />
-            </TouchableOpacity>
-          )}
+            {message.status !== "DELETED" && (
+              <TouchableOpacity
+                onPress={showUserReacted}
+                style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>
+                <TotalEmojiReacted reaction={message.totalReaction} />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </Animated.View>
     </GestureDetector>

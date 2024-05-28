@@ -1,6 +1,6 @@
 default_platform(:android)
 
-platform :android do 
+platform :android do
     desc "Validate Google Play json key"
     lane :validate_key do
         validate_play_store_json_key(
@@ -18,8 +18,8 @@ platform :android do
             task: "bundle",
             build_type: "Release",
             project_dir: 'android/',
-            print_command_output: false,
-            print_command: false,
+            print_command_output: true,
+            print_command: true,
             properties: {
                 "android.injected.signing.store.file" => ENV['ANDROID_KEYSTORE_FILE'],
                 "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],

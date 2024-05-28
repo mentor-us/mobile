@@ -1,6 +1,9 @@
-name: Deploy to Production Google Play
+name: Deploy to Internal Testing Google Play
 
 on:
+  push:
+    branches:
+      - develop
   workflow_dispatch:
 
 jobs:
@@ -75,7 +78,7 @@ jobs:
         run: |
             export OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
             op read --out-file ./android/app/google-services.json op://mentorus/firebase-credential/google.com.mentorus/google-services.json
-            APP_ENV=prod op inject -i ./.env.tpl -o ./.env
+            APP_ENV=dev op inject -i ./.env.tpl -o ./.env
 
       - name: Update Bundle
         run: |
@@ -95,9 +98,9 @@ jobs:
           name: aab
           path: src/android/app/build/outputs/bundle/release/app-release.aab
 
-      - name: Upload AAB to Google Play
+      - name: Upload AAB to Google Play Internal Test
         id: deploy
-        run: yarn android:fastlane:uploadRelease
+        run: yarn android:fastlane:uploadInternal
         env:
           PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
           PLAY_STORE_PACKAGE_NAME: com.mentorus

@@ -44,17 +44,18 @@ export const LoginScreen: ScreenProps<"loginScreen"> = () => {
     }
 
     const { token, error }: LoginRouteParamsProps = route.params as object;
+    console.log(LoginScreen.name, route);
     if (error) {
-      switch (error) {
-        case "704":
-          setMessage("Tài khoản không tồn tại trên hệ thống");
-          break;
-        case "705":
-          setMessage("Tài khoản bị khoá");
-          break;
-        default:
-          setMessage("Có lỗi xảy ra, vui lòng thử lại");
+      console.error("ERROR: " + LoginScreen.name, error);
+
+      if (error.includes("704")) {
+        setMessage("Tài khoản không tồn tại trên hệ thống");
+      } else if (error.includes("705")) {
+        setMessage("Tài khoản bị khoá");
+      } else {
+        setMessage("Có lỗi xảy ra, vui lòng thử lại");
       }
+
       setSnackBar(true);
       return;
     }
@@ -100,12 +101,16 @@ export const LoginScreen: ScreenProps<"loginScreen"> = () => {
       <View style={styles.mainBody}>
         <Text style={styles.welcomeText}>MentorUS</Text>
         <View style={styles.loginOptionsContainer}>
-          {/* Login with Apple */}
-          <LoginButton
-            type="apple"
-            onPress={() => onPressLogin(LinkAuthorize.apple)}
-          />
-          <Text>hoặc</Text>
+          {Platform.OS === "ios" && (
+            <View style={styles.loginOptionsContainer}>
+              {/* Login with Apple */}
+              <LoginButton
+                type="apple"
+                onPress={() => onPressLogin(LinkAuthorize.apple)}
+              />
+              <Text>hoặc</Text>
+            </View>
+          )}
 
           {/* Login with Google */}
           <LoginButton

@@ -1,4 +1,4 @@
-package vn.edu.hcmus.mentorus;
+package com.mentorus;
 import expo.modules.ReactActivityDelegateWrapper;
 
 import com.facebook.react.ReactActivity;

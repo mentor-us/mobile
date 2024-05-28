@@ -1,26 +1,26 @@
-import {View, Text, TouchableOpacity, StyleSheet} from "react-native";
-import {screenHeight, screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { screenHeight, screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
-import {RefreshIcon} from "~/assets/svgs";
+import { RefreshIcon } from "~/assets/svgs";
 import Animated, {
-  runOnUI,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   onRefresh: () => void;
   loading: boolean;
 }
 
-const ListFooter = ({onRefresh, loading}: Props) => {
+const ListFooter = ({ onRefresh, loading }: Props) => {
   const rotation = useSharedValue(0);
   const reloadAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{rotateZ: `${rotation.value}deg`}],
+      transform: [{ rotateZ: `${rotation.value}deg` }],
     };
   });
 
@@ -31,7 +31,7 @@ const ListFooter = ({onRefresh, loading}: Props) => {
 
   const refresh = () => {
     "worklet";
-    runOnUI(onRefresh)();
+    runOnJS(onRefresh)();
   };
 
   useEffect(() => {

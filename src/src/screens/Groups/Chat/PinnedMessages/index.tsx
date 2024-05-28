@@ -61,13 +61,13 @@ const PinnedMessages = () => {
     await GroupApi.unpinMessage(state._groupDetail.id, messageId);
   };
 
-  const onItemLongPress = () => {};
+  const onItemLongPress = () => { };
 
   const onItemPress = async id => {
     state.setScrollToId(id);
-    let index = state._messageList.findIndex(item => item.id === id);
+    const index = state._messageList.findIndex(item => item.id === id);
     if (index === -1) {
-     return;
+      return;
     }
     state._messageFlatlistRef.current?.scrollToIndex({
       index: index,
@@ -87,7 +87,7 @@ const PinnedMessages = () => {
         testID="pinned-msg"
         style={[styles.container, expanding && styles.expandCtn]}
         layout={CustomLayoutTransition}>
-        <View style={expanding && styles.headerCtn}>
+        <View style={expanding ? styles.headerCtn : { zIndex: 2 }}>
           {expanding && (
             <Animated.Text entering={FadeIn.delay(500)} style={styles.title}>
               Danh sách đã ghim
@@ -97,7 +97,7 @@ const PinnedMessages = () => {
             testID="expand-pin-msg-icon"
             style={[styles.moreBtn, expanding && styles.rotate]}
             onPress={expand}>
-            <ArrowheadDownIcon />
+            <ArrowheadDownIcon fill="black" />
           </TouchableOpacity>
         </View>
         <Animated.View

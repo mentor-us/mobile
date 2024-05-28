@@ -20,7 +20,7 @@ import SizedBox from "~/components/SizedBox";
 import _ from "lodash";
 import { observer } from "mobx-react-lite";
 import { useChatScreenState } from "~/context/chat";
-import { NotiFailed } from "~/assets/svgs";
+import { ForwardMessageIcon, NotiFailed } from "~/assets/svgs";
 import GroupApi from "~/api/remote/GroupApi";
 import CacheImage from "~/components/CacheImage";
 
@@ -102,8 +102,6 @@ const ImageList = ({ message }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const forwardMessage = (message: ForwardMessageModel) => {
     // state.setReplying(message);
-    console.log(message);
-    console.log(message.images);
     navigation.navigate("forwardMessage", {
       message: `Chuyển tiếp ${
         message?.images ? message.images.length : 0
@@ -157,43 +155,63 @@ const ImageList = ({ message }: Props) => {
           />
         </TouchableOpacity>
       )}
-
-      <TouchableOpacity
-        style={[commonStyles.container, styles.container]}
-        disabled={message.uploadFailed}
-        onPress={showImageSlider}
-        onLongPress={onLongPress}>
-        {!isOwner && (
-          <View style={GlobalStyles.flexRow}>
-            <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+      <View>
+        {message.isForward && (
+          // eslint-disable-next-line react-native/no-inline-styles
+          <View
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}>
+            <ForwardMessageIcon width={12} height={12} />
+            <Text
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={[
+                otherStyle.senderName,
+                // eslint-disable-next-line react-native/no-inline-styles
+                { color: "gray" },
+              ]}
+              numberOfLines={1}>
+              {`${!isOwner ? message.sender.name : "Bạn"} đã chuyển tiếp ${
+                message.images?.length
+              } hình ảnh`}
+            </Text>
           </View>
         )}
-        {message.isForward && isOwner && (
-          <Text style={otherStyle.senderName} numberOfLines={1}>
-            {`Bạn đã chuyển ${message.images?.length} hình ảnh`}
+        <TouchableOpacity
+          style={[commonStyles.container, styles.container]}
+          disabled={message.uploadFailed}
+          onPress={showImageSlider}
+          onLongPress={onLongPress}>
+          {!isOwner && (
+            <View style={GlobalStyles.flexRow}>
+              <Text style={otherStyle.senderName}>{message.sender.name}</Text>
+            </View>
+          )}
+          <SizedBox height={4} />
+          <View>
+            <GridThumbnail
+              useSkeletonWhenLoad
+              maxWidth={screenWidth * 0.8}
+              mediaData={message.images || []}
+            />
+          </View>
+          <SizedBox height={4} />
+          <Text style={otherStyle.sentTime}>
+            {Helper.getTime(message.createdDate)}
           </Text>
-        )}
-        <SizedBox height={4} />
-        <View>
-          <GridThumbnail
-            useSkeletonWhenLoad
-            maxWidth={screenWidth * 0.8}
-            mediaData={message.images || []}
-          />
-        </View>
-        <SizedBox height={4} />
-        <Text style={otherStyle.sentTime}>
-          {Helper.getTime(message.createdDate)}
-        </Text>
 
-        {message.uploadFailed && (
-          <View style={commonStyles.failedLayer}>
-            {/* <ActivityIndicator size={"small"} color={Color.primary} /> */}
-            <NotiFailed />
-            <Text style={commonStyles.failedText}>Gửi ảnh thất bại</Text>
-          </View>
-        )}
-      </TouchableOpacity>
+          {message.uploadFailed && (
+            <View style={commonStyles.failedLayer}>
+              {/* <ActivityIndicator size={"small"} color={Color.primary} /> */}
+              <NotiFailed />
+              <Text style={commonStyles.failedText}>Gửi ảnh thất bại</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         onPress={showUserReacted}
         style={[commonStyles.emojiCtn, styles.emojiCtnPos]}>

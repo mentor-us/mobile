@@ -23,9 +23,7 @@ export default class Helper {
       return key;
     }
 
-    const searchParams = new URLSearchParams();
-    searchParams.append("key", key);
-    return `${BASE_URL}/api/files?${searchParams.toString()}`;
+    return `${BASE_URL}/infra/blob/mentorus/${key}`;
   }
 
   static getBoolean(src: string): boolean {

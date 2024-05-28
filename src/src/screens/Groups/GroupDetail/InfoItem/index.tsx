@@ -1,5 +1,5 @@
-import {View, Text, TouchableOpacity} from "react-native";
-import React, {memo, useMemo} from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { memo, useMemo } from "react";
 
 import {
   CalendarIcon,
@@ -16,13 +16,13 @@ import {
 import SizedBox from "~/components/SizedBox";
 import GlobalStyles from "~/constants/GlobalStyles";
 import isEqual from "react-fast-compare";
-import {InfoItemModel} from "../index.props";
+import { InfoItemModel } from "../index.props";
 
 import styles from "./styles";
-import {Switch} from "react-native-paper";
-import {Color} from "~/constants/Color";
-import {useNavigation} from "@react-navigation/native";
-import {RoleType} from "~/models/commonTypes";
+import { Switch } from "react-native-paper";
+import { Color } from "~/constants/Color";
+import { useNavigation } from "@react-navigation/native";
+import { RoleType } from "~/models/commonTypes";
 import { GroupModel } from "~/models/group";
 
 interface Props {
@@ -31,7 +31,7 @@ interface Props {
   role: RoleType;
 }
 
-const InfoItem = ({data, role, group}: Props) => {
+const InfoItem = ({ data, role, group }: Props) => {
   const navigation = useNavigation();
   const ITEM_TOOL = useMemo(() => {
     return {
@@ -43,7 +43,10 @@ const InfoItem = ({data, role, group}: Props) => {
           return <View />;
         },
         action: () => {
-          navigation.navigate("groupAttendees", {groupId: group.id, role: role});
+          navigation.navigate("groupAttendees", {
+            groupId: group.id,
+            role: role,
+          });
         },
       },
       media: {
@@ -54,7 +57,10 @@ const InfoItem = ({data, role, group}: Props) => {
           return <View />;
         },
         action: () => {
-          navigation.navigate("groupMedia", {groupId: group.id, mode: "images"});
+          navigation.navigate("groupMedia", {
+            groupId: group.id,
+            mode: "images",
+          });
         },
       },
       meeting: {
@@ -113,7 +119,7 @@ const InfoItem = ({data, role, group}: Props) => {
           return <View />;
         },
         action: () => {
-          navigation.navigate("groupFAQ", {groupId: group.id});
+          navigation.navigate("groupFAQ", { groupId: group?.parentId || "" });
         },
       },
       notes: {
@@ -124,7 +130,7 @@ const InfoItem = ({data, role, group}: Props) => {
           return <View />;
         },
         action: () => {
-          navigation.navigate("groupNote", {groupId: group.id});
+          navigation.navigate("groupNote", { groupId: group.id });
         },
       },
       notification_list: {
