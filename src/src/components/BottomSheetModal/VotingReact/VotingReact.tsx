@@ -1,7 +1,7 @@
-import {useMemo} from "react";
-import {BottomSheetModalRef} from "../index.props";
-import {  Choice, NEW_VOTE_SAMPLE, Vote } from "~/models/vote";
-import { TouchableOpacity, View, Text,Image } from "react-native";
+import { useMemo } from "react";
+import { BottomSheetModalRef } from "../index.props";
+import { Choice, NEW_VOTE_SAMPLE } from "~/models/vote";
+import { TouchableOpacity, View, Text, Image } from "react-native";
 import styles from "./style";
 import { ColumnChartImage } from "~/assets/images";
 import { LockRedIcon, PinMessageIcon } from "~/assets/svgs";
@@ -11,14 +11,14 @@ import GroupApi from "~/api/remote/GroupApi";
 import { MessageModel } from "~/models/message";
 
 interface VotingProps {
-    data?: MessageModel;
-  }
-  
-  const VotingReact = ({ data = NEW_VOTE_SAMPLE }: VotingProps) => {
-    const { vote } = data;
-    const voterNumber = vote?.choices
+  data?: MessageModel;
+}
+
+const VotingReact = ({ data = NEW_VOTE_SAMPLE }: VotingProps) => {
+  const { vote } = data;
+  const voterNumber = vote?.choices
     .flatMap(choice => choice.voters)
-    .filter((value, index, array) => array.indexOf(value) === index).length;
+    .flatMap(voter => (voter as any)?.id).length;
 
   const renderVoteItems = useMemo(
     () =>
@@ -72,44 +72,41 @@ interface VotingProps {
 
   return (
     <View style={styles.root}>
-        <View style={[styles.container, {
-        }]}>
-          <View style={styles.header}>
-            <Image source={ColumnChartImage} style={styles.icon} />
-            <Text numberOfLines={3} style={styles.votingTitle}>
-              {vote?.question}
-            </Text>
+      <View style={[styles.container, {}]}>
+        <View style={styles.header}>
+          <Image source={ColumnChartImage} style={styles.icon} />
+          <Text numberOfLines={3} style={styles.votingTitle}>
+            {vote?.question}
+          </Text>
+        </View>
+
+        {vote?.status === "CLOSED" && (
+          <View style={styles.hintCtn}>
+            <LockRedIcon width={15} height={15} />
+            <Text style={styles.lockHint}>Bình chọn đã kết thúc!</Text>
           </View>
+        )}
 
-          {vote?.status === "CLOSED" && (
-            <View style={styles.hintCtn}>
-              <LockRedIcon width={15} height={15} />
-              <Text style={styles.lockHint}>Bình chọn đã kết thúc!</Text>
-            </View>
-          )}
+        <View style={styles.lineSeparator} />
 
-          <View style={styles.lineSeparator} />
+        {voterNumber === 0 ? (
+          <Text style={styles.hint}>Chưa có người tham gia bình chọn!</Text>
+        ) : (
+          <Text style={styles.hint}>{voterNumber} người đã bình chọn.</Text>
+        )}
 
-          {voterNumber === 0 ? (
-            <Text style={styles.hint}>Chưa có người tham gia bình chọn!</Text>
-          ) : (
-            <Text style={styles.hint}>{voterNumber} người đã bình chọn.</Text>
-          )}
-
-          <View style={styles.optionItemList}>{renderVoteItems}</View>
-        </View>
-        <View>
-              <TouchableOpacity
-                style={commonStyles.actionButton}
-                testID="pin-icon"
-                onPress={onPinMessage}>
-                <PinMessageIcon width={24} height={24} />
-              </TouchableOpacity>
-        </View>
+        <View style={styles.optionItemList}>{renderVoteItems}</View>
       </View>
+      <View>
+        <TouchableOpacity
+          style={commonStyles.actionButton}
+          testID="pin-icon"
+          onPress={onPinMessage}>
+          <PinMessageIcon width={24} height={24} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
-
-  
 };
 
 export default VotingReact;

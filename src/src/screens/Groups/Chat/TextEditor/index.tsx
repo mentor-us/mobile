@@ -544,7 +544,10 @@ const TextEditor = () => {
                 containerStyle={{ transform: [{ rotate: "180deg" }] }}
                 ref={RichTextRef}
                 onChange={onChangeText}
-                onBlur={() => setOpenMention(false)}
+                onBlur={() => {
+                  state.setKeyboardVisible(false); // or some other action
+                  state.setKeyboardHeight(0);
+                }}
                 pasteAsPlainText={true}
                 placeholder={"Soạn tin nhắn..."}
               />

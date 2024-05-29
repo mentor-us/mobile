@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import equals from "react-fast-compare";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import { StorageMediaAttachemt } from "~/models/media";
 import Helper from "~/utils/Helper";
@@ -25,14 +25,28 @@ const GalleryItem = ({ data, onSelect, number, single }: Props) => {
   const renderPicked = () => {
     if (single) {
       return single == data.id ? (
-        <View style={styles.selectedIcon} />
+        <View style={styles.selectedIcon}>
+          {/* Tick icon */}
+          <Image
+            source={require("src/assets/images/check_white.png")}
+            style={styles.tickIcon}
+          />
+        </View>
       ) : (
         <View style={styles.unselectedIcon} />
       );
     }
 
     return (
-      <View style={selected ? styles.selectedIcon : styles.unselectedIcon} />
+      <View style={selected ? styles.selectedIcon : styles.unselectedIcon}>
+        {/* Tick icon */}
+        {selected && (
+          <Image
+            source={require("src/assets/images/check_white.png")}
+            style={styles.tickIcon}
+          />
+        )}
+      </View>
     );
   };
 
