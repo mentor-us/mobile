@@ -46,7 +46,7 @@ export interface UploadAttachment {
   id: string;
   filename: string;
   mime?: string;
-  size: number | null;
+  size?: number;
   path: string;
   duration?: number | null;
   origin: "storage" | "camera";
@@ -116,7 +116,7 @@ export interface ShortMedia {
     time: string; //hh:mm
     date: string; // dd/mm/yyyy
     displayName: string;
-  }
+  };
 }
 
 export interface ShortMediaList {
