@@ -29,4 +29,15 @@ export const SUPPORT_FILE_TYPES: string[] = [
   types.pdf,
 ];
 
+export const SOCKET_EVENT = {
+  JOIN_ROOM: "join_room",
+  RECEIVE_REACT_MESSAGE: "receive_react_message",
+  RECEIVE_REMOVE_REACT_MESSAGE: "receive_remove_react_message",
+  RECEIVE_PINNED_MESSAGE: "receive_pinned_message",
+  RECEIVE_UNPINNED_MESSAGE: "receive_unpinned_message",
+  UPDATE_MESSAGE: "update_message",
+  RECEIVE_MESSAGE: "receive_message",
+  RECEIVE_VOTING: "receive_voting",
+};
+
 export const MAX_SIZE_IMG = 5 * 1000 * 1000;
