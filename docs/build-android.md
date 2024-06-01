@@ -12,7 +12,7 @@
 
 ## Running the Application Locally
 
-- Obtain the backend URL and replace the `API_URL` and `SOCKET_URL` in the `.env` file:
+- Obtain the backend URL and replace the `BASE_URL` and `SOCKET_URL` in the `.env` file:
 
   - **Note:** If the backend is running locally,
     - Use the local IP instead of `localhost`, for example, `127.0.0.1`.
