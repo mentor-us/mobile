@@ -42,6 +42,7 @@ import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 import ForwardMessage from "~/screens/Groups/ForwardMessage";
 import LinkEmail from "~/screens/Profiles/LinkEmail";
+import { View } from "react-native-animatable";
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
 
 const Authorized = () => {

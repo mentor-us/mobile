@@ -1,5 +1,6 @@
 import {
   DeviceEventEmitter,
+  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -15,7 +16,7 @@ import { Color } from "~/constants/Color";
 import { GroupIcon } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import { Line } from "~/components/Separator";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderTitle from "./HeaderTitle";
 import HeaderRight from "./HeaderRight";
@@ -63,13 +64,24 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
 
     navigation.setOptions({
       headerTintColor: Color.white,
-      headerTitle: () => (
-        <HeaderTitle
-          name={workspace.name}
-          category={workspace.groupCategory}
-          avatar={workspace.imageUrl}
-        />
-      ),
+      headerStyle: {
+        backgroundColor: Color.primary,
+        ...Platform.select({
+          ios: {
+            height: 120,
+          },
+          android: {},
+        }),
+      },
+      headerTitle: () => {
+        return (
+          <HeaderTitle
+            name={workspace.name}
+            category={workspace.groupCategory}
+            avatar={workspace.imageUrl}
+          />
+        );
+      },
       headerLeft: () => <HeaderBackButton canGoBack />,
       headerRight: () => <HeaderRight groupId={groupId} />,
     } as Partial<StackNavigationOptions>);
@@ -116,8 +128,8 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   if (isError || !workspace) {
     return <ErrorMessage message="Lỗi truy cập nhóm. Vui lòng thử lại sau!" />;
   }
-  
-    return (
+
+  return (
     isSuccess && (
       <SafeAreaView style={styles.container}>
         <ScrollView
