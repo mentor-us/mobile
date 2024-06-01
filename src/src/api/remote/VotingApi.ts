@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 
 const VotingApi = {
   getGroupVotes: async (groupId: string) => {
-    const URL = `/api/votes?groupId=${groupId}`;
+    const URL = `/api/channels/${groupId}/votes`;
     try {
       const response: any = await axiosClient.get(URL);
       if (!response) {
