@@ -89,6 +89,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.16.0",
     "react-native-gifted-chat": "^1.1.0",
+    "react-native-image-picker": "^7.1.2",
     "react-native-image-slider": "^2.0.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-logs": "^5.0.1",
