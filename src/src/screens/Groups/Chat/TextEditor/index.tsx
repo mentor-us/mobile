@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Keyboard,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -23,7 +24,6 @@ import { useAppDispatch, useAppSelector } from "~/redux";
 import { SocketContext } from "~/context/socket";
 import Actions from "./Actions";
 import { useChatScreenState } from "~/context/chat";
-import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StorageMediaAttachemt } from "~/models/media";
 import uuid from "react-native-uuid";
 import SubmitButton from "./SubmitButton";
@@ -43,6 +43,13 @@ import { GroupMemberModel } from "~/models/group";
 import { SOCKET_EVENT } from "~/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { GetGroupDetailQueryKey } from "~/app/server/groups/queries";
+import {
+  ImageLibraryOptions,
+  ImagePickerResponse,
+  launchImageLibrary,
+} from "react-native-image-picker";
+import Helper from "~/utils/Helper";
+import { MAX_SIZE_IMG } from "~/constants";
 
 const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)|^@\w*/gim;
 // const mentionRegex = /(?<=<[^>]*\s|<.*>)@(\w+)(?=\s*<\/.*>|>)/gim;
@@ -232,8 +239,38 @@ const TextEditor = () => {
     try {
       const hasPermission = await Permission.handleReadStoragePermission();
       if (hasPermission) {
-        BottomSheetModalRef.current?.show("gallery", true, {
-          run: submitImage,
+        const options: ImageLibraryOptions = {
+          mediaType: "photo",
+          includeBase64: false,
+          maxHeight: 2000,
+          maxWidth: 2000,
+          selectionLimit: 0,
+        };
+
+        launchImageLibrary(options, (response: ImagePickerResponse) => {
+          if (response.didCancel) {
+            console.log("User cancelled image picker");
+          } else if (response.errorMessage) {
+            console.error("Image picker error: ", response.errorMessage);
+          } else {
+            const selectedMedia = Helper.formatMediaListMirage(
+              response.assets || [],
+            );
+
+            if (
+              selectedMedia.some(item => item.size && item.size > MAX_SIZE_IMG)
+            ) {
+              Alert.alert(
+                "Cảnh báo",
+                `Kích thước ảnh vượt quá ${Helper.formatFileSize(
+                  MAX_SIZE_IMG,
+                )}`,
+              );
+              return;
+            }
+
+            submitImage(selectedMedia);
+          }
         });
       }
     } catch (error) {
