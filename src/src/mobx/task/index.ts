@@ -30,15 +30,15 @@ export class CreateTaskScreenState {
   groupData: GroupModel = GROUP_SAMPLE;
   currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
   taskId?: string;
-  role: RoleType = "MENTEE";
+  role: RoleType = RoleType.MENTEE;
 
   // Form State
-  title: string = "";
-  titleError: string = "";
+  title = "";
+  titleError = "";
 
-  description: string = "";
-  time: string = "22:45";
-  date: string = "01/09/2023";
+  description = "";
+  time = "22:45";
+  date = "01/09/2023";
 
   // groups: string[] = [];
   assigner: ShortProfileUserModel = SHORT_PROFILE_USER_MODEL;
@@ -80,7 +80,7 @@ export class CreateTaskScreenState {
 
   @computed
   getCanGoBack() {
-    if (Boolean(this.titleError)) {
+    if (this.titleError) {
       return false;
     }
     return true;
@@ -88,7 +88,10 @@ export class CreateTaskScreenState {
 
   @computed
   isCanEdit() {
-    return this.role == "MENTOR" || this.assigner?.id == this.currentUser?.id;
+    return (
+      this.role === RoleType.MENTOR ||
+      this.assigner?.id === this.currentUser?.id
+    );
   }
 
   @computed
@@ -214,12 +217,9 @@ export class CreateTaskScreenState {
 
   @action
   submitForm() {
-    const valid: boolean = Boolean(this.title);
-    if (!Boolean(this.title)) {
-      this.setTitleError("Chưa có tiêu đề");
-    }
-
+    const valid = Boolean(this.title);
     if (!valid) {
+      this.setTitleError("Chưa có tiêu đề");
       return;
     }
 

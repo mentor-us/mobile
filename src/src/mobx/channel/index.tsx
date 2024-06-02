@@ -25,7 +25,7 @@ export class AddChannelScreenState {
   groupData: GroupModel = GROUP_SAMPLE;
   oldChannels: GroupModel[] = [];
   currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
-  role: RoleType = "MENTOR";
+  role: RoleType = RoleType.MENTOR;
   channelId: string | undefined = undefined;
 
   // Form State

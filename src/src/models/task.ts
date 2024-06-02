@@ -1,7 +1,7 @@
 import { Color } from "~/constants/Color";
-import {CheckBoxType, RoleType} from "./commonTypes";
-import {GroupModel, ShortGroupModel} from "./group";
-import {ShortProfileUserModel, USER_PROFILE_SAMPLE} from "./user";
+import { CheckBoxType, RoleType } from "./commonTypes";
+import { ShortGroupModel } from "./group";
+import { ShortProfileUserModel, USER_PROFILE_SAMPLE } from "./user";
 
 export type TaskStatusType =
   | "TO_DO"
@@ -57,14 +57,14 @@ export const TaskStatusObject = {
     displayName: "Đã trễ hạn",
     color: "#C01C28",
     backgroundColor: "#C01C28",
-    icon: "progress-alert"
+    icon: "progress-alert",
   },
   NULL: {
     key: "NULL",
     displayName: "",
     color: "transparent",
     backgroundColor: "transparent",
-    icon: ""
+    icon: "",
   },
 };
 
@@ -97,7 +97,7 @@ export interface TaskModel {
   description: string;
   group: ShortGroupModel;
   assigner: ShortProfileUserModel;
-  assignees: Assignee[],
+  assignees: Assignee[];
   role: RoleType;
   totalAssignees: number;
 }
@@ -106,7 +106,7 @@ export const TASK_SAMPLE: TaskModel = {
   id: "",
   title: "",
   deadline: "",
-  group: {id: "", name: ""},
+  group: { id: "", name: "" },
   status: "IN_PROGRESS",
   description: "",
   deadlineTimeModel: {
@@ -116,6 +116,6 @@ export const TASK_SAMPLE: TaskModel = {
   },
   assigner: USER_PROFILE_SAMPLE,
   assignees: [],
-  role: "MENTOR",
+  role: RoleType.MENTOR,
   totalAssignees: 0,
 };

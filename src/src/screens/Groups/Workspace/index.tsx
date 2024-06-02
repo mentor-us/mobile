@@ -64,15 +64,6 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
 
     navigation.setOptions({
       headerTintColor: Color.white,
-      headerStyle: {
-        backgroundColor: Color.primary,
-        ...Platform.select({
-          ios: {
-            height: 120,
-          },
-          android: {},
-        }),
-      },
       headerTitle: () => {
         return (
           <HeaderTitle
@@ -175,7 +166,7 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
             title={"Kênh"}
             addChannel={addChannel}
             loading={isLoading}
-            role={workspace?.role || "MENTEE"}
+            role={workspace?.role || RoleType.MENTEE}
             channels={workspace?.channels}
           />
 
@@ -187,7 +178,7 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
             type={"PRIVATE_MESSAGE"}
             title={"Tin nhắn riêng"}
             loading={isLoading}
-            role={workspace?.role || "MENTEE"}
+            role={workspace?.role || RoleType.MENTEE}
             channels={workspace?.privates}
           />
         </ScrollView>

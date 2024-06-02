@@ -12,7 +12,11 @@ interface Props {
   online?: boolean;
   role?: RoleType;
 }
-const GroupAvatar = ({ avatar, online = true, role = "MENTEE" }: Props) => {
+const GroupAvatar = ({
+  avatar,
+  online = true,
+  role = RoleType.MENTEE,
+}: Props) => {
   const store = useMobxStore();
   const searchParams = new URLSearchParams();
   searchParams.append("key", avatar ?? "");
@@ -31,7 +35,7 @@ const GroupAvatar = ({ avatar, online = true, role = "MENTEE" }: Props) => {
           style={styles.avatar}
         />
         <View style={styles.roleType}>
-          {role == "MENTEE" ? (
+          {role === RoleType.MENTEE ? (
             <StudentReadingIcon width={14} height={14} />
           ) : (
             <TeacherIcon width={12} height={12} />

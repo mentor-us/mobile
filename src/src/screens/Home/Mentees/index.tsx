@@ -1,20 +1,20 @@
-import {SafeAreaView, FlatList, View} from "react-native";
+import { SafeAreaView, FlatList, View } from "react-native";
 import styles from "./styles";
-import React, {useState, useCallback} from "react";
-import {useNavigation} from "@react-navigation/native";
-import {GroupModel} from "~/models/group";
+import React, { useState, useCallback } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { GroupModel } from "~/models/group";
 import GroupItem from "~/components/GroupItem";
-import {Line} from "~/components/Separator";
-import {useQueryGroupList} from "../queries";
+import { Line } from "~/components/Separator";
+import { useQueryGroupList } from "../queries";
 
 export default function Mentees() {
   const navigation = useNavigation();
   const data = useQueryGroupList();
 
   const renderGroupMetorItem = useCallback(
-    ({item, index}: {item: GroupModel; index: number}) => {
+    ({ item, index }: { item: GroupModel; index: number }) => {
       return (
-        <View style={{backgroundColor: "#fff", padding: 12}}>
+        <View style={{ backgroundColor: "#fff", padding: 12 }}>
           <GroupItem group={item} onPress={() => detailGroup(item.id)} />
         </View>
       );
@@ -23,7 +23,7 @@ export default function Mentees() {
   );
 
   const detailGroup = (groupId: string) => {
-    navigation.navigate("chat", {groupId: groupId});
+    navigation.navigate("chat", { groupId: groupId });
   };
 
   const onEndReached = () => {
@@ -42,7 +42,9 @@ export default function Mentees() {
         data={
           !data.data
             ? []
-            : data.data.pages.flat().filter(item => item.role == "MENTEE")
+            : data.data.pages
+                .flat()
+                .filter(item => item.role == RoleType.MENTEE)
         }
         renderItem={renderGroupMetorItem}
         showsVerticalScrollIndicator={false}

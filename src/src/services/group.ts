@@ -1,14 +1,11 @@
 import GroupApi from "~/api/remote/GroupApi";
+import { RoleType } from "~/models/commonTypes";
 import { GroupMemberModel, GroupModel, GROUP_SAMPLE } from "~/models/group";
 import { ShortMedia, ShortMediaList } from "~/models/media";
 import Helper from "~/utils/Helper";
 
 const GroupService = {
-  all: async (
-    type: string = "",
-    page: number = 0,
-    pageSize: number = 25,
-  ): Promise<GroupModel[]> => {
+  all: async (type = "", page = 0, pageSize = 25): Promise<GroupModel[]> => {
     try {
       const data: GroupModel[] | undefined = await GroupApi.all(
         type,
@@ -55,7 +52,7 @@ const GroupService = {
         ? data.mentors.map(item => {
             return {
               ...item,
-              role: "MENTOR",
+              role: RoleType.MENTOR,
             } as GroupMemberModel;
           })
         : [];
@@ -66,11 +63,11 @@ const GroupService = {
             .map(item => {
               return {
                 ...item,
-                role: "MENTEE",
+                role: RoleType.MENTEE,
               } as GroupMemberModel;
             })
             .sort((a, b) => {
-              if (b.role == "MENTOR" || a.role == "MENTOR") {
+              if (b.role === RoleType.MENTOR || a.role === RoleType.MENTOR) {
                 return 0;
               }
               const k1 = a.marked ? 1 : 0;

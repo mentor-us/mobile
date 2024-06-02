@@ -1,8 +1,9 @@
-import {View, Text, TouchableOpacity} from "react-native";
-import React, {memo} from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { memo } from "react";
 import styles from "./styles";
 import Avatar from "./Avatar";
-import {Assignee, TaskStatusObject} from "~/models/task";
+import { Assignee, TaskStatusObject } from "~/models/task";
+import { RoleType } from "~/models/commonTypes";
 
 interface Props {
   member?: Assignee;
@@ -14,12 +15,12 @@ const MEMBER_SAMPLE: Assignee = {
   email: "",
   name: "",
   imageUrl: "",
-  role: "MENTEE",
+  role: RoleType.MENTEE,
   status: "NULL",
   assigned: "indeterminate",
 };
 
-const GroupMember = ({member = MEMBER_SAMPLE, onPress}: Props) => {
+const GroupMember = ({ member = MEMBER_SAMPLE, onPress }: Props) => {
   return (
     <TouchableOpacity style={[]} onPress={onPress}>
       <View style={styles.infoCtn}>
@@ -35,11 +36,17 @@ const GroupMember = ({member = MEMBER_SAMPLE, onPress}: Props) => {
           </View>
 
           <View style={styles.statusCtn}>
-              <Text style={[styles.status, {
-                      color: TaskStatusObject[member.status].color,
-                      fontWeight: "bold",
-                    }]}>{TaskStatusObject[member.status].displayName}</Text>
-            </View>
+            <Text
+              style={[
+                styles.status,
+                {
+                  color: TaskStatusObject[member.status].color,
+                  fontWeight: "bold",
+                },
+              ]}>
+              {TaskStatusObject[member.status].displayName}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>

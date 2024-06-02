@@ -14,8 +14,10 @@ import { Color } from "~/constants/Color";
 import { FaqIcon, ImportFaqIcon } from "~/assets/svgs";
 import { GROUP_SAMPLE, GroupModel } from "~/models/group";
 import GroupService from "~/services/group";
+import { RoleType } from "~/models/commonTypes";
 
 const GroupFAQ: ScreenProps<"groupFAQ"> = ({ route }) => {
+  console.log("@SCREEN_GroupFAQ: ", route.params);
   const { groupId } = route.params;
   const navigation = useNavigation();
 
@@ -151,8 +153,10 @@ const GroupFAQ: ScreenProps<"groupFAQ"> = ({ route }) => {
   };
 
   const isMentor = useMemo(() => {
-    return group.role == "MENTOR";
+    return group.role === RoleType.MENTOR;
   }, [group]);
+
+  console.log("GROUP_DATA", group);
 
   return (
     <View style={styles.container}>

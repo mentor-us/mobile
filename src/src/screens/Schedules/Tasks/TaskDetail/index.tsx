@@ -6,26 +6,27 @@ import {
   RefreshControl,
   DeviceEventEmitter,
 } from "react-native";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles";
 import GlobalStyles from "~/constants/GlobalStyles";
 import InfoItem from "./InfoItem";
-import {InfoItemModel} from "./index.props";
+import { InfoItemModel } from "./index.props";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
-import {HeaderEditButton} from "~/components/Header";
-import {ScreenProps} from "~/types/navigation";
-import {MarkTitleIcon} from "~/assets/svgs";
-import {StackNavigationOptions} from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+import { HeaderEditButton } from "~/components/Header";
+import { ScreenProps } from "~/types/navigation";
+import { MarkTitleIcon } from "~/assets/svgs";
+import { StackNavigationOptions } from "@react-navigation/stack";
 import TaskServices from "~/services/task";
-import {TaskModel, TaskStatusObject, TASK_SAMPLE} from "~/models/task";
+import { TaskModel, TaskStatusObject, TASK_SAMPLE } from "~/models/task";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import {ActivityIndicator, Button, Snackbar} from "react-native-paper";
-import {BottomSheetModalRef} from "~/components/BottomSheetModal/index.props";
+import { ActivityIndicator, Button, Snackbar } from "react-native-paper";
+import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { RefreshTaskDetailEvent } from "~/models/events/refresh-task-detail";
 import { useAppSelector } from "~/redux";
+import { RoleType } from "~/models/commonTypes";
 
-const TaskDetail: ScreenProps<"taskDetail"> = ({route}) => {
+const TaskDetail: ScreenProps<"taskDetail"> = ({ route }) => {
   const navigation = useNavigation();
   const currentUser = useAppSelector(state => state.user.data);
   const taskId = route.params.taskId;
@@ -71,10 +72,13 @@ const TaskDetail: ScreenProps<"taskDetail"> = ({route}) => {
   };
 
   const headerRight = () => {
-    if (taskData == TASK_SAMPLE) {
+    if (taskData === TASK_SAMPLE) {
       return <></>;
     }
-    if (taskData.role === "MENTOR" || taskData.assigner.id == currentUser.id) {
+    if (
+      taskData.role === RoleType.MENTOR ||
+      taskData.assigner.id === currentUser.id
+    ) {
       return <HeaderEditButton onPress={onEditPress} text={"Chỉnh sửa"} />;
     }
     return <></>;
@@ -100,14 +104,14 @@ const TaskDetail: ScreenProps<"taskDetail"> = ({route}) => {
     if (taskData != TASK_SAMPLE) {
       navigation.setOptions({
         headerRight,
-      } as Partial<StackNavigationOptions>);  
+      } as Partial<StackNavigationOptions>);
     }
   }, [taskData.id, taskData.group.id]);
 
   useEffect(() => {
     const subcribe = DeviceEventEmitter.addListener(
       EventEmitterNames.refreshTaskDetail,
-      ({status, message}: RefreshTaskDetailEvent) => {
+      ({ status, message }: RefreshTaskDetailEvent) => {
         setTimeout(() => {
           setMessage(message);
           setLoading(status);
@@ -132,7 +136,9 @@ const TaskDetail: ScreenProps<"taskDetail"> = ({route}) => {
   if (!taskData.id) {
     return (
       <SafeAreaView style={GlobalStyles.fullFlexFocus}>
-        <Text style={styles.error}>Công việc này không tồn tại hoặc đã bị xóa</Text>
+        <Text style={styles.error}>
+          Công việc này không tồn tại hoặc đã bị xóa
+        </Text>
       </SafeAreaView>
     );
   }

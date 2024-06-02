@@ -10,22 +10,23 @@ import {
   Alert,
   AlertButton,
 } from "react-native";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles";
 import GlobalStyles from "~/constants/GlobalStyles";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
-import {ScreenProps} from "~/types/navigation";
-import {FaqIcon, FaqAnswerIcon} from "~/assets/svgs";
-import {FaqModel, FAQ_SAMPLE} from "~/models/faq";
+import { useNavigation } from "@react-navigation/native";
+import { ScreenProps } from "~/types/navigation";
+import { FaqIcon, FaqAnswerIcon } from "~/assets/svgs";
+import { FaqModel, FAQ_SAMPLE } from "~/models/faq";
 import FaqApi from "~/api/remote/FaqApi";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import {ActivityIndicator, Button, Snackbar} from "react-native-paper";
-import {Color} from "~/constants/Color";
+import { ActivityIndicator, Button, Snackbar } from "react-native-paper";
+import { Color } from "~/constants/Color";
 import Helper from "~/utils/Helper";
-import {color} from "react-native-reanimated";
+import { color } from "react-native-reanimated";
+import { RoleType } from "~/models/commonTypes";
 
-const FaqDetail: ScreenProps<"faqDetail"> = ({route}) => {
+const FaqDetail: ScreenProps<"faqDetail"> = ({ route }) => {
   const navigation = useNavigation();
   const goBack = useCallback(() => {
     navigation.goBack();
@@ -35,7 +36,7 @@ const FaqDetail: ScreenProps<"faqDetail"> = ({route}) => {
   /* State */
   const [faqData, setFaqData] = useState<FaqModel>(FAQ_SAMPLE);
   const editable: boolean = useMemo(() => {
-    return faqData.group.role == "MENTOR" ? true : false;
+    return faqData.group.role === RoleType.MENTOR ? true : false;
   }, [faqData]);
 
   /* Form state */
@@ -108,7 +109,7 @@ const FaqDetail: ScreenProps<"faqDetail"> = ({route}) => {
 
   const deleteFaq = async () => {
     Alert.alert("Cảnh báo", "Bạn có chắc muốn xóa FAQ này?", [
-      {text: "Hủy"},
+      { text: "Hủy" },
       {
         text: "Xác nhận",
         onPress: async () => {
@@ -204,7 +205,7 @@ const FaqDetail: ScreenProps<"faqDetail"> = ({route}) => {
 
     return (
       <SafeAreaView style={GlobalStyles.fullFlexFocus}>
-        <Text style={{color: Color.black}}>
+        <Text style={{ color: Color.black }}>
           FAQ này không tồn tại hoặc đã bị xóa
         </Text>
       </SafeAreaView>
@@ -222,12 +223,16 @@ const FaqDetail: ScreenProps<"faqDetail"> = ({route}) => {
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={onRefresh} />
         }
-        style={[GlobalStyles.fullFlex, {padding: 15}]}
+        style={[GlobalStyles.fullFlex, { padding: 15 }]}
         bounces={false}>
         <View
           style={[
             styles.fieldContainer,
-            {flexDirection: "column", alignItems: "flex-start", marginBottom: 20},
+            {
+              flexDirection: "column",
+              alignItems: "flex-start",
+              marginBottom: 20,
+            },
           ]}>
           <Text style={styles.groupTitle}>Nhóm: {faqData.group.name}</Text>
           <Text style={styles.categoryTitle}>

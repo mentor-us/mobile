@@ -1,5 +1,5 @@
-import {MeetingModel} from "./meeting";
-import {TaskModel} from "./task";
+import { MeetingModel } from "./meeting";
+import { TaskModel } from "./task";
 
 export type Theme = "light" | "dark" | "default";
 export type AppLanguage = "en" | "vi";
@@ -19,9 +19,17 @@ export interface SchedulesList {
   passed: (MeetingModel | TaskModel)[];
 }
 
-export type RoleType = "MENTOR" | "MENTEE";
+export enum RoleType {
+  MENTOR = "MENTOR",
+  MENTEE = "MENTEE",
+}
 
-export type PermissionType = "SEND_FILES" | "TASK_MANAGEMENT" 
-  | "MEETING_MANAGEMENT" | "BOARD_MANAGEMENT" | "FAQ_MANAGEMENT" | "GROUP_SETTINGS";
+export type PermissionType =
+  | "SEND_FILES"
+  | "TASK_MANAGEMENT"
+  | "MEETING_MANAGEMENT"
+  | "BOARD_MANAGEMENT"
+  | "FAQ_MANAGEMENT"
+  | "GROUP_SETTINGS";
 
 export type CheckBoxType = "checked" | "unchecked" | "indeterminate";
