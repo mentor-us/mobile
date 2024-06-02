@@ -11,13 +11,14 @@ import GroupApi from "~/api/remote/GroupApi";
 import { Snackbar } from "react-native-paper";
 import { useAppSelector } from "~/redux";
 import { Color } from "~/constants/Color";
+import { RoleType } from "~/models/commonTypes";
 
 const GroupAttendees: ScreenProps<"groupAttendees"> = ({ route }) => {
   const { groupId, role } = route.params;
   const navigation = useNavigation();
   const currentUser = useAppSelector(state => state.user.data);
   const [members, setMembers] = useState<GroupMemberModel[]>([]);
-  const [myRole, setMyRole] = useState<string>("MENTEE");
+  const [myRole, setMyRole] = useState<string>(RoleType.MENTEE);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [snackBar, setSnackBar] = useState<boolean>(false);
@@ -37,13 +38,13 @@ const GroupAttendees: ScreenProps<"groupAttendees"> = ({ route }) => {
         setMembers(prev => {
           return prev
             .map(item => {
-              if (item.id == memberId) {
+              if (item.id === memberId) {
                 return { ...item, marked: !item.marked };
               }
               return item;
             })
             .sort((a, b) => {
-              if (b.role == "MENTOR" || a.role == "MENTOR") {
+              if (b.role === RoleType.MENTOR || a.role === RoleType.MENTOR) {
                 return 0;
               }
               // const t1 = a.id == memberId ? 1 : 0;
@@ -87,7 +88,7 @@ const GroupAttendees: ScreenProps<"groupAttendees"> = ({ route }) => {
             });
           }}
           member={item}
-          markable={item.role == "MENTEE" && role == "MENTOR"}
+          markable={item.role === RoleType.MENTEE && role === RoleType.MENTOR}
           onMark={onMark}
         />
       );

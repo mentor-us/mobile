@@ -29,6 +29,7 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
     });
   };
 
+  console.log("CHANNEL_ITEM: ", channel);
   const updateChannel = () =>
     navigation.navigate("addChannel", {
       groupId: channel.parentId || "",
@@ -79,7 +80,7 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
           </TouchableOpacity>
         )}
 
-        {role === "MENTOR" && selected === channel.id && (
+        {role === RoleType.MENTOR && selected === channel.id && (
           <FAB
             icon="square-edit-outline"
             style={{

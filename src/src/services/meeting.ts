@@ -1,7 +1,7 @@
 import MeetingApi from "~/api/remote/Meeting";
-import {SchedulesList} from "~/models/commonTypes";
-import {GroupMemberModel, GROUP_MEMBER_SAMPLE} from "~/models/group";
-import {MeetingModel, MeetingHistory, MEETING_SAMPLE} from "~/models/meeting";
+import { RoleType, SchedulesList } from "~/models/commonTypes";
+import { GroupMemberModel, GROUP_MEMBER_SAMPLE } from "~/models/group";
+import { MeetingModel, MeetingHistory, MEETING_SAMPLE } from "~/models/meeting";
 import Helper from "~/utils/Helper";
 
 const MeetingServices = {
@@ -71,7 +71,8 @@ const MeetingServices = {
               "Bởi " +
               item.modifier.name +
               ".\n" +
-              Helper.getTimeMeeting(item.timeStart, item.timeEnd).display + ".",
+              Helper.getTimeMeeting(item.timeStart, item.timeEnd).display +
+              ".",
           } as MeetingHistory;
         },
       );
@@ -99,7 +100,7 @@ const MeetingServices = {
         const formatData: GroupMemberModel[] = data.map(item => {
           return {
             ...item,
-            role: item.mentor == false ? "MENTEE" : "MENTOR",
+            role: item.mentor === false ? RoleType.MENTEE : RoleType.MENTOR,
           } as GroupMemberModel;
         });
 

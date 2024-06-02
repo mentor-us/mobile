@@ -12,7 +12,11 @@ interface Props {
   online?: boolean;
   role?: RoleType;
 }
-const GroupAvatar = ({ avatar, online = true, role = "MENTEE" }: Props) => {
+const GroupAvatar = ({
+  avatar,
+  online = true,
+  role = RoleType.MENTEE,
+}: Props) => {
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>
@@ -24,7 +28,7 @@ const GroupAvatar = ({ avatar, online = true, role = "MENTEE" }: Props) => {
           />
         </View>
         <View style={styles.roleType}>
-          {role === "MENTEE" ? (
+          {role === RoleType.MENTEE ? (
             <StudentReadingIcon width={14} height={14} />
           ) : (
             <TeacherIcon width={12} height={12} />

@@ -119,7 +119,9 @@ const InfoItem = ({ data, role, group }: Props) => {
           return <View />;
         },
         action: () => {
-          navigation.navigate("groupFAQ", { groupId: group?.parentId || "" });
+          navigation.navigate("groupFAQ", {
+            groupId: group?.parentId || group?.id || "",
+          });
         },
       },
       notes: {
