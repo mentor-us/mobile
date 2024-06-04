@@ -60,6 +60,18 @@ const GlobalStyles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
+  nullTextContainer: {
+    marginTop: 20,
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+  },
+  nullText: {
+    textAlign: "center",
+    fontSize: FontSize.larger,
+    marginBottom: 10,
+    color: Color.black,
+  },
 });
 
 export default GlobalStyles;

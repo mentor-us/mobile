@@ -53,6 +53,7 @@ export namespace MentorUsRoutes {
     taskAssignees: { taskId: string; groupId: string };
 
     // Profile
+    studentNote: { userId: string };
     otherProfile: { userId: string; groupId: string };
     editProfile: undefined;
     linkEmail: undefined;
@@ -71,6 +72,7 @@ export namespace MentorUsRoutes {
     homeStack: undefined;
     profileStack: undefined;
     scheduleStack: undefined;
+    studentNoteStack: undefined;
   };
 
   export type HomeStack = {
@@ -85,6 +87,10 @@ export namespace MentorUsRoutes {
 
   export type ProfileStack = {
     myProfile: undefined;
+  };
+
+  export type StudentNoteStack = {
+    studentNote: undefined;
   };
 
   export type AllRoute = UnAuthorized &

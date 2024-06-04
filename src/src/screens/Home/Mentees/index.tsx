@@ -6,6 +6,7 @@ import { GroupModel } from "~/models/group";
 import GroupItem from "~/components/GroupItem";
 import { Line } from "~/components/Separator";
 import { useQueryGroupList } from "../queries";
+import { RoleType } from "~/models/commonTypes";
 
 export default function Mentees() {
   const navigation = useNavigation();
@@ -44,7 +45,7 @@ export default function Mentees() {
             ? []
             : data.data.pages
                 .flat()
-                .filter(item => item.role == RoleType.MENTEE)
+                .filter(item => item.role === RoleType.MENTEE)
         }
         renderItem={renderGroupMetorItem}
         showsVerticalScrollIndicator={false}

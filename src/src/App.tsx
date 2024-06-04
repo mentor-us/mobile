@@ -15,6 +15,7 @@ import { StatusBar } from "react-native";
 import { Color } from "./constants/Color";
 import NetworkSnackbar from "./components/NetworkSnackbar";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const styles = StyleSheet.create({
   root: {
@@ -46,21 +47,23 @@ const App = () => {
       <SocketContext.Provider value={socket}>
         <QueryClientProvider client={queryClient}>
           <RootSiblingParent>
-            <Provider store={store}>
-              <CalendarProvider date="dd-MM-yyyy">
-                <MobxProvider value={rootMobxStore}>
-                  <StatusBar
-                    animated={true}
-                    backgroundColor={Color.primary}
-                    showHideTransition={"fade"}
-                    barStyle={"light-content"}
-                    hidden={false}
-                  />
-                  <RootNavigator />
-                  <NetworkSnackbar isSubscribed />
-                </MobxProvider>
-              </CalendarProvider>
-            </Provider>
+            <SafeAreaProvider>
+              <Provider store={store}>
+                <CalendarProvider date="dd-MM-yyyy">
+                  <MobxProvider value={rootMobxStore}>
+                    <StatusBar
+                      animated={true}
+                      backgroundColor={Color.primary}
+                      showHideTransition={"fade"}
+                      barStyle={"light-content"}
+                      hidden={false}
+                    />
+                    <RootNavigator />
+                    <NetworkSnackbar isSubscribed />
+                  </MobxProvider>
+                </CalendarProvider>
+              </Provider>
+            </SafeAreaProvider>
           </RootSiblingParent>
         </QueryClientProvider>
       </SocketContext.Provider>
