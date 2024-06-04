@@ -50,6 +50,7 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
   const comment = useRef<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [search, setSearch] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const message = route.params.message;
   const messageId = route.params.messageID;
   const messageType = route.params.messageType;
@@ -106,37 +107,44 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
       data.fetchNextPage();
     }
   };
-
-  const handleSubmit = listChannelId => {
-    ChannelService.forward(
-      messageId,
-      listChannelId
-    ).then((res:any)=>{
-      Toast.show("Chuyển tiếp tin nhắn thành công", {
-        position: Toast.positions.BOTTOM
-      })
-      if(navigation.canGoBack()){
-        navigation.goBack()
-      }
-    }).catch((err)=>{
-
-    })
-    
+  const handleSubmit = (listChannelId)=>{
+    setIsSubmitting(true);
   };
-  const headerRight = useCallback(listChannelId => {
-    if (!listChannelId.length) return;
+  const submitForm = listChannelId => {
+    ChannelService.forward(messageId, listChannelId)
+      .then((res: any) => {
+        Toast.show("Chuyển tiếp tin nhắn thành công", {
+          position: Toast.positions.BOTTOM
+        });
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+        }
+      })
+      .catch(() => {});
+  };
+  useEffect(() => {
+    setHeaderRight(listChannelId, isSubmitting);
 
-    return <HeaderSubmitButton onPress={() => handleSubmit(listChannelId)} />;
+    if (isSubmitting) {
+      submitForm(listChannelId);
+    }
+  }, [isSubmitting, listChannelId]);
+  useEffect(() => {
+    setHeaderRight(listChannelId, false);
+  }, [listChannelId]);
+  const headerRight = useCallback((listIdChannel, isSubmit = false) => {
+    if (!listIdChannel.length || isSubmit) return;
+    return <HeaderSubmitButton onPress={() => handleSubmit(listIdChannel)} />;
   }, []);
 
   const headerLeft = useCallback(() => {
     return <HeaderCloseButton canGoBack />;
   }, []);
 
-  const setHeaderRight = listChannelId => {
+  const setHeaderRight = (listIdChannel, isSubmit) => {
     const title = "Chuyển tiếp tin nhắn";
     navigation.setOptions({
-      headerRight: () => headerRight(listChannelId),
+      headerRight: () => headerRight(listIdChannel, isSubmit),
       headerLeft,
       title: title,
     } as StackNavigationOptions);
@@ -161,9 +169,6 @@ const ForwardMessage: ScreenProps<"forwardMessage"> = ({ route }) => {
     return lines.slice(0, n);
   }
   const result = getContentOfNLines(trimmedContent, 6);
-  useEffect(() => {
-    setHeaderRight(listChannelId);
-  }, [listChannelId]);
 
   useEffect(() => {
     // console.log(listChannelChoosen)
