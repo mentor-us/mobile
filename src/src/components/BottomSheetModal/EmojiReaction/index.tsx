@@ -33,6 +33,7 @@ import { ToastMessage } from "~/constants/ToastMessage";
 import TextMessage from "./TextMessage";
 import ImageMessage from "./ImageMessage";
 import File from "~/components/File";
+import CacheImage from "~/components/CacheImage";
 interface Props {
   message: MessageModel;
   action: any;
@@ -137,7 +138,7 @@ const EmojiReation = ({ message, action }: Props) => {
       case MessageEnumType.Image:
         return <ImageMessage isOwner={isOwner} message={message} />;
       case MessageEnumType.File:
-        return <File file={message.file!} isDownloadable={false}/> 
+        return <File file={message.file!} isDownloadable={false} />;
       default:
         return null;
     }
@@ -151,12 +152,9 @@ const EmojiReation = ({ message, action }: Props) => {
       <View style={[styles.root, commonStyles.root]}>
         {!isOwner && (
           <View>
-            <Image
-              source={
-                message.sender.imageUrl
-                  ? { uri: message.sender.imageUrl }
-                  : DefaultUserAvatar
-              }
+            <CacheImage
+              url={Helper.getImageUrl(message?.sender?.imageUrl)}
+              defaultSource={DefaultUserAvatar}
               style={commonStyles.avatar}
             />
           </View>

@@ -51,7 +51,7 @@ export class CreateTaskScreenState {
 
   constructor(props: Props) {
     makeAutoObservable(this);
-    if (props.groupId == "") {
+    if (props.groupId === "") {
       this.setScreenType("select_group");
     }
     this.fetchGroupData(props.groupId);
@@ -217,9 +217,8 @@ export class CreateTaskScreenState {
 
   @action
   submitForm() {
-    const valid = Boolean(this.title);
-    if (!valid) {
-      this.setTitleError("Chưa có tiêu đề");
+    if (Helper.isBlank(this.title)) {
+      this.setTitleError("Tiêu đề không được để trống");
       return;
     }
 
@@ -231,7 +230,7 @@ export class CreateTaskScreenState {
       organizerId: this.currentUser.id,
       description: this.description,
       deadline: Helper.createDateTime(`${this.time} - ${this.date}`),
-      title: this.title,
+      title: this.title.trim(),
     };
 
     this.taskId

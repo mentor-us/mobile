@@ -27,6 +27,7 @@ import { HeaderBackButton } from "~/components/Header";
 import { useGetWorkSpace } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
 import { useMobxStore } from "~/mobx/store";
+import { RoleType } from "~/models/commonTypes";
 
 const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   // Needed data
