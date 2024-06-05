@@ -15,6 +15,10 @@ import { Asset } from "react-native-image-picker";
 
 const MOV_REG = RegExp(/(.*).mov/i);
 export default class Helper {
+  static isBlank(str) {
+    return !str || /^\s*$/.test(str);
+  }
+
   static getImageUrl(key?: string) {
     if (!key) {
       return "";

@@ -7,6 +7,8 @@ import { GroupModel } from "~/models/group";
 import { FAB } from "react-native-paper";
 import { Color } from "~/constants/Color";
 import { RoleType } from "~/models/commonTypes";
+import CacheImage from "~/components/CacheImage";
+import Helper from "~/utils/Helper";
 
 interface Props {
   channel?: GroupModel;
@@ -45,11 +47,10 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
     }
 
     return (
-      <Image
+      <CacheImage
+        defaultSource={DefaultUserAvatar}
+        url={Helper.getImageUrl(channel.imageUrl)}
         style={styles.avatar}
-        source={
-          channel.imageUrl ? { uri: channel.imageUrl } : DefaultUserAvatar
-        }
       />
     );
   };

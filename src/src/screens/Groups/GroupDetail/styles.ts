@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 export const AVATAR_SIZE = screenWidth / 4;
@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   infoCtn: {
-    marginTop: 8,
     marginHorizontal: 16,
   },
   infoHeader: {

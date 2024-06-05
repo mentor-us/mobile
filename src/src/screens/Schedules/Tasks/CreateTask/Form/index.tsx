@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 import DatePicker from "react-native-date-picker";
 import styles from "./styles";
 
@@ -20,10 +20,10 @@ import {
 } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import GlobalStyles from "~/constants/GlobalStyles";
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import MUITextInput from "~/components/MUITextInput";
-import {useNavigation} from "@react-navigation/native";
-import {useCreateTaskScreenState} from "~/context/task";
+import { useNavigation } from "@react-navigation/native";
+import { useCreateTaskScreenState } from "~/context/task";
 import TaskApi from "~/api/remote/TaskApi";
 import Helper from "~/utils/Helper";
 import EventEmitterNames from "~/constants/EventEmitterNames";
@@ -55,7 +55,7 @@ const Form = () => {
 
   const deleteTask = async () => {
     Alert.alert("Cảnh báo", "Bạn có chắc muốn xóa công việc này không?", [
-      {text: "Hủy"},
+      { text: "Hủy" },
       {
         text: "Xác nhận",
         onPress: async () => {
@@ -83,7 +83,7 @@ const Form = () => {
         {/* Group Name - Select Group */}
         <TouchableOpacity
           disabled={true}
-          style={[GlobalStyles.flexRow, {justifyContent: "space-between"}]}>
+          style={[GlobalStyles.flexRow, { justifyContent: "space-between" }]}>
           <Text
             style={styles.groupName}>{`Nhóm: ${state.groupData.name}`}</Text>
           {/* <EditIcon /> */}
@@ -105,7 +105,7 @@ const Form = () => {
             multiline
             numberOfLines={2}
             errorText={state.titleError}
-            style={{textAlignVertical: "top"}}
+            style={{ textAlignVertical: "top" }}
           />
         </View>
 
@@ -132,19 +132,20 @@ const Form = () => {
         <View style={styles.fieldContainer}>
           <ClockGrayIcon width={24} height={24} />
           <SizedBox width={16} />
-          <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <MUITextInput
               label="Lúc"
               onFocus={() => state.setDatePickerStatus("time")}
               value={state.time}
-              containerStyle={{flex: 1}}
+              containerStyle={{ flex: 1 }}
             />
             <SizedBox width={16} />
             <MUITextInput
               label="Ngày"
               onFocus={() => state.setDatePickerStatus("date")}
               value={state.date}
-              containerStyle={{flex: 3}}
+              containerStyle={{ flex: 3 }}
             />
           </View>
         </View>
@@ -163,7 +164,7 @@ const Form = () => {
               <Text style={styles.label}>Giao công việc *</Text>
               <Text style={[styles.valueText, GlobalStyles.rightText]}>
                 {state.assignees.checkedAll === "checked"
-                  ? "Tất cả"
+                  ? "Cả nhóm"
                   : `${state.assignees.totalChecked} người`}
               </Text>
             </View>

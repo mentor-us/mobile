@@ -1,24 +1,27 @@
-import {View, Text, FlatList, Image} from "react-native";
+import { View, Text, FlatList, Image } from "react-native";
 import React from "react";
 import ListHeader from "./ListHeader";
 import styles from "./styles";
-import {Reaction} from "~/models/reaction";
-import {DefaultUserAvatar} from "~/assets/images";
+import { Reaction } from "~/models/reaction";
+import { DefaultUserAvatar } from "~/assets/images";
 import EmoijsData from "~/constants/Emoijs";
 import GlobalStyles from "~/constants/GlobalStyles";
 import SizedBox from "~/components/SizedBox";
+import CacheImage from "~/components/CacheImage";
+import Helper from "~/utils/Helper";
 
 interface Props {
   reactions?: Reaction[];
 }
 
-const UserReacted = ({reactions = []}: Props) => {
-  const renderItem = ({item}: {item: Reaction}) => {
+const UserReacted = ({ reactions = [] }: Props) => {
+  const renderItem = ({ item }: { item: Reaction }) => {
     return (
       <View style={styles.userCtn}>
         <View style={GlobalStyles.flexRow}>
-          <Image
-            source={item.imageUrl ? {uri: item.imageUrl} : DefaultUserAvatar}
+          <CacheImage
+            defaultSource={DefaultUserAvatar}
+            url={Helper.getImageUrl(item.imageUrl)}
             style={styles.avatar}
           />
           <SizedBox width={8} />

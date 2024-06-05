@@ -64,7 +64,7 @@ export default function NotificationItem({ notification, index }: Props) {
           ]}>
           <View style={styles.container}>
             <CacheImage
-              url={notification.sender.imageUrl}
+              url={Helper.getImageUrl(notification.sender.imageUrl)}
               defaultSource={DefaultGroupNotification}
               style={styles.avatar}
             />

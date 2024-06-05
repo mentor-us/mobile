@@ -1,9 +1,9 @@
-import {View, Text, TouchableOpacity} from "react-native";
-import React, {memo} from "react";
-import {GroupMemberModel, GROUP_MEMBER_SAMPLE} from "~/models/group";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { memo } from "react";
+import { GroupMemberModel, GROUP_MEMBER_SAMPLE } from "~/models/group";
 import styles from "./styles";
 import Avatar from "./Avatar";
-import {MarkIcon} from "~/assets/svgs";
+import { MarkIcon } from "~/assets/svgs";
 
 interface Props {
   member?: GroupMemberModel;

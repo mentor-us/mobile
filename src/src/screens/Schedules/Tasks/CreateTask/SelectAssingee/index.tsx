@@ -1,11 +1,11 @@
-import {FlatList} from "react-native";
-import React, {useCallback, useEffect, useState} from "react";
-import {observer} from "mobx-react-lite";
-import {Checkbox} from "react-native-paper";
-import {CheckBoxType} from "~/models/commonTypes";
-import {Color} from "~/constants/Color";
-import {useCreateTaskScreenState} from "~/context/task";
-import {AssignedCheckList, Assignee} from "~/models/task";
+import { FlatList } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { Checkbox } from "react-native-paper";
+import { CheckBoxType } from "~/models/commonTypes";
+import { Color } from "~/constants/Color";
+import { useCreateTaskScreenState } from "~/context/task";
+import { AssignedCheckList, Assignee } from "~/models/task";
 
 const SelectAssignee = () => {
   const state = useCreateTaskScreenState();
@@ -21,7 +21,7 @@ const SelectAssignee = () => {
       return {
         checkedAll: status,
         data: prev.data.map(item => {
-          return {...item, assigned: status} as Assignee;
+          return { ...item, assigned: status } as Assignee;
         }),
         totalChecked: status === "checked" ? prev.data.length : 0,
       };
@@ -68,13 +68,13 @@ const SelectAssignee = () => {
         label="Tất cả"
         status={assignees.checkedAll}
         color={Color.primary}
-        labelStyle={{fontWeight: "bold"}}
+        labelStyle={{ fontWeight: "bold" }}
       />
     );
   }, [assignees.checkedAll]);
 
   const renderItem = useCallback(
-    ({index, item}: {index: number; item: Assignee}) => {
+    ({ index, item }: { index: number; item: Assignee }) => {
       return (
         <Checkbox.Item
           onPress={() => pressItem(index)}
