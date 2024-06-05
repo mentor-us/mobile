@@ -59,7 +59,7 @@ export class CreateMeetingScreenState {
 
   constructor(props: Props) {
     makeAutoObservable(this);
-    if (props.groupId == "") {
+    if (props.groupId === "") {
       this.setScreenType("select_group");
     }
     this.fetchGroupData(props.groupId);
@@ -247,10 +247,10 @@ export class CreateMeetingScreenState {
   @action
   submitForm() {
     const valid: boolean =
-      Boolean(this.title) &&
+      !Helper.isBlank(this.title) &&
       Helper.isValidMeetingTime(this.fromTime, this.toTime);
-    if (!Boolean(this.title)) {
-      this.setTitleError("Chưa có tiêu đề");
+    if (Helper.isBlank(this.title)) {
+      this.setTitleError("Tiêu đề không được để trống");
     }
 
     if (!Helper.isValidMeetingTime(this.fromTime, this.toTime)) {
@@ -274,7 +274,7 @@ export class CreateMeetingScreenState {
       repeated: MeetingRepeatedTypeKeys[this.repeatedIndex],
       timeEnd: Helper.createDateTime(`${this.toTime} - ${this.date}`),
       timeStart: Helper.createDateTime(`${this.fromTime} - ${this.date}`),
-      title: this.title,
+      title: this.title.trim(),
     };
 
     this.meetingId
@@ -301,7 +301,6 @@ export class CreateMeetingScreenState {
   private async fetchGroupData(groupId: string) {
     try {
       const data = await GroupService.findById(groupId);
-      LOG.error("@MOBX_MEETING_GROUP_DATA", data.timeEnd);
       this.setGroupData(data);
     } catch (error) {
       console.log("@MOBX_MEETING_ERORR", error);

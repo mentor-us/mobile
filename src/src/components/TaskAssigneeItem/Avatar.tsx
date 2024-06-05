@@ -4,6 +4,8 @@ import { DefaultUserAvatar } from "~/assets/images";
 import { StudentReadingIcon, TeacherIcon } from "~/assets/svgs";
 import { Color } from "~/constants/Color";
 import { RoleType } from "~/models/commonTypes";
+import CacheImage from "../CacheImage";
+import Helper from "~/utils/Helper";
 
 interface Props {
   avatar?: string;
@@ -14,9 +16,10 @@ const Avatar = ({ avatar, online = true, role = RoleType.MENTEE }: Props) => {
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>
-        <Image
+        <CacheImage
+          defaultSource={DefaultUserAvatar}
+          url={Helper.getImageUrl(avatar)}
           style={styles.avatar}
-          source={avatar ? { uri: avatar } : DefaultUserAvatar}
         />
         <View style={styles.roleType}>
           {role === RoleType.MENTEE ? (

@@ -24,7 +24,7 @@ export default function Mentors() {
   );
 
   const detailGroup = (groupId: string) => {
-    navigation.navigate("chat", { groupId: groupId });
+    navigation.navigate("workspace", { groupId: groupId });
   };
 
   const onEndReached = () => {

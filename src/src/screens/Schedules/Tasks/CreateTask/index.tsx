@@ -1,19 +1,15 @@
-import {DeviceEventEmitter, View} from "react-native";
-import React, {useCallback, useEffect, useState} from "react";
-import {useNavigation} from "@react-navigation/native";
-import {StackNavigationOptions} from "@react-navigation/stack";
-import {
-  HeaderCloseButton,
-  HeaderLeft,
-  HeaderSubmitButton,
-} from "~/components/Header";
+import { DeviceEventEmitter, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationOptions } from "@react-navigation/stack";
+import { HeaderCloseButton, HeaderSubmitButton } from "~/components/Header";
 
-import {ScreenProps} from "~/types/navigation";
-import {observer} from "mobx-react-lite";
+import { ScreenProps } from "~/types/navigation";
+import { observer } from "mobx-react-lite";
 import GlobalStyles from "~/constants/GlobalStyles";
-import {CreateTaskScreenState} from "~/mobx/task";
-import {useAppSelector} from "~/redux";
-import {UserProfileModel} from "~/models/user";
+import { CreateTaskScreenState } from "~/mobx/task";
+import { useAppSelector } from "~/redux";
+import { UserProfileModel } from "~/models/user";
 
 import Form from "./Form";
 import SelectGroup from "./SelectGroup";
@@ -35,7 +31,7 @@ const Container = observer(() => {
   );
 });
 
-const CreateTask: ScreenProps<"createTask"> = ({route}) => {
+const CreateTask: ScreenProps<"createTask"> = ({ route }) => {
   const groupId = route.params.groupId;
   const navigation = useNavigation();
   const currentUser: UserProfileModel = useAppSelector(
@@ -54,8 +50,7 @@ const CreateTask: ScreenProps<"createTask"> = ({route}) => {
   const onRightPress = useCallback(() => {
     state.submit();
     if (state.screenType === "form") {
-
-      if (Boolean(state.taskId)) {
+      if (state.taskId) {
         DeviceEventEmitter.emit(EventEmitterNames.refreshTaskDetail, {
           status: true,
           task: null,
@@ -64,19 +59,15 @@ const CreateTask: ScreenProps<"createTask"> = ({route}) => {
       } else {
         DeviceEventEmitter.emit(EventEmitterNames.refreshScheduleList, {
           status: true,
-          message: "Tạo lịch hẹn mới thành công",
+          message: "Tạo công việc mới thành công",
         });
       }
       state.getCanGoBack() && navigation.goBack();
-    };
+    }
 
     // Update last message in homepage
     const newMessage = `Nhóm có công việc mới "${state.title}"`;
-    queryAction.updateGroupNewMessage(
-      groupId,
-      newMessage,
-      false,
-    );
+    queryAction.updateGroupNewMessage(groupId, newMessage, false);
   }, []);
 
   const onLeftPress = useCallback(() => {
@@ -90,7 +81,7 @@ const CreateTask: ScreenProps<"createTask"> = ({route}) => {
   }, []);
 
   const headerLeft = useCallback(() => {
-    return <HeaderCloseButton canGoBack />
+    return <HeaderCloseButton canGoBack />;
   }, [state.screenType]);
 
   // Side Effect

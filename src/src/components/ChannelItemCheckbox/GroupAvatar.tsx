@@ -1,11 +1,12 @@
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { memo } from "react";
 import { DefaultGroupNotification } from "~/assets/images";
 import { StudentReadingIcon, TeacherIcon } from "~/assets/svgs";
 import { Color } from "~/constants/Color";
 import { RoleType } from "~/models/commonTypes";
-import { BASE_URL } from "@env";
 import { useMobxStore } from "~/mobx/store";
+import Helper from "~/utils/Helper";
+import CacheImage from "../CacheImage";
 
 interface Props {
   avatar?: string;
@@ -23,16 +24,10 @@ const GroupAvatar = ({
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>
-        <Image
-          source={{
-            uri: `${BASE_URL}/api/files?${searchParams}`,
-
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${store.authStore.userToken}`,
-            },
-          }}
+        <CacheImage
+          defaultSource={DefaultGroupNotification}
           style={styles.avatar}
+          url={Helper.getImageUrl(avatar)}
         />
         <View style={styles.roleType}>
           {role === RoleType.MENTEE ? (

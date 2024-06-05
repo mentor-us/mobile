@@ -28,10 +28,10 @@ const GroupMember = ({ member = MEMBER_SAMPLE, onPress }: Props) => {
         <View style={styles.flexRowBetween}>
           <View style={styles.detailCtn}>
             <Text style={[styles.textInfo, styles.displayName]}>
-              {member.name}
+              {member?.name}
             </Text>
             <View style={styles.descCtn}>
-              <Text style={styles.textInfo}>{member.email}</Text>
+              <Text style={styles.textInfo}>{member?.email}</Text>
             </View>
           </View>
 
@@ -40,11 +40,15 @@ const GroupMember = ({ member = MEMBER_SAMPLE, onPress }: Props) => {
               style={[
                 styles.status,
                 {
-                  color: TaskStatusObject[member.status].color,
+                  color: member?.status
+                    ? TaskStatusObject[member?.status].color
+                    : "black",
                   fontWeight: "bold",
                 },
               ]}>
-              {TaskStatusObject[member.status].displayName}
+              {member?.status
+                ? TaskStatusObject[member.status].displayName
+                : null}
             </Text>
           </View>
         </View>

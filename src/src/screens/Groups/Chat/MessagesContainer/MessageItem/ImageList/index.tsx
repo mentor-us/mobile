@@ -149,7 +149,7 @@ const ImageList = ({ message }: Props) => {
       {!isOwner && (
         <TouchableOpacity onPress={onPressAvatar}>
           <CacheImage
-            url={message.sender.imageUrl}
+            url={Helper.getImageUrl(message.sender.imageUrl)}
             defaultSource={DefaultUserAvatar}
             style={commonStyles.avatar}
           />
