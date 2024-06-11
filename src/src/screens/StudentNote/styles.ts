@@ -9,6 +9,12 @@ export default StyleSheet.create({
     paddingBottom: 24,
     paddingHorizontal: 24,
   },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
   /** Empty */
   empty: {
     alignItems: "center",

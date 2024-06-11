@@ -66,6 +66,9 @@ export namespace MentorUsRoutes {
     createFaq: { groupId: string; faqId?: string };
     selectGroup: { groupId: string };
     importFaq: { fromGroupId: string; toGroupId: string };
+
+    // Student note
+    createOrUpdateNote: { noteId?: string };
   };
 
   export type BottomTab = {

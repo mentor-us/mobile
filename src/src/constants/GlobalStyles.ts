@@ -72,6 +72,9 @@ const GlobalStyles = StyleSheet.create({
     marginBottom: 10,
     color: Color.black,
   },
+  textAlignCenter: {
+    textAlign: "center",
+  },
 });
 
 export default GlobalStyles;

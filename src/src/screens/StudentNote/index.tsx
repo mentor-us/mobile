@@ -7,16 +7,20 @@ import {
   View,
   Text,
 } from "react-native";
-import { Avatar, Card } from "react-native-paper";
+import { Avatar, Card, Searchbar } from "react-native-paper";
 import { ShortProfileUserModel } from "~/models/user";
 import CacheImage from "~/components/CacheImage";
 import Helper from "~/utils/Helper";
 import styles from "./styles";
-import GlobalStyles from "~/constants/GlobalStyles";
-import FeatherIcon from "react-native-vector-icons/Feather";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { FAB } from "@rneui/themed";
+import { Color } from "~/constants/Color";
+import { useNavigation } from "@react-navigation/native";
 
 function StudentNote() {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const navigation = useNavigation();
+
+  const onChangeSearch = query => setSearchQuery(query);
   const data: ShortProfileUserModel[] = [
     {
       id: "1",
@@ -74,6 +78,14 @@ function StudentNote() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Searchbar
+        style={{
+          marginVertical: 10,
+        }}
+        placeholder="Tìm bằng tên hoặc email"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+      />
       <FlatList<ShortProfileUserModel>
         data={data}
         ListEmptyComponent={() => (
@@ -110,6 +122,13 @@ function StudentNote() {
         )}
         renderItem={renderItem}
         keyExtractor={item => item.id}
+      />
+
+      <FAB
+        style={styles.fab}
+        icon={{ name: "add", color: "white" }}
+        onPress={() => navigation.navigate("createOrUpdateNote", {})}
+        color={Color.primary}
       />
     </SafeAreaView>
   );

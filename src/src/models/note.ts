@@ -1,4 +1,10 @@
-import { ShortProfileUserModel } from "./user";
+export interface NoteUserProfile {
+  id: string;
+  name: string;
+  imageUrl: string;
+  email: string;
+  totalNotes: number;
+}
 
 export interface CreateNoteDto {
   title: string;
@@ -18,18 +24,18 @@ export interface NoteHistory {
   noteId: string;
   description: string;
   updatedDate: Date;
-  updatedBy: ShortProfileUserModel;
+  updatedBy: NoteUserProfile;
 }
 
 export interface Note {
   id: string;
   title: string;
   content: string;
-  creator: ShortProfileUserModel;
-  owner: ShortProfileUserModel;
+  creator: NoteUserProfile;
+  owner: NoteUserProfile;
   createdDate: Date;
   updatedDate: Date;
-  updatedBy: ShortProfileUserModel;
+  updatedBy: NoteUserProfile;
   isEditable: boolean;
 }
 
@@ -39,7 +45,7 @@ export enum NoteUserAccessType {
 }
 
 export interface NoteUserAccess {
-  user: ShortProfileUserModel;
+  user: NoteUserProfile;
   accessType: NoteUserAccessType;
 }
 
@@ -47,14 +53,14 @@ export interface NoteDetail {
   id: string;
   title: string;
   content: string;
-  creator: ShortProfileUserModel;
-  owner: ShortProfileUserModel;
+  creator: NoteUserProfile;
+  owner: NoteUserProfile;
   createdDate: Date;
   updatedDate: Date;
-  updatedBy: ShortProfileUserModel;
+  updatedBy: NoteUserProfile;
   isEditable: boolean;
   noteHistories: NoteHistory[] | null;
-  users: ShortProfileUserModel[];
+  users: NoteUserProfile[];
   userAccesses: NoteUserAccess[];
 }
 
@@ -67,3 +73,14 @@ export interface ShareNoteDto {
   noteId: string;
   users: NoteAccessDto[];
 }
+
+// GET /api/users/mentees - phan trang - dung de tao note
+// All ng dc mentee
+
+// GET /api/notes/users - phan trang - dung de xem danh sach ng dc note
+// All ng co note dc share va co quyen xem
+
+// CRUD Notes
+
+// CRUD - POST /api/notes/{noteId}/share
+// params: ShareNoteDto

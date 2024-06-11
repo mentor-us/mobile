@@ -42,6 +42,7 @@ import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 import ForwardMessage from "~/screens/Groups/ForwardMessage";
 import LinkEmail from "~/screens/Profiles/LinkEmail";
+import CreateOrUpdateNote from "~/screens/StudentNote/CreateNote";
 
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
 
@@ -394,6 +395,18 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Chọn câu hỏi",
+          };
+        }}
+      />
+
+      <AuthorizedStack.Screen
+        name="createOrUpdateNote"
+        component={CreateOrUpdateNote}
+        options={({}) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: "Tạo ghi chú",
           };
         }}
       />

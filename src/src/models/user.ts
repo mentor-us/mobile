@@ -1,4 +1,4 @@
-import {Theme, AppLanguage} from "~/models/commonTypes";
+import { Theme, AppLanguage } from "~/models/commonTypes";
 
 export interface UserSettingModel {
   themeMode: Theme;
@@ -16,13 +16,14 @@ export interface UserProfileModel {
   gender: number;
   emailVerified?: boolean;
   wallpaper?: string;
-  additionalEmails?: string[]
+  additionalEmails?: string[];
 }
 
 export interface ShortProfileUserModel {
   id: string;
   name: string;
   imageUrl: string;
+  email: string;
 }
 
 export const USER_PROFILE_SAMPLE: UserProfileModel = {
@@ -40,5 +41,5 @@ export const USER_PROFILE_SAMPLE: UserProfileModel = {
 export const SHORT_PROFILE_USER_MODEL: ShortProfileUserModel = {
   id: "",
   name: "",
-  imageUrl: ""
-}
+  imageUrl: "",
+};
