@@ -80,6 +80,7 @@ export interface GroupChannel {
   // imageUrl?: string;
   parentId?: string;
   group?: GroupModel;
+  groupName: string;
 }
 export interface GroupChannelSearchInput {
   type?: string;

@@ -1,22 +1,15 @@
-import {
-  QueryClient,
-  useInfiniteQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import NotificationApi from "~/api/remote/NotificationApi";
-import {Notification} from "~/models/notification";
+import { Notification } from "~/models/notification";
 
 const PAGE_SIZE = 25;
 
 export function useNotificationsQuery() {
   const data = useInfiniteQuery({
     queryKey: ["notifications"],
-    queryFn: async ({pageParam = 0}): Promise<Notification[]> => {
+    queryFn: async ({ pageParam = 0 }): Promise<Notification[]> => {
       try {
-        const response: any = await NotificationApi.all(
-          pageParam,
-          PAGE_SIZE,
-        );
+        const response: any = await NotificationApi.all(pageParam, PAGE_SIZE);
         return response.notifications;
       } catch (error) {
         console.log("@DUKE - useNotificationsQuery: ", error);

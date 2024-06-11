@@ -79,7 +79,7 @@ export class CreateMeetingScreenState {
       case "form":
         return this.meetingId ? "Chỉnh sửa lịch hẹn" : "Lịch hẹn mới";
       case "select_group":
-        return "Chọn nhóm";
+        return "Chọn kênh";
       case "select_attendee":
         return "Chọn thành viên";
       default:

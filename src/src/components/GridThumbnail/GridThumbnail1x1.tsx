@@ -59,7 +59,6 @@ const GridThumbnail1x1: FC<Props> = ({
   }
 
   if (mediaData.length === 2) {
-    console.log("2 tam anh");
     const itemWidth = (maxWidth - horizonSeparator) / 2;
     return (
       <View style={GlobalStyles.row}>

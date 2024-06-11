@@ -9,10 +9,12 @@ import ChannelService from "~/services/channel";
 
 const PAGE_SIZE = 25;
 
-export function useQueryChannelList(query="") {
-  const data = useInfiniteQuery({
-    queryKey: ["channels",query],
-    queryFn: async ({pageParam}): Promise<GroupChannel[]> => {
+const QuerryChannelListKey = query => ["channels", query];
+
+export function useQueryChannelList(query = "") {
+  return useInfiniteQuery({
+    queryKey: QuerryChannelListKey(query),
+    queryFn: async ({ pageParam }): Promise<GroupChannel[]> => {
       try {
         const channel: GroupChannel[] = await ChannelService.search(
           query,
@@ -27,10 +29,8 @@ export function useQueryChannelList(query="") {
       }
     },
     getNextPageParam: (lastPage, allPage) => {
-      return lastPage.length == PAGE_SIZE ? allPage.length : undefined;
+      return lastPage.length === PAGE_SIZE ? allPage.length : undefined;
     },
     enabled: true,
   });
-
-  return data;
 }
