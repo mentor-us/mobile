@@ -77,7 +77,7 @@ const ChannelList = ({
         <Text style={styles.commonRoomText}>{title}</Text>
       </View>
       <View style={styles.channelList}>
-        {type === "CHANNEL" && role === "MENTOR" && (
+        {type === "CHANNEL" && role === RoleType.MENTOR && (
           <TouchableOpacity onPress={addChannel}>
             <View style={styles.commonRoom}>
               <View style={styles.addChannelIcon}>

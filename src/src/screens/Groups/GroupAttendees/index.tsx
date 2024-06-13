@@ -1,23 +1,24 @@
-import {ActivityIndicator, FlatList, Text, View} from "react-native";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {ScreenProps} from "~/types/navigation";
-import {GroupMemberModel} from "~/models/group";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ScreenProps } from "~/types/navigation";
+import { GroupMemberModel } from "~/models/group";
 import GroupService from "~/services/group";
 import GroupMember from "~/components/GroupMember";
 import styles from "./styles";
 import SizedBox from "~/components/SizedBox";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import GroupApi from "~/api/remote/GroupApi";
-import {Snackbar} from "react-native-paper";
-import {useAppSelector} from "~/redux";
+import { Snackbar } from "react-native-paper";
+import { useAppSelector } from "~/redux";
 import { Color } from "~/constants/Color";
+import { RoleType } from "~/models/commonTypes";
 
-const GroupAttendees: ScreenProps<"groupAttendees"> = ({route}) => {
-  const {groupId, role} = route.params;
+const GroupAttendees: ScreenProps<"groupAttendees"> = ({ route }) => {
+  const { groupId, role } = route.params;
   const navigation = useNavigation();
   const currentUser = useAppSelector(state => state.user.data);
   const [members, setMembers] = useState<GroupMemberModel[]>([]);
-  const [myRole, setMyRole] = useState<string>("MENTEE");
+  const [myRole, setMyRole] = useState<string>(RoleType.MENTEE);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [snackBar, setSnackBar] = useState<boolean>(false);
@@ -37,13 +38,13 @@ const GroupAttendees: ScreenProps<"groupAttendees"> = ({route}) => {
         setMembers(prev => {
           return prev
             .map(item => {
-              if (item.id == memberId) {
-                return {...item, marked: !item.marked};
+              if (item.id === memberId) {
+                return { ...item, marked: !item.marked };
               }
               return item;
             })
             .sort((a, b) => {
-              if (b.role == "MENTOR" || a.role == "MENTOR") {
+              if (b.role === RoleType.MENTOR || a.role === RoleType.MENTOR) {
                 return 0;
               }
               // const t1 = a.id == memberId ? 1 : 0;
@@ -77,7 +78,7 @@ const GroupAttendees: ScreenProps<"groupAttendees"> = ({route}) => {
 
   // render item
   const renderItem = useCallback(
-    ({index, item}: {index: number; item: GroupMemberModel}) => {
+    ({ index, item }: { index: number; item: GroupMemberModel }) => {
       return (
         <GroupMember
           onPress={() => {
@@ -87,7 +88,7 @@ const GroupAttendees: ScreenProps<"groupAttendees"> = ({route}) => {
             });
           }}
           member={item}
-          markable={item.role == "MENTEE" && role == "MENTOR"}
+          markable={item.role === RoleType.MENTEE && role === RoleType.MENTOR}
           onMark={onMark}
         />
       );
@@ -129,22 +130,24 @@ const GroupAttendees: ScreenProps<"groupAttendees"> = ({route}) => {
           }}>
           <ActivityIndicator size={"large"} color={Color.primary} />
         </View>
-      )
+      );
     }
 
     return (
       <View
-          style={{
-            flex: 1,
-            backgroundColor: Color.white,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Text style={{color: Color.black, fontWeight: "500"}}>Không có thành viên nào.</Text>
-        </View>
-    )
-  }
+        style={{
+          flex: 1,
+          backgroundColor: Color.white,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Text style={{ color: Color.black, fontWeight: "500" }}>
+          Không có thành viên nào.
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <>

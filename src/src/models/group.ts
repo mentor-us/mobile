@@ -1,11 +1,11 @@
-import {RoleType, PermissionType} from "./commonTypes";
-import {MessageModel} from "./message";
+import { RoleType, PermissionType } from "./commonTypes";
+import { MessageModel } from "./message";
 
 export const GROUP_SAMPLE: GroupModel = {
   id: "",
   name: "",
   totalMember: 2,
-  role: "MENTEE",
+  role: RoleType.MENTEE,
   groupCategory: "",
   pinned: false,
 };
@@ -14,7 +14,7 @@ export const GROUP_SAMPLE_MENTOR: GroupModel = {
   id: "",
   name: "",
   totalMember: 2,
-  role: "MENTOR",
+  role: RoleType.MENTOR,
   groupCategory: "",
 };
 
@@ -68,14 +68,13 @@ export const GROUP_MEMBER_SAMPLE: GroupMemberModel = {
   email: "",
   name: "",
   imageUrl: "",
-  role: "MENTEE",
+  role: RoleType.MENTEE,
 };
 
-
 export interface GroupChannel {
-  id	: string
-	name	: string
-	description	: string
+  id: string;
+  name: string;
+  description: string;
   type?: "PUBLIC" | "PRIVATE" | "PRIVATE_MESSAGE";
   hasNewMessage?: boolean;
   // imageUrl?: string;
@@ -83,7 +82,7 @@ export interface GroupChannel {
   group?: GroupModel;
 }
 export interface GroupChannelSearchInput {
-  type?: string; 
+  type?: string;
   page?: number;
   pageSize?: number;
   query?: string;
@@ -92,5 +91,5 @@ export interface GroupChannelSearchInput {
 export const GROUP_CHANNEL_SAMPLE: GroupChannel = {
   id: "",
   name: "",
-	description	: "",
+  description: "",
 };

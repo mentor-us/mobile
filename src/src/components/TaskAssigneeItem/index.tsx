@@ -1,8 +1,9 @@
-import {View, Text, TouchableOpacity} from "react-native";
-import React, {memo} from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { memo } from "react";
 import styles from "./styles";
 import Avatar from "./Avatar";
-import {Assignee, TaskStatusObject} from "~/models/task";
+import { Assignee, TaskStatusObject } from "~/models/task";
+import { RoleType } from "~/models/commonTypes";
 
 interface Props {
   member?: Assignee;
@@ -14,12 +15,12 @@ const MEMBER_SAMPLE: Assignee = {
   email: "",
   name: "",
   imageUrl: "",
-  role: "MENTEE",
+  role: RoleType.MENTEE,
   status: "NULL",
   assigned: "indeterminate",
 };
 
-const GroupMember = ({member = MEMBER_SAMPLE, onPress}: Props) => {
+const GroupMember = ({ member = MEMBER_SAMPLE, onPress }: Props) => {
   return (
     <TouchableOpacity style={[]} onPress={onPress}>
       <View style={styles.infoCtn}>
@@ -27,19 +28,29 @@ const GroupMember = ({member = MEMBER_SAMPLE, onPress}: Props) => {
         <View style={styles.flexRowBetween}>
           <View style={styles.detailCtn}>
             <Text style={[styles.textInfo, styles.displayName]}>
-              {member.name}
+              {member?.name}
             </Text>
             <View style={styles.descCtn}>
-              <Text style={styles.textInfo}>{member.email}</Text>
+              <Text style={styles.textInfo}>{member?.email}</Text>
             </View>
           </View>
 
           <View style={styles.statusCtn}>
-              <Text style={[styles.status, {
-                      color: TaskStatusObject[member.status].color,
-                      fontWeight: "bold",
-                    }]}>{TaskStatusObject[member.status].displayName}</Text>
-            </View>
+            <Text
+              style={[
+                styles.status,
+                {
+                  color: member?.status
+                    ? TaskStatusObject[member?.status].color
+                    : "black",
+                  fontWeight: "bold",
+                },
+              ]}>
+              {member?.status
+                ? TaskStatusObject[member.status].displayName
+                : null}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>

@@ -1,5 +1,5 @@
 import TaskApi from "~/api/remote/TaskApi";
-import { SchedulesList } from "~/models/commonTypes";
+import { RoleType, SchedulesList } from "~/models/commonTypes";
 import { Assignee, TaskModel, TASK_SAMPLE } from "~/models/task";
 import Helper from "~/utils/Helper";
 
@@ -165,7 +165,7 @@ const TaskServices = {
         const formatData: Assignee[] = data.map(item => {
           return {
             ...item,
-            role: item.mentor == false ? "MENTEE" : "MENTOR",
+            role: item.mentor == false ? RoleType.MENTEE : RoleType.MENTOR,
           } as Assignee;
         });
 

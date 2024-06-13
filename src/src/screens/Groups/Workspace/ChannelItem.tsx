@@ -7,6 +7,8 @@ import { GroupModel } from "~/models/group";
 import { FAB } from "react-native-paper";
 import { Color } from "~/constants/Color";
 import { RoleType } from "~/models/commonTypes";
+import CacheImage from "~/components/CacheImage";
+import Helper from "~/utils/Helper";
 
 interface Props {
   channel?: GroupModel;
@@ -29,6 +31,7 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
     });
   };
 
+  console.log("CHANNEL_ITEM: ", channel);
   const updateChannel = () =>
     navigation.navigate("addChannel", {
       groupId: channel.parentId || "",
@@ -44,11 +47,10 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
     }
 
     return (
-      <Image
+      <CacheImage
+        defaultSource={DefaultUserAvatar}
+        url={Helper.getImageUrl(channel.imageUrl)}
         style={styles.avatar}
-        source={
-          channel.imageUrl ? { uri: channel.imageUrl } : DefaultUserAvatar
-        }
       />
     );
   };
@@ -79,7 +81,7 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
           </TouchableOpacity>
         )}
 
-        {role === "MENTOR" && selected === channel.id && (
+        {role === RoleType.MENTOR && selected === channel.id && (
           <FAB
             icon="square-edit-outline"
             style={{

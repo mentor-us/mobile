@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Keyboard,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -23,7 +24,6 @@ import { useAppDispatch, useAppSelector } from "~/redux";
 import { SocketContext } from "~/context/socket";
 import Actions from "./Actions";
 import { useChatScreenState } from "~/context/chat";
-import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
 import { StorageMediaAttachemt } from "~/models/media";
 import uuid from "react-native-uuid";
 import SubmitButton from "./SubmitButton";
@@ -37,12 +37,19 @@ import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import { EventActions } from "~/redux/features/event/slice";
 import ReplyAction from "./ReplyAction";
 import LOG from "~/utils/Logger";
-import Helper from "~/utils/Helper";
 import Permission from "~/utils/PermissionStrategies";
 import MentionListPopup from "../MentionListPopup";
 import { GroupMemberModel } from "~/models/group";
-import MessageServices from "~/services/messages";
-import { SecureStore } from "~/api/local/SecureStore";
+import { SOCKET_EVENT } from "~/constants";
+import { useQueryClient } from "@tanstack/react-query";
+import { GetGroupDetailQueryKey } from "~/app/server/groups/queries";
+import {
+  ImageLibraryOptions,
+  ImagePickerResponse,
+  launchImageLibrary,
+} from "react-native-image-picker";
+import Helper from "~/utils/Helper";
+import { MAX_SIZE_IMG } from "~/constants";
 
 const mentionRegex = /(?<= |<.*>)@\w*(?=<\/.*>)|^@\w*/gim;
 // const mentionRegex = /(?<=<[^>]*\s|<.*>)@(\w+)(?=\s*<\/.*>|>)/gim;
@@ -52,7 +59,7 @@ const TextEditor = () => {
   const [openMention, setOpenMention] = useState<boolean>(false);
   const [searchMentionName, setSearchMentionName] = useState<string>("");
   const [mentionList, setMentionList] = useState<string[]>([]);
-
+  const queryClient = useQueryClient();
   const state = useChatScreenState();
   const queryAction = useUpdateQueryGroupList();
   const currentUser = useAppSelector(state => state.user.data);
@@ -73,50 +80,56 @@ const TextEditor = () => {
   /* On every component need socket, must have code like this below one */
   useEffect(() => {
     if (state._groupDetail) {
-      socket.emit("join_room", {
+      socket.emit(SOCKET_EVENT.JOIN_ROOM, {
         groupId: state._groupDetail?.id,
         userId: currentUser?.id,
       });
     }
 
     // listen text + image message
-    socket.on("receive_message", response => {
-      // console.log("@DUKE: receive_message", response);
-      if (response.type == "MEETING" || response.type == "TASK") {
+    socket.on(SOCKET_EVENT.RECEIVE_MESSAGE, response => {
+      if (response.type === "MEETING" || response.type === "TASK") {
         dispacher(EventActions.setLoading(true));
       }
+
       state.receiveMessage(response);
     });
 
     // update message
-    socket.on("update_message", response => {
-      LOG.info("@DUKE_UPDATE MESS: ", response);
-
-      if (response?.action && response?.action == "delete") {
+    socket.on(SOCKET_EVENT.UPDATE_MESSAGE, response => {
+      if (response?.action && response?.action === "delete") {
         state.deleteMessage(response.messageId);
       }
 
-      if (response?.action && response?.action == "update") {
-        LOG.info("@DUKE_UPDATE MESS: ", response);
-
+      if (response?.action && response?.action === "update") {
         state.updateMessage(response.messageId, response.newContent);
       }
     });
 
     // listen react emoji
-    socket.on("receive_react_message", response => {
-      // console.log("@DUKE: receive_react_message", response);
+    socket.on(SOCKET_EVENT.RECEIVE_REACT_MESSAGE, response => {
       state.receiveReact(response);
     });
 
     // listen remove emoji
-    socket.on("receive_remove_react_message", response => {
-      LOG.info("@DUKE: receive_remove_react_message", response.totalReaction);
+    socket.on(SOCKET_EVENT.RECEIVE_REMOVE_REACT_MESSAGE, response => {
       state.receiveRemoveReact(response);
     });
 
-    socket.on("receive_voting", response => {
+    socket.on(SOCKET_EVENT.RECEIVE_VOTING, response => {
       state.addVote(response);
+    });
+
+    socket.on(SOCKET_EVENT.RECEIVE_PINNED_MESSAGE, response => {
+      queryClient.refetchQueries({
+        queryKey: GetGroupDetailQueryKey(state._groupDetail.id),
+      });
+    });
+
+    socket.on(SOCKET_EVENT.RECEIVE_UNPINNED_MESSAGE, response => {
+      queryClient.refetchQueries({
+        queryKey: GetGroupDetailQueryKey(state._groupDetail.id),
+      });
     });
 
     return () => {
@@ -127,10 +140,12 @@ const TextEditor = () => {
         });
       }
 
-      socket.removeListener("receive_message");
-      socket.removeListener("receive_react_message");
-      socket.removeListener("receive_remove_react_message");
-      socket.removeListener("receive_voting");
+      socket.removeListener(SOCKET_EVENT.RECEIVE_PINNED_MESSAGE);
+      socket.removeListener(SOCKET_EVENT.RECEIVE_UNPINNED_MESSAGE);
+      socket.removeListener(SOCKET_EVENT.RECEIVE_MESSAGE);
+      socket.removeListener(SOCKET_EVENT.RECEIVE_REACT_MESSAGE);
+      socket.removeListener(SOCKET_EVENT.RECEIVE_REMOVE_REACT_MESSAGE);
+      socket.removeListener(SOCKET_EVENT.RECEIVE_VOTING);
     };
   }, [state._groupDetail.id, currentUser.id]);
 
@@ -224,8 +239,38 @@ const TextEditor = () => {
     try {
       const hasPermission = await Permission.handleReadStoragePermission();
       if (hasPermission) {
-        BottomSheetModalRef.current?.show("gallery", true, {
-          run: submitImage,
+        const options: ImageLibraryOptions = {
+          mediaType: "photo",
+          includeBase64: false,
+          maxHeight: 2000,
+          maxWidth: 2000,
+          selectionLimit: 0,
+        };
+
+        launchImageLibrary(options, (response: ImagePickerResponse) => {
+          if (response.didCancel) {
+            console.log("User cancelled image picker");
+          } else if (response.errorMessage) {
+            console.error("Image picker error: ", response.errorMessage);
+          } else {
+            const selectedMedia = Helper.formatMediaListMirage(
+              response.assets || [],
+            );
+
+            if (
+              selectedMedia.some(item => item.size && item.size > MAX_SIZE_IMG)
+            ) {
+              Alert.alert(
+                "Cảnh báo",
+                `Kích thước ảnh vượt quá ${Helper.formatFileSize(
+                  MAX_SIZE_IMG,
+                )}`,
+              );
+              return;
+            }
+
+            submitImage(selectedMedia);
+          }
         });
       }
     } catch (error) {

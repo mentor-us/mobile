@@ -106,12 +106,12 @@ const Chat: ScreenProps<"chat"> = ({ route }) => {
   useEffect(() => {
     if (groupDetail) {
       initHeader(groupDetail);
+      chatState.setGroupDetail(groupDetail);
 
-      if (!chatState._groupDetail || chatState._groupDetail?.id !== groupId) {
-        chatState.setGroupDetail(groupDetail);
+      // if (!chatState._groupDetail || chatState._groupDetail?.id !== groupId) {
 
-        // Loading 1 page message with react query
-      }
+      //   // Loading 1 page message with react query
+      // }
 
       if (messages && messages.length > 0) {
         chatState.setInitLoading(false);

@@ -50,15 +50,20 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
 
   const infoItems: InfoItemModel[] = useMemo(() => {
     return [
-      { text: `Bộ sưu tập ảnh, tập tin đã gửi`, type: "media" },
+      ...(groupData.parentId
+        ? [{ text: `Bộ sưu tập ảnh, tập tin đã gửi`, type: "media" }]
+        : []),
       { text: `Xem thành viên (${groupData.totalMember})`, type: "attendee" },
-      ...(groupData.permissions?.includes("MEETING_MANAGEMENT")
+      ...(groupData.parentId &&
+      groupData.permissions?.includes("MEETING_MANAGEMENT")
         ? [{ text: `Lịch hẹn`, type: "meeting" }]
         : []),
-      ...(groupData.permissions?.includes("TASK_MANAGEMENT")
+      ...(groupData.parentId &&
+      groupData.permissions?.includes("TASK_MANAGEMENT")
         ? [{ text: `Danh sách công việc`, type: "task" }]
         : []),
-      ...(groupData.permissions?.includes("BOARD_MANAGEMENT")
+      ...(groupData.parentId &&
+      groupData.permissions?.includes("BOARD_MANAGEMENT")
         ? [{ text: `Bảng tin`, type: "notes" }]
         : []),
       ...(groupData.permissions?.includes("FAQ_MANAGEMENT")
@@ -207,7 +212,6 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
           type === "group" &&
           groupData.imageUrl && (
             <>
-              <Line height={8} color={Color.gray[0]} />
               {/* Group Setting */}
               <View style={styles.infoCtn}>
                 {groupSettings.map(item => {

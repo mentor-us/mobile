@@ -1,37 +1,36 @@
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { memo } from "react";
 import { DefaultGroupNotification } from "~/assets/images";
 import { StudentReadingIcon, TeacherIcon } from "~/assets/svgs";
 import { Color } from "~/constants/Color";
 import { RoleType } from "~/models/commonTypes";
-import { BASE_URL } from "@env";
 import { useMobxStore } from "~/mobx/store";
+import Helper from "~/utils/Helper";
+import CacheImage from "../CacheImage";
 
 interface Props {
   avatar?: string;
   online?: boolean;
   role?: RoleType;
 }
-const GroupAvatar = ({ avatar, online = true, role = "MENTEE" }: Props) => {
+const GroupAvatar = ({
+  avatar,
+  online = true,
+  role = RoleType.MENTEE,
+}: Props) => {
   const store = useMobxStore();
   const searchParams = new URLSearchParams();
   searchParams.append("key", avatar ?? "");
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>
-        <Image
-          source={{
-            uri: `${BASE_URL}/api/files?${searchParams}`,
-
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${store.authStore.userToken}`,
-            },
-          }}
+        <CacheImage
+          defaultSource={DefaultGroupNotification}
           style={styles.avatar}
+          url={Helper.getImageUrl(avatar)}
         />
         <View style={styles.roleType}>
-          {role == "MENTEE" ? (
+          {role === RoleType.MENTEE ? (
             <StudentReadingIcon width={14} height={14} />
           ) : (
             <TeacherIcon width={12} height={12} />

@@ -1,5 +1,6 @@
 import {
   DeviceEventEmitter,
+  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -15,7 +16,7 @@ import { Color } from "~/constants/Color";
 import { GroupIcon } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import { Line } from "~/components/Separator";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import HeaderTitle from "./HeaderTitle";
 import HeaderRight from "./HeaderRight";
@@ -26,6 +27,7 @@ import { HeaderBackButton } from "~/components/Header";
 import { useGetWorkSpace } from "~/app/server/groups/queries";
 import ErrorMessage from "~/components/ErrorMessage";
 import { useMobxStore } from "~/mobx/store";
+import { RoleType } from "~/models/commonTypes";
 
 const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   // Needed data
@@ -63,13 +65,15 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
 
     navigation.setOptions({
       headerTintColor: Color.white,
-      headerTitle: () => (
-        <HeaderTitle
-          name={workspace.name}
-          category={workspace.groupCategory}
-          avatar={workspace.imageUrl}
-        />
-      ),
+      headerTitle: () => {
+        return (
+          <HeaderTitle
+            name={workspace.name}
+            category={workspace.groupCategory}
+            avatar={workspace.imageUrl}
+          />
+        );
+      },
       headerLeft: () => <HeaderBackButton canGoBack />,
       headerRight: () => <HeaderRight groupId={groupId} />,
     } as Partial<StackNavigationOptions>);
@@ -116,8 +120,8 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
   if (isError || !workspace) {
     return <ErrorMessage message="Lỗi truy cập nhóm. Vui lòng thử lại sau!" />;
   }
-  
-    return (
+
+  return (
     isSuccess && (
       <SafeAreaView style={styles.container}>
         <ScrollView
@@ -163,7 +167,7 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
             title={"Kênh"}
             addChannel={addChannel}
             loading={isLoading}
-            role={workspace?.role || "MENTEE"}
+            role={workspace?.role || RoleType.MENTEE}
             channels={workspace?.channels}
           />
 
@@ -175,7 +179,7 @@ const Workspace: ScreenProps<"workspace"> = ({ route }) => {
             type={"PRIVATE_MESSAGE"}
             title={"Tin nhắn riêng"}
             loading={isLoading}
-            role={workspace?.role || "MENTEE"}
+            role={workspace?.role || RoleType.MENTEE}
             channels={workspace?.privates}
           />
         </ScrollView>

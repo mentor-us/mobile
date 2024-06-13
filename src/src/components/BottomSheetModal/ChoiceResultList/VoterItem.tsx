@@ -1,10 +1,11 @@
-import {useNavigation} from "@react-navigation/native";
-import {useCallback} from "react";
-import {Image, Text, TouchableOpacity, View} from "react-native";
-import {StyleSheet} from "react-native";
-import {DefaultUserAvatar} from "~/assets/images";
-import {Color} from "~/constants/Color";
-import {ShortProfileUserModel} from "~/models/user";
+import { useNavigation } from "@react-navigation/native";
+import { useCallback } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { DefaultUserAvatar } from "~/assets/images";
+import CacheImage from "~/components/CacheImage";
+import { Color } from "~/constants/Color";
+import { ShortProfileUserModel } from "~/models/user";
 import Helper from "~/utils/Helper";
 
 interface Props {
@@ -13,24 +14,21 @@ interface Props {
   groupId: string;
 }
 
-export const VoteItem = ({voter, close, groupId}: Props) => {
+export const VoteItem = ({ voter, close, groupId }: Props) => {
   const navigation = useNavigation();
   const onPress = () => {
     close();
-    navigation.navigate("otherProfile", {userId: voter.id, groupId: groupId});
+    navigation.navigate("otherProfile", { userId: voter.id, groupId: groupId });
   };
 
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image
+          <CacheImage
+            defaultSource={DefaultUserAvatar}
+            url={Helper.getImageUrl(voter.imageUrl)}
             style={styles.avatar}
-            source={
-              Helper.filterImageUrl(voter.imageUrl)
-                ? {uri: voter.imageUrl}
-                : DefaultUserAvatar
-            }
           />
         </View>
 

@@ -30,15 +30,15 @@ export class CreateTaskScreenState {
   groupData: GroupModel = GROUP_SAMPLE;
   currentUser: UserProfileModel = USER_PROFILE_SAMPLE;
   taskId?: string;
-  role: RoleType = "MENTEE";
+  role: RoleType = RoleType.MENTEE;
 
   // Form State
-  title: string = "";
-  titleError: string = "";
+  title = "";
+  titleError = "";
 
-  description: string = "";
-  time: string = "22:45";
-  date: string = "01/09/2023";
+  description = "";
+  time = "22:45";
+  date = "01/09/2023";
 
   // groups: string[] = [];
   assigner: ShortProfileUserModel = SHORT_PROFILE_USER_MODEL;
@@ -51,7 +51,7 @@ export class CreateTaskScreenState {
 
   constructor(props: Props) {
     makeAutoObservable(this);
-    if (props.groupId == "") {
+    if (props.groupId === "") {
       this.setScreenType("select_group");
     }
     this.fetchGroupData(props.groupId);
@@ -80,7 +80,7 @@ export class CreateTaskScreenState {
 
   @computed
   getCanGoBack() {
-    if (Boolean(this.titleError)) {
+    if (this.titleError) {
       return false;
     }
     return true;
@@ -88,7 +88,10 @@ export class CreateTaskScreenState {
 
   @computed
   isCanEdit() {
-    return this.role == "MENTOR" || this.assigner?.id == this.currentUser?.id;
+    return (
+      this.role === RoleType.MENTOR ||
+      this.assigner?.id === this.currentUser?.id
+    );
   }
 
   @computed
@@ -214,12 +217,8 @@ export class CreateTaskScreenState {
 
   @action
   submitForm() {
-    const valid: boolean = Boolean(this.title);
-    if (!Boolean(this.title)) {
-      this.setTitleError("Chưa có tiêu đề");
-    }
-
-    if (!valid) {
+    if (Helper.isBlank(this.title)) {
+      this.setTitleError("Tiêu đề không được để trống");
       return;
     }
 
@@ -231,7 +230,7 @@ export class CreateTaskScreenState {
       organizerId: this.currentUser.id,
       description: this.description,
       deadline: Helper.createDateTime(`${this.time} - ${this.date}`),
-      title: this.title,
+      title: this.title.trim(),
     };
 
     this.taskId

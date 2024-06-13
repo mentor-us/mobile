@@ -11,9 +11,14 @@ import { Reaction } from "~/models/reaction";
 import { ShortProfileUserModel } from "~/models/user";
 import { MyMarkedDate, MyMarkingProps, ScheduleModel } from "~/models/schedule";
 import { BASE_URL } from "@env";
+import { Asset } from "react-native-image-picker";
 
 const MOV_REG = RegExp(/(.*).mov/i);
 export default class Helper {
+  static isBlank(str) {
+    return !str || /^\s*$/.test(str);
+  }
+
   static getImageUrl(key?: string) {
     if (!key) {
       return "";
@@ -22,7 +27,6 @@ export default class Helper {
     if (key.startsWith("https") || key.startsWith("file")) {
       return key;
     }
-
     return `${BASE_URL}/infra/blob/mentorus/${key}`;
   }
 
@@ -330,6 +334,21 @@ export default class Helper {
   }
 
   static getRandomString = () => Math.random().toString(36).substring(2, 5);
+
+  static formatMediaListMirage = (images: Asset[]): StorageMediaAttachemt[] => {
+    return images?.map(image => {
+      return <StorageMediaAttachemt>{
+        id: `${image.fileName}${this.getRandomString()}`,
+        filename: image.fileName || `Image-${moment.now()}`,
+        mime: image.type,
+        path: image.uri,
+        duration: image.duration,
+        size: image.fileSize,
+        selectedIndex: -1,
+        origin: "storage",
+      };
+    });
+  };
 
   static formatMediaList = (storageMediaList): StorageMediaAttachemt[] => {
     return storageMediaList.edges.map(media => {

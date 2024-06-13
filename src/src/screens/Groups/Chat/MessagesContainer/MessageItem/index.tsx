@@ -23,10 +23,31 @@ const MessageItem = ({ message }: Props) => {
   const currentUser = useAppSelector(state => state.user.data);
 
   if (message.status === "DELETED") {
+    let content = "";
+    switch (message.type) {
+      case "TASK":
+        content = "Công việc đã bị xóa";
+        break;
+      case "VOTE":
+        content = "Cuộc bình chọn đã bị xóa";
+        break;
+      case "MEETING":
+        content = "Lịch hẹn đã bị xóa";
+        break;
+      case "IMAGE":
+        content = `${message?.images?.length} ảnh đã bị xóa`;
+        break;
+      default:
+        content = "Tin nhắn đã được xóa";
+    }
+
     return (
       <TextContent
         key={message.id}
-        message={{ ...message, type: "TEXT", content: "Tin nhắn đã được xóa" }}
+        message={{
+          ...message,
+          content,
+        }}
       />
     );
   }
