@@ -15,6 +15,7 @@ import { CurrentUserQueryKey } from "~/app/server/users/queries";
 import { useMobxStore } from "~/mobx/store";
 import { LoginRouteParamsProps } from ".";
 import * as WebBrowser from "expo-web-browser";
+import { getBuildNumber, getVersion } from "react-native-device-info";
 
 export const LoginScreen: ScreenProps<"loginScreen"> = () => {
   const { authStore } = useMobxStore();
@@ -131,6 +132,7 @@ export const LoginScreen: ScreenProps<"loginScreen"> = () => {
           cấp để sử dụng ứng dụng nhé!
         </Text>
         <Text style={styles.desc}>{BASE_URL}</Text>
+        <Text style={styles.desc}>Phiên bản: {getVersion()}</Text>
       </View>
       <Snackbar
         visible={snackBar}
