@@ -1,4 +1,3 @@
-import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   FlatList,
@@ -7,51 +6,97 @@ import {
   View,
   Text,
 } from "react-native";
-import { Avatar, Card, Searchbar } from "react-native-paper";
-import { ShortProfileUserModel } from "~/models/user";
+import { Avatar, Card } from "react-native-paper";
 import CacheImage from "~/components/CacheImage";
 import Helper from "~/utils/Helper";
 import styles from "./styles";
-import { FAB } from "@rneui/themed";
+import { FAB, SearchBar } from "@rneui/themed";
 import { Color } from "~/constants/Color";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
+import { NoteUserProfile } from "~/models/note";
+import { BorderlessButton } from "react-native-gesture-handler";
+import { Fontisto } from "@expo/vector-icons";
+import { MentorUsRoutes } from "~/types/navigation";
+import { useGetNotedUsersQuery } from "~/app/server/notes/queries";
+import { DefaultUserAvatar } from "~/assets/images";
+import { Skeleton } from "@rneui/themed";
+import LinearGradient from "react-native-linear-gradient";
+import { screenWidth } from "~/constants";
 
-function StudentNote() {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const navigation = useNavigation();
+function StudentNote({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: RouteProp<MentorUsRoutes.StudentNoteStack, "studentNote">;
+}) {
+  const { searchOn, searchQuery } = route.params;
 
-  const onChangeSearch = query => setSearchQuery(query);
-  const data: ShortProfileUserModel[] = [
-    {
-      id: "1",
-      name: "Dương Quang Vinh",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9AuDc53EBhPtkswfxfjyiGUql1wtc7izhjw&s",
-    },
-    {
-      id: "2",
-      name: "Dương Quang Vinh",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9AuDc53EBhPtkswfxfjyiGUql1wtc7izhjw&s",
-    },
-    {
-      id: "3",
-      name: "Dương Quang Vinh",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9AuDc53EBhPtkswfxfjyiGUql1wtc7izhjw&s",
-    },
-  ];
+  navigation.setOptions({
+    headerTitle: !searchOn
+      ? "Danh sách sinh viên"
+      : () => (
+          <SearchBar
+            loadingProps={{
+              color: Color.primary,
+            }}
+            containerStyle={styles.searchBarContainerStyle}
+            inputContainerStyle={styles.searchBarInputContainerStyle}
+            inputStyle={styles.searchBarInputStyle}
+            leftIconContainerStyle={styles.searchBarLeftIconContainerStyle}
+            onCancel={() =>
+              navigation.setParams({ searchOn: false, searchQuery: "" })
+            }
+            onClear={() => navigation.setParams({ searchQuery: "" })}
+            platform={"android"}
+            placeholder="Tìm bằng tên hoặc email"
+            onChangeText={onChangeSearch}
+            value={searchQuery}
+          />
+        ),
+    headerLeft: null,
+    headerRight: () =>
+      searchOn ? null : (
+        <BorderlessButton
+          onPress={() => {
+            navigation.setParams({ searchOn: true });
+          }}
+          style={{ marginRight: 15 }}>
+          <Fontisto name="search" size={24} color={Color.white} />
+        </BorderlessButton>
+      ),
+  });
 
-  const onUserPress = () => {};
+  const onChangeSearch = query => navigation.setParams({ searchQuery: query });
+  const {
+    data: notedUsersList,
+    isLoading,
+    isRefetching,
+    refetch,
+  } = useGetNotedUsersQuery(searchQuery);
 
-  const renderItem = ({ item }: ListRenderItemInfo<ShortProfileUserModel>) => {
+  const onUserPress = (userId: string, userName: string) => {
+    navigation.navigate("userNotes", {
+      userId,
+      userName,
+    });
+  };
+
+  const getDescriptions = (totalNotes: number) => {
+    if (totalNotes.toString().length > 2) {
+      return `Có 99+ ghi chú về người này`;
+    }
+    return `Có ${totalNotes} ghi chú về người này`;
+  };
+
+  const renderItem = ({ item }: ListRenderItemInfo<NoteUserProfile>) => {
     return (
-      <TouchableOpacity onPress={onUserPress}>
+      <TouchableOpacity onPress={() => onUserPress(item.id, item.name)}>
         <Card.Title
           style={styles.userCard}
           title={item.name}
           titleNumberOfLines={1}
-          subtitle="Có 4 ghi chú về người này"
+          subtitle={getDescriptions(item.totalNotes)}
           subtitleNumberOfLines={1}
           left={props => {
             return (
@@ -61,11 +106,15 @@ function StudentNote() {
                 source={() => (
                   <CacheImage
                     url={Helper.getImageUrl(item.imageUrl)}
-                    style={{
-                      width: props.size,
-                      height: props.size,
-                      borderRadius: props.size,
-                    }}
+                    defaultSource={DefaultUserAvatar}
+                    style={[
+                      {
+                        width: props.size,
+                        height: props.size,
+                        borderRadius: props.size,
+                      },
+                      styles.itemAvatar,
+                    ]}
                   />
                 )}
               />
@@ -76,52 +125,102 @@ function StudentNote() {
     );
   };
 
+  const renderEmpty = () => {
+    if (searchQuery === "" && notedUsersList?.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <View style={styles.empty}>
+            <View style={styles.fake}>
+              <View style={styles.fakeCircle} />
+              <View>
+                <View style={[styles.fakeLine, { width: 120 }]} />
+                <View style={styles.fakeLine} />
+                <View
+                  style={[styles.fakeLine, { width: 70, marginBottom: 0 }]}
+                />
+              </View>
+            </View>
+            <View style={[styles.fake, { opacity: 0.5 }]}>
+              <View style={styles.fakeCircle} />
+              <View>
+                <View style={[styles.fakeLine, { width: 120 }]} />
+                <View style={styles.fakeLine} />
+                <View
+                  style={[styles.fakeLine, { width: 70, marginBottom: 0 }]}
+                />
+              </View>
+            </View>
+            <Text style={styles.emptyTitle}>
+              Bạn chưa có ghi chú cho sinh viên nào
+            </Text>
+            <Text style={styles.emptyDescription}>
+              Khi bạn ghi chú cho sinh viên, chúng sẽ xuất hiện ở đây
+            </Text>
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.emptyContainer}>
+        <View style={styles.empty}>
+          <Text style={styles.emptyTitle}>Không tìm thấy kết quả phù hợp</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const SkeletonCard = () => (
+    <Card.Title
+      style={styles.userCard}
+      title={
+        <Skeleton
+          width={100}
+          LinearGradientComponent={LinearGradient}
+          animation="wave"
+        />
+      }
+      titleNumberOfLines={1}
+      subtitle={
+        <Skeleton
+          width={screenWidth * 0.6}
+          LinearGradientComponent={LinearGradient}
+          animation="wave"
+        />
+      }
+      subtitleNumberOfLines={1}
+      left={props => {
+        return (
+          <Skeleton
+            LinearGradientComponent={LinearGradient}
+            animation="wave"
+            circle
+            width={props.size}
+            height={props.size}
+          />
+        );
+      }}
+    />
+  );
+
+  const LoadingComponent = () => (
+    <View style={styles.centerView}>
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <Searchbar
-        style={{
-          marginVertical: 10,
-        }}
-        placeholder="Tìm bằng tên hoặc email"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-      />
-      <FlatList<ShortProfileUserModel>
-        data={data}
-        ListEmptyComponent={() => (
-          <View style={styles.emptyContainer}>
-            <View style={styles.empty}>
-              <View style={styles.fake}>
-                <View style={styles.fakeCircle} />
-                <View>
-                  <View style={[styles.fakeLine, { width: 120 }]} />
-                  <View style={styles.fakeLine} />
-                  <View
-                    style={[styles.fakeLine, { width: 70, marginBottom: 0 }]}
-                  />
-                </View>
-              </View>
-              <View style={[styles.fake, { opacity: 0.5 }]}>
-                <View style={styles.fakeCircle} />
-                <View>
-                  <View style={[styles.fakeLine, { width: 120 }]} />
-                  <View style={styles.fakeLine} />
-                  <View
-                    style={[styles.fakeLine, { width: 70, marginBottom: 0 }]}
-                  />
-                </View>
-              </View>
-              <Text style={styles.emptyTitle}>
-                Chưa có ghi chú cho sinh viên nào
-              </Text>
-              <Text style={styles.emptyDescription}>
-                Once you start a new conversation, you'll see new messages here
-              </Text>
-            </View>
-          </View>
-        )}
+      <FlatList<NoteUserProfile>
+        data={notedUsersList ?? []}
         renderItem={renderItem}
         keyExtractor={item => item.id}
+        refreshing={isRefetching}
+        onRefresh={refetch}
+        ListEmptyComponent={isLoading ? LoadingComponent : renderEmpty}
       />
 
       <FAB

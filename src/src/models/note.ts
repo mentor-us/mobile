@@ -46,7 +46,7 @@ export enum NoteUserAccessType {
 
 export interface NoteUserAccess {
   user: NoteUserProfile;
-  accessType: NoteUserAccessType;
+  notePermission: NoteUserAccessType;
 }
 
 export interface NoteDetail {

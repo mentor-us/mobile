@@ -1,5 +1,6 @@
 import UserApiV2 from "~/api/remote/UserApi.v2";
-import { UserProfileModel } from "~/models/user";
+import { PaginationData } from "~/models/commonTypes";
+import { ShortProfileUserModel, UserProfileModel } from "~/models/user";
 import TryCatchWrapper from "~/utils/TryCatchWrapper";
 
 const UserServiceV2 = {
@@ -21,6 +22,14 @@ const UserServiceV2 = {
   async findById(id: string) {
     const data = await UserApiV2.findById(id);
     return data;
+  },
+
+  async findMentees(
+    query: string,
+    page: number,
+    pageSize: number,
+  ): Promise<PaginationData<ShortProfileUserModel>> {
+    return await UserApiV2.findMentees(query, page, pageSize);
   },
 };
 

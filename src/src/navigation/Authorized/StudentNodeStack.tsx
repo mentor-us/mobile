@@ -4,7 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Color } from "~/constants/Color";
 import StudentNote from "~/screens/StudentNote";
 
-const StudentNoteNav = createStackNavigator<MentorUsRoutes.StudentNoteStack>();
+export const StudentNoteNav =
+  createStackNavigator<MentorUsRoutes.StudentNoteStack>();
 
 const StudentNoteStack = () => {
   return (
@@ -19,11 +20,15 @@ const StudentNoteStack = () => {
       <StudentNoteNav.Screen
         name="studentNote"
         component={StudentNote}
+        initialParams={{ searchOn: false, searchQuery: "" }}
         options={{ title: "Ghi chú" }}
+        listeners={({ navigation }) => ({
+          blur: () =>
+            navigation.setParams({ searchOn: false, searchQuery: "" }),
+        })}
       />
     </StudentNoteNav.Navigator>
   );
 };
 
-///
 export default StudentNoteStack;

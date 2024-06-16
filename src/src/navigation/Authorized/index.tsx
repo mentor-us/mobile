@@ -43,6 +43,8 @@ import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 import ForwardMessage from "~/screens/Groups/ForwardMessage";
 import LinkEmail from "~/screens/Profiles/LinkEmail";
 import CreateOrUpdateNote from "~/screens/StudentNote/CreateNote";
+import NoteDetail from "~/screens/StudentNote/NoteDetail";
+import UserNotes from "~/screens/StudentNote/UserNotes";
 
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
 
@@ -407,6 +409,30 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Tạo ghi chú",
+          };
+        }}
+      />
+
+      <AuthorizedStack.Screen
+        name="noteDetail"
+        component={NoteDetail}
+        options={({}) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: "Chi tiết ghi chú",
+          };
+        }}
+      />
+
+      <AuthorizedStack.Screen
+        name="userNotes"
+        component={UserNotes}
+        options={({ route }) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: route.params.userName,
           };
         }}
       />

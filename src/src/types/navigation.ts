@@ -52,8 +52,12 @@ export namespace MentorUsRoutes {
     };
     taskAssignees: { taskId: string; groupId: string };
 
+    // Student Note
+    studentNote: { searchOn: boolean; searchQuery: string };
+    userNotes: { userId: string; userName: string };
+    noteDetail: { noteId: string };
+
     // Profile
-    studentNote: { userId: string };
     otherProfile: { userId: string; groupId: string };
     editProfile: undefined;
     linkEmail: undefined;
@@ -93,7 +97,7 @@ export namespace MentorUsRoutes {
   };
 
   export type StudentNoteStack = {
-    studentNote: undefined;
+    studentNote: { searchOn: boolean; searchQuery: string };
   };
 
   export type AllRoute = UnAuthorized &

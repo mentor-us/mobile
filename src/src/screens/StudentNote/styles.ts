@@ -1,11 +1,21 @@
 import { StyleSheet } from "react-native";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 
 export default StyleSheet.create({
+  itemAvatar: {
+    borderWidth: 0.5,
+  },
+  centerView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: { backgroundColor: "white", flex: 1 },
   userCard: { backgroundColor: "white", elevation: 2, margin: 5 },
   userCardIcon: { backgroundColor: "white" },
   emptyContainer: {
-    marginTop: 24,
+    marginTop: 50,
     paddingBottom: 24,
     paddingHorizontal: 24,
   },
@@ -74,5 +84,26 @@ export default StyleSheet.create({
     lineHeight: 26,
     fontWeight: "600",
     color: "#fff",
+  },
+  // Search bar
+  searchBarContainerStyle: {
+    width: screenWidth * 0.92,
+    backgroundColor: "transparent",
+    padding: 0,
+    margin: 0,
+  },
+  searchBarInputContainerStyle: {
+    backgroundColor: Color.white,
+    padding: 0,
+    margin: 0,
+  },
+  searchBarInputStyle: {
+    padding: 0,
+    marginLeft: 4,
+    margin: 0,
+  },
+  searchBarLeftIconContainerStyle: {
+    padding: 0,
+    margin: 0,
   },
 });

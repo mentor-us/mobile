@@ -9,11 +9,17 @@ import styles from "./styles";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import { useState } from "react";
-import { ActivityIndicator, Text } from "react-native-paper";
+import { ActivityIndicator, Snackbar } from "react-native-paper";
 import { Color } from "~/constants/Color";
 import { ShortProfileUserModel } from "./../../../models/user";
 import { Button } from "@rneui/themed";
 import GlobalStyles from "~/constants/GlobalStyles";
+import { useInfinitySearchMentees } from "~/app/server/users/queries";
+import Helper from "~/utils/Helper";
+import { DefaultUserAvatar } from "~/assets/images";
+import { CreateNoteDto } from "~/models/note";
+import { useCreateNoteMutation } from "~/app/server/users/mutation";
+import { Text } from "react-native";
 
 interface RenderUserProfileProps
   extends Omit<ShortProfileUserModel, "imageUrl"> {
@@ -27,21 +33,42 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
   route,
 }) => {
   const { noteId } = route.params;
+  const [queryMentee, setQueryMentee] = useState("");
+  const [visible, setVisible] = useState(false);
+
+  const onToggleSnackBar = () => setVisible(!visible);
+
   const {
     control,
     handleSubmit,
     getValues,
     formState: { errors },
-  } = useForm({
+  } = useForm<CreateNoteDto>({
     defaultValues: {
       title: "",
       content: "",
       userIds: [],
-      public: true,
     },
   });
+  const {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isRefetching,
+    data,
+    isSuccess,
+    refetch: reloadSearch,
+  } = useInfinitySearchMentees(queryMentee);
+  const { mutateAsync } = useCreateNoteMutation();
 
-  const onSubmit = data => console.log(data);
+  const onSubmit = (createNoteDto: CreateNoteDto) => {
+    mutateAsync(createNoteDto, {
+      onSuccess: () => {
+        navigation.goBack();
+      },
+    });
+  };
 
   navigation.setOptions({
     title: noteId ? "Cập nhật ghi chú" : "Tạo ghi chú",
@@ -142,24 +169,35 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
             render={({ field: { onChange, value } }) => {
               return (
                 <SectionedMultiSelect<RenderUserProfileProps>
-                  items={[
-                    {
-                      name: "Vinh1",
-                      imageUrl: {
-                        uri: "https://assets-global.website-files.com/62d84e447b4f9e7263d31e94/6399a4d27711a5ad2c9bf5cd_ben-sweet-2LowviVHZ-E-unsplash-1.jpeg",
-                      },
-                      email: "de",
-                      id: 0,
-                    },
-                    {
-                      name: "Cars2",
-                      imageUrl: {
-                        uri: "https://assets-global.website-files.com/62d84e447b4f9e7263d31e94/6399a4d27711a5ad2c9bf5cd_ben-sweet-2LowviVHZ-E-unsplash-1.jpeg",
-                      },
-                      email: "dqvinh20@gmail.com",
-                      id: 1,
-                    },
-                  ]}
+                  onChangeSearchText={setQueryMentee}
+                  items={
+                    isSuccess
+                      ? data?.pages.flat().map((user: any) => {
+                          return {
+                            ...user,
+                            imageUrl: user.imageUrl
+                              ? {
+                                  uri: Helper.getImageUrl(user.imageUrl),
+                                }
+                              : DefaultUserAvatar,
+                          };
+                        })
+                      : []
+                  }
+                  loading={isLoading}
+                  itemsFlatListProps={{
+                    refreshing: isRefetching,
+                    onRefresh: reloadSearch,
+                    onEndReached: hasNextPage ? fetchNextPage : null,
+                    onEndReachedThreshold: 0.8,
+                    ListFooterComponent: isFetchingNextPage && (
+                      <ActivityIndicator
+                        size={32}
+                        style={{ marginTop: 10 }}
+                        color={Color.primary}
+                      />
+                    ),
+                  }}
                   uniqueKey="id"
                   iconKey="imageUrl"
                   loadingComponent={
@@ -229,7 +267,7 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
                     item: {
                       height: 46,
                     },
-                    itemText: { marginLeft: 4, fontSize: 20 },
+                    itemText: { marginLeft: 4, fontSize: 16 },
                     itemIconStyle: {
                       width: 30,
                       height: 30,
@@ -254,6 +292,15 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
         title={noteId ? "Cập nhật ghi chú" : "Tạo ghi chú"}
         onPress={() => handleSubmit(onSubmit)()}
       />
+      {/* <Snackbar
+        testID="network-snackbar"
+        wrapperStyle={{
+          marginBottom: 48,
+        }}
+        // wrapperStyle={styles.wrapperStyle}
+        visible>
+        <Text>{}</Text>
+      </Snackbar> */}
     </SafeAreaView>
   );
 };

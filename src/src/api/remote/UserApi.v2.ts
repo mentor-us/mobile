@@ -1,6 +1,7 @@
-import { UserProfileModel } from "~/models/user";
+import { ShortProfileUserModel, UserProfileModel } from "~/models/user";
 import axiosClient from "./AxiosClient";
 import TryCatchWrapper from "~/utils/TryCatchWrapper";
+import { PaginationData } from "~/models/commonTypes";
 
 const UserApiV2 = {
   async getCurrentUser() {
@@ -19,6 +20,17 @@ const UserApiV2 = {
       data,
     );
     return response.data;
+  },
+
+  // Find mentees
+  findMentees: async (
+    query: string,
+    page = 0,
+    pageSize = 25,
+  ): Promise<PaginationData<ShortProfileUserModel>> => {
+    return axiosClient.get(`/api/users/mentees`, {
+      params: { query, page, pageSize },
+    });
   },
 };
 
