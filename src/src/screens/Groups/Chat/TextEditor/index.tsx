@@ -240,7 +240,7 @@ const TextEditor = () => {
       const hasPermission = await Permission.handleReadStoragePermission();
       if (hasPermission) {
         const options: ImageLibraryOptions = {
-          mediaType: "photo",
+          mediaType: "mixed",
           includeBase64: false,
           maxHeight: 2000,
           maxWidth: 2000,
@@ -256,15 +256,23 @@ const TextEditor = () => {
             const selectedMedia = Helper.formatMediaListMirage(
               response.assets || [],
             );
+            const isHasVideo = selectedMedia.some(item =>
+              item.mime?.includes("video"),
+            );
+
+            if (isHasVideo && selectedMedia.length > 1) {
+              Alert.alert("Cảnh báo", "Chỉ được chọn 1 video");
+              return;
+            }
 
             if (
               selectedMedia.some(item => item.size && item.size > MAX_SIZE_IMG)
             ) {
               Alert.alert(
                 "Cảnh báo",
-                `Kích thước ảnh vượt quá ${Helper.formatFileSize(
-                  MAX_SIZE_IMG,
-                )}`,
+                `Kích thước ${
+                  isHasVideo ? "video" : "ảnh"
+                } vượt quá ${Helper.formatFileSize(MAX_SIZE_IMG)}`,
               );
               return;
             }
