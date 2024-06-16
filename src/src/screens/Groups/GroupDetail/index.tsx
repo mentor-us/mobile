@@ -44,6 +44,7 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
   const { groupId, type } = route.params;
 
   // State
+  const [isFetchGroupData, setIsFetchGroupData] = useState<boolean>(false);
   const [groupData, setGroupData] = useState<GroupModel>(GROUP_SAMPLE);
   const queryAction = useUpdateQueryGroupList();
   const [loadingAvatar, setLoadingAvatar] = useState<boolean>(false);
@@ -121,7 +122,9 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
 
   const fetchGroupData = async (groupId: string) => {
     try {
+      setIsFetchGroupData(true);
       const data: GroupModel = await GroupService.findById(groupId);
+      setIsFetchGroupData(false);
       setGroupData(data);
     } catch (error) {
       console.log("@SCREEN_GroupDetail: ", error);
@@ -170,12 +173,9 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
               data => {
                 setGroupData(prev => ({ ...prev, imageUrl: data }));
                 queryAction.updateGroupAvatar(groupData.id, data);
-                queryClient.refetchQueries({
-                  queryKey: GetGroupDetailQueryKey(
-                    groupData.parentId ?? groupData.id,
-                  ),
+                fetchGroupData(groupData.id).then(() => {
+                  setLoadingAvatar(false);
                 });
-                setLoadingAvatar(false);
               },
             );
           }
@@ -212,7 +212,7 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
                     groupData.imageUrl ?? parentDetail?.imageUrl,
                   ),
                   assetLocal: DefaultGroupAvatar,
-                  isLoading: loadingAvatar,
+                  isLoading: loadingAvatar || isFetchGroupData,
                 }}
                 width={AVATAR_SIZE}
                 height={AVATAR_SIZE}
