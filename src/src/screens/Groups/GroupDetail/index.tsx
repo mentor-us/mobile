@@ -173,9 +173,7 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
               data => {
                 setGroupData(prev => ({ ...prev, imageUrl: data }));
                 queryAction.updateGroupAvatar(groupData.id, data);
-                fetchGroupData(groupData.id).then(() => {
-                  setLoadingAvatar(false);
-                });
+                setLoadingAvatar(false);
               },
             );
           }
