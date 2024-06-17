@@ -22,6 +22,7 @@ import { DefaultUserAvatar } from "~/assets/images";
 import { Skeleton } from "@rneui/themed";
 import LinearGradient from "react-native-linear-gradient";
 import { screenWidth } from "~/constants";
+import { useEffect } from "react";
 
 function StudentNote({
   navigation,
@@ -32,40 +33,42 @@ function StudentNote({
 }) {
   const { searchOn, searchQuery } = route.params;
 
-  navigation.setOptions({
-    headerTitle: !searchOn
-      ? "Danh sách sinh viên"
-      : () => (
-          <SearchBar
-            loadingProps={{
-              color: Color.primary,
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: !searchOn
+        ? "Danh sách sinh viên"
+        : () => (
+            <SearchBar
+              loadingProps={{
+                color: Color.primary,
+              }}
+              containerStyle={styles.searchBarContainerStyle}
+              inputContainerStyle={styles.searchBarInputContainerStyle}
+              inputStyle={styles.searchBarInputStyle}
+              leftIconContainerStyle={styles.searchBarLeftIconContainerStyle}
+              onCancel={() =>
+                navigation.setParams({ searchOn: false, searchQuery: "" })
+              }
+              onClear={() => navigation.setParams({ searchQuery: "" })}
+              platform={"android"}
+              placeholder="Tìm bằng tên hoặc email"
+              onChangeText={onChangeSearch}
+              value={searchQuery}
+            />
+          ),
+      headerLeft: null,
+      headerRight: () =>
+        searchOn ? null : (
+          <BorderlessButton
+            onPress={() => {
+              navigation.setParams({ searchOn: true });
             }}
-            containerStyle={styles.searchBarContainerStyle}
-            inputContainerStyle={styles.searchBarInputContainerStyle}
-            inputStyle={styles.searchBarInputStyle}
-            leftIconContainerStyle={styles.searchBarLeftIconContainerStyle}
-            onCancel={() =>
-              navigation.setParams({ searchOn: false, searchQuery: "" })
-            }
-            onClear={() => navigation.setParams({ searchQuery: "" })}
-            platform={"android"}
-            placeholder="Tìm bằng tên hoặc email"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-          />
+            style={{ marginRight: 15 }}>
+            <Fontisto name="search" size={24} color={Color.white} />
+          </BorderlessButton>
         ),
-    headerLeft: null,
-    headerRight: () =>
-      searchOn ? null : (
-        <BorderlessButton
-          onPress={() => {
-            navigation.setParams({ searchOn: true });
-          }}
-          style={{ marginRight: 15 }}>
-          <Fontisto name="search" size={24} color={Color.white} />
-        </BorderlessButton>
-      ),
-  });
+    });
+  }, [navigation, route]);
 
   const onChangeSearch = query => navigation.setParams({ searchQuery: query });
   const {
