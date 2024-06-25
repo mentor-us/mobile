@@ -42,7 +42,7 @@ import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 import ForwardMessage from "~/screens/Groups/ForwardMessage";
 import LinkEmail from "~/screens/Profiles/LinkEmail";
-import CreateOrUpdateNote from "~/screens/StudentNote/CreateNote";
+import CreateOrUpdateNote from "~/screens/StudentNote/CreateOrUpdateNote";
 import NoteDetail from "~/screens/StudentNote/NoteDetail";
 import UserNotes from "~/screens/StudentNote/UserNotes";
 

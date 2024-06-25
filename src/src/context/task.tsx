@@ -1,5 +1,5 @@
-import React, {createContext, useContext} from "react";
-import {CreateTaskScreenState} from "~/mobx/task";
+import React, { createContext, useContext } from "react";
+import { CreateTaskScreenState } from "~/mobx/task";
 
 interface Props {
   children: React.ReactElement;
