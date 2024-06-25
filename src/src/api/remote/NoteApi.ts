@@ -1,10 +1,11 @@
 import { PaginationData } from "~/models/commonTypes";
 import axiosClient from "./AxiosClient";
 import {
-  CreateNoteDto,
+  CreateOrUpdateNoteDto,
   Note,
   NoteDetail,
   NoteUserProfile,
+  ShareNoteRequest,
 } from "~/models/note";
 
 const NoteApi = {
@@ -12,12 +13,12 @@ const NoteApi = {
    * Get a list of user that has been noted by me
    */
   getNotedUsers: (
-    query: string,
+    search: string,
     page = 0,
     pageSize = 25,
   ): Promise<NoteUserProfile[]> => {
     return axiosClient.get("/api/notes/users", {
-      params: { query, page, pageSize },
+      params: { search, page, pageSize },
     });
   },
 
@@ -35,13 +36,39 @@ const NoteApi = {
   /**
    * Create a note
    */
-  createNote: (createNoteDto: CreateNoteDto): Promise<NoteDetail> => {
+  createNote: (createNoteDto: CreateOrUpdateNoteDto): Promise<NoteDetail> => {
     return axiosClient.post("/api/notes", createNoteDto);
   },
-  updateNote: () => {},
-  deleteNote: () => {},
+
+  /*
+   * Update a note
+   */
+  updateNote: (
+    noteId: string,
+    updateNoteDto: CreateOrUpdateNoteDto,
+  ): Promise<NoteDetail> => {
+    return axiosClient.patch(`/api/notes/${noteId}`, updateNoteDto);
+  },
+
+  /*
+   * Delete note
+   */
+  deleteNote: (nodeId: string) => {
+    return axiosClient.delete(`/api/notes/${nodeId}`);
+  },
+
+  /*
+   * Get detail of a note
+   */
   getNoteDetail: (nodeId: string): Promise<NoteDetail> => {
     return axiosClient.get(`/api/notes/${nodeId}`);
+  },
+
+  /**
+   * Share a note
+   */
+  shareNote: (noteId: string, shareNoteRequest: ShareNoteRequest) => {
+    return axiosClient.post(`/api/notes/${noteId}/share`, shareNoteRequest);
   },
 };
 

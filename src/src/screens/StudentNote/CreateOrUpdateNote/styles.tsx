@@ -37,6 +37,15 @@ export default StyleSheet.create({
     fontSize: 14.5,
   },
 
+  fullScreen: {
+    flex: 1,
+  },
+  keyboardAvoidingView: {
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
+  },
+
   // Submit button
   submitButtonContainer: {
     position: "absolute",

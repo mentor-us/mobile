@@ -17,6 +17,7 @@ import NetworkSnackbar from "./components/NetworkSnackbar";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "@rneui/themed";
+import AppProvider from "./context/app";
 
 const styles = StyleSheet.create({
   root: {
@@ -46,29 +47,31 @@ const App = () => {
   return (
     <GestureHandlerRootView style={styles.root}>
       <SocketContext.Provider value={socket}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <RootSiblingParent>
-              <SafeAreaProvider>
-                <Provider store={store}>
-                  <CalendarProvider date="dd-MM-yyyy">
-                    <MobxProvider value={rootMobxStore}>
-                      <StatusBar
-                        animated={true}
-                        backgroundColor={Color.primary}
-                        showHideTransition={"fade"}
-                        barStyle={"light-content"}
-                        hidden={false}
-                      />
-                      <RootNavigator />
-                      <NetworkSnackbar isSubscribed />
-                    </MobxProvider>
-                  </CalendarProvider>
-                </Provider>
-              </SafeAreaProvider>
-            </RootSiblingParent>
-          </ThemeProvider>
-        </QueryClientProvider>
+        <AppProvider>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+              <RootSiblingParent>
+                <SafeAreaProvider>
+                  <Provider store={store}>
+                    <CalendarProvider date="dd-MM-yyyy">
+                      <MobxProvider value={rootMobxStore}>
+                        <StatusBar
+                          animated={true}
+                          backgroundColor={Color.primary}
+                          showHideTransition={"fade"}
+                          barStyle={"light-content"}
+                          hidden={false}
+                        />
+                        <RootNavigator />
+                        <NetworkSnackbar isSubscribed />
+                      </MobxProvider>
+                    </CalendarProvider>
+                  </Provider>
+                </SafeAreaProvider>
+              </RootSiblingParent>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </AppProvider>
       </SocketContext.Provider>
     </GestureHandlerRootView>
   );

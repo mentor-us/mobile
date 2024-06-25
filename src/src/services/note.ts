@@ -1,16 +1,24 @@
 import NoteApi from "~/api/remote/NoteApi";
 import { PaginationData } from "~/models/commonTypes";
 import {
-  CreateNoteDto,
+  CreateOrUpdateNoteDto,
   Note,
   NoteDetail,
   NoteUserProfile,
+  ShareNoteRequest,
 } from "~/models/note";
 import TryCatchWrapper from "~/utils/TryCatchWrapper";
 
 const NoteService = {
-  async createNote(createNoteDto: CreateNoteDto): Promise<NoteDetail> {
+  async createNote(createNoteDto: CreateOrUpdateNoteDto): Promise<NoteDetail> {
     return await NoteApi.createNote(createNoteDto);
+  },
+
+  async updateNote(
+    noteId: string,
+    updateNoteDto: CreateOrUpdateNoteDto,
+  ): Promise<NoteDetail> {
+    return await NoteApi.updateNote(noteId, updateNoteDto);
   },
 
   async findNotedUsers(
@@ -34,6 +42,17 @@ const NoteService = {
     },
   ): Promise<PaginationData<Note>> {
     return await NoteApi.getAllNoteOfUser(userId, params);
+  },
+
+  async deleteNote(noteId: string): Promise<void> {
+    await NoteApi.deleteNote(noteId);
+  },
+
+  async shareNote(
+    noteId: string,
+    shareNoteRequest: ShareNoteRequest,
+  ): Promise<void> {
+    await NoteApi.shareNote(noteId, shareNoteRequest);
   },
 };
 

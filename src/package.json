@@ -37,9 +37,11 @@
     "android:fastlane:uploadInternal": "bundle exec fastlane android internal"
   },
   "dependencies": {
+    "@10play/tentap-editor": "^0.5.6",
     "@gluestack-style/react": "^1.0.56",
     "@gluestack-ui/config": "^1.1.18",
     "@gluestack-ui/themed": "^1.1.28",
+    "@gorhom/bottom-sheet": "4",
     "@gorhom/portal": "^1.0.14",
     "@hookform/resolvers": "^3.0.0",
     "@howljs/calendar-kit": "^1.13.2",
@@ -91,6 +93,7 @@
     "react-native-device-info": "^10.6.0",
     "react-native-document-picker": "^8.2.0",
     "react-native-dropdown-select-list": "^2.0.4",
+    "react-native-expo-fancy-alerts": "^2.1.1",
     "react-native-fast-image": "^8.6.3",
     "react-native-floating-action": "^1.22.0",
     "react-native-fs": "^2.20.0",
@@ -127,7 +130,7 @@
     "react-native-video": "^6.2.0",
     "react-native-video-cache": "^2.7.3",
     "react-native-video-player": "^0.14.0",
-    "react-native-webview": "11.23.1",
+    "react-native-webview": "^13.10.3",
     "react-redux": "^8.0.5",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.2.0",

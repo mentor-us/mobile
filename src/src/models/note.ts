@@ -6,22 +6,18 @@ export interface NoteUserProfile {
   totalNotes: number;
 }
 
-export interface CreateNoteDto {
+export interface CreateOrUpdateNoteDto {
   title: string;
   content: string;
   userIds: string[];
 }
 
-export interface UpdateNoteDto {
-  id: string;
-  title: string | null;
-  content: string | null;
-  userIds: string[] | null;
-}
-
 export interface NoteHistory {
   id: string;
+  title: string;
+  content: string;
   noteId: string;
+  createdDate: Date;
   description: string;
   updatedDate: Date;
   updatedBy: NoteUserProfile;
@@ -44,11 +40,6 @@ export enum NoteUserAccessType {
   VIEWER = "VIEWER",
 }
 
-export interface NoteUserAccess {
-  user: NoteUserProfile;
-  notePermission: NoteUserAccessType;
-}
-
 export interface NoteDetail {
   id: string;
   title: string;
@@ -64,14 +55,26 @@ export interface NoteDetail {
   userAccesses: NoteUserAccess[];
 }
 
-export interface NoteAccessDto {
+export interface NoteUserAccess {
   userId: string;
-  accessType: NoteUserAccessType;
+  permission: NotePermission;
 }
 
-export interface ShareNoteDto {
-  noteId: string;
-  users: NoteAccessDto[];
+export interface ShareNoteRequest {
+  shareType: NoteShareType;
+  users: NoteUserAccess[];
+}
+
+export enum NoteShareType {
+  PUBLIC,
+  MENTOR_VIEW,
+  MENTOR_EDIT,
+  PRIVATE,
+}
+
+export enum NotePermission {
+  EDIT,
+  VIEW,
 }
 
 // GET /api/users/mentees - phan trang - dung de tao note

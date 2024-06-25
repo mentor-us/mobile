@@ -13,17 +13,36 @@ import NoteService from "~/services/note";
 import { useMobxStore } from "~/mobx/store";
 import { PaginationData } from "~/models/commonTypes";
 
-export const useGetNotedUsersQuery = <TData = NoteUserProfile[]>(
+export const useGetNotedUsersInfinityQuery = (
   query: string,
-  select?: (data: NoteUserProfile[]) => TData,
-) =>
-  useQuery({
-    queryKey: GetNotedUsersQueryKey,
-    queryFn: async () => {
-      return NoteService.findNotedUsers(query, 0, 25);
+  select: (
+    data: InfiniteData<PaginationData<NoteUserProfile>>,
+  ) => InfiniteData<NoteUserProfile> = data => {
+    return {
+      pages: data.pages.flatMap(page => page.data),
+      pageParams: data.pageParams,
+    } as any;
+  },
+) => {
+  const { authStore } = useMobxStore();
+  return useInfiniteQuery<PaginationData<NoteUserProfile>>({
+    queryKey: GetNotedUsersQueryKey(query),
+    select: select,
+    queryFn: async ({ pageParam = 0 }) => {
+      return NoteService.findNotedUsers(query, pageParam, 25);
     },
-    select,
+    getNextPageParam: lastPage => {
+      if (!lastPage) return undefined;
+      return lastPage.last ? undefined : Number(lastPage.page) + 1;
+    },
+    getPreviousPageParam: firstPage => {
+      if (!firstPage) return undefined;
+      return firstPage.first ? undefined : Number(firstPage.page) - 1;
+    },
+    enabled: !!authStore.userToken,
+    staleTime: 0,
   });
+};
 
 export const useGetAllNoteOfUserInfinityQuery = (
   userId: string,
@@ -44,7 +63,7 @@ export const useGetAllNoteOfUserInfinityQuery = (
       return NoteService.getAllNoteOfUser(userId, {
         search: "",
         page: pageParam,
-        pageSize: 2,
+        pageSize: 25,
       });
     },
     getNextPageParam: lastPage => {
@@ -61,13 +80,15 @@ export const useGetAllNoteOfUserInfinityQuery = (
 };
 
 export const useGetNoteDetailQuery = <TData = NoteDetail>(
-  noteId: string,
+  noteId?: string,
   select?: (data: NoteDetail) => TData,
 ) =>
   useQuery({
     queryKey: GetNoteDetailQueryKey(noteId),
     queryFn: async () => {
-      return NoteService.getNoteDetail(noteId);
+      return NoteService.getNoteDetail(noteId!);
     },
     select,
+    enabled: !!noteId,
+    staleTime: 0,
   });

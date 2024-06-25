@@ -31,6 +31,10 @@ const UserServiceV2 = {
   ): Promise<PaginationData<ShortProfileUserModel>> {
     return await UserApiV2.findMentees(query, page, pageSize);
   },
+
+  async findByEmail(email: string) {
+    return await UserApiV2.findByEmail(email);
+  },
 };
 
 export default TryCatchWrapper(UserServiceV2, "UserServiceV2");

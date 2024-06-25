@@ -1,25 +1,38 @@
 import { useForm, Controller } from "react-hook-form";
 import { View } from "react-native-animatable";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MarkTitleIcon, ParagraphIcon } from "~/assets/svgs";
+import { MarkTitleIcon } from "~/assets/svgs";
 import MUITextInput from "~/components/MUITextInput";
 import SizedBox from "~/components/SizedBox";
 import { ScreenProps } from "~/types/navigation";
 import styles from "./styles";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
-import { useState } from "react";
-import { ActivityIndicator, Snackbar } from "react-native-paper";
+import { useContext, useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native-paper";
 import { Color } from "~/constants/Color";
-import { ShortProfileUserModel } from "./../../../models/user";
+import { ShortProfileUserModel } from "../../../models/user";
 import { Button } from "@rneui/themed";
 import GlobalStyles from "~/constants/GlobalStyles";
 import { useInfinitySearchMentees } from "~/app/server/users/queries";
 import Helper from "~/utils/Helper";
 import { DefaultUserAvatar } from "~/assets/images";
-import { CreateNoteDto } from "~/models/note";
-import { useCreateNoteMutation } from "~/app/server/users/mutation";
-import { Text } from "react-native";
+import { CreateOrUpdateNoteDto } from "~/models/note";
+import { Platform, Text } from "react-native";
+import {
+  CoreBridge,
+  PlaceholderBridge,
+  RichText,
+  TenTapStartKit,
+  Toolbar,
+  useEditorBridge,
+} from "@10play/tentap-editor";
+import { KeyboardAvoidingView } from "react-native";
+import { useGetNoteDetailQuery } from "~/app/server/notes/queries";
+import AppLoadingIndicator from "~/components/AppLoadingIndicator";
+import { AppContext } from "~/context/app";
+import { useCreateOrUpdateNoteMutation } from "~/app/server/notes/mutation";
+import AppErrorModal from "~/components/AppErrorModal";
 
 interface RenderUserProfileProps
   extends Omit<ShortProfileUserModel, "imageUrl"> {
@@ -28,28 +41,52 @@ interface RenderUserProfileProps
   };
 }
 
+const editorCss = `
+ * {
+   font-family: sans-serif;
+ }
+ body {
+ }
+ img {
+   max-width: 80%;
+   height: auto;
+   padding: 0 10%;
+ }
+`;
+
 const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
   navigation,
   route,
 }) => {
   const { noteId } = route.params;
+  const { data: noteDetail, isInitialLoading: isNoteDetailInitialLoading } =
+    useGetNoteDetailQuery(noteId);
+  const { setIsLoading } = useContext(AppContext);
   const [queryMentee, setQueryMentee] = useState("");
-  const [visible, setVisible] = useState(false);
+  const [selectedItemObjects, setSelectedItemObjects] = useState<
+    RenderUserProfileProps[]
+  >([]);
 
-  const onToggleSnackBar = () => setVisible(!visible);
-
+  // React Hook Form
   const {
     control,
     handleSubmit,
     getValues,
+    register,
+    setValue,
+    reset,
     formState: { errors },
-  } = useForm<CreateNoteDto>({
+  } = useForm<CreateOrUpdateNoteDto>({
     defaultValues: {
       title: "",
       content: "",
       userIds: [],
     },
   });
+  register("content", {
+    required: "Nội dung ghi chú không được để trống",
+  });
+
   const {
     fetchNextPage,
     hasNextPage,
@@ -60,12 +97,65 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
     isSuccess,
     refetch: reloadSearch,
   } = useInfinitySearchMentees(queryMentee);
-  const { mutateAsync } = useCreateNoteMutation();
+  const {
+    mutateAsync,
+    isError,
+    error,
+    reset: resetCreateOrUpdateNote,
+  } = useCreateOrUpdateNoteMutation(noteId);
 
-  const onSubmit = (createNoteDto: CreateNoteDto) => {
+  // Rich text editor
+  const editor = useEditorBridge({
+    autofocus: false,
+    avoidIosKeyboard: true,
+    initialContent: getValues("content"),
+    bridgeExtensions: [
+      ...TenTapStartKit,
+      CoreBridge.configureCSS(editorCss),
+      PlaceholderBridge.configureExtension({
+        showOnlyCurrent: false,
+        placeholder: "Nội dung ghi chú *",
+      }),
+    ],
+    onChange: async () => {
+      const text = await editor.getText();
+      console.log("text", text, await editor.getHTML());
+      setValue(
+        "content",
+        text.trim().length === 0 ? "" : await editor.getHTML(),
+      );
+      // onContentChange({
+      //   target: {
+      //     value: text.trim().length === 0 ? "" : await editor.getHTML(),
+      //   },
+      // });
+    },
+  });
+
+  useEffect(() => {
+    // reset form with note data
+    reset({
+      title: noteDetail?.title ?? "",
+      content: noteDetail?.content ?? "",
+      userIds: noteDetail?.users.map(user => user.id) ?? [],
+    });
+    if (editor.editable) {
+      editor.setContent(noteDetail?.content ?? "");
+    }
+  }, [noteDetail]);
+
+  useEffect(() => {
+    setIsLoading(isNoteDetailInitialLoading);
+  }, [isNoteDetailInitialLoading]);
+
+  const onSubmit = async (createNoteDto: CreateOrUpdateNoteDto) => {
+    setIsLoading(true);
     mutateAsync(createNoteDto, {
       onSuccess: () => {
         navigation.goBack();
+      },
+      onSettled() {
+        setIsLoading(false);
       },
     });
   };
@@ -73,10 +163,6 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
   navigation.setOptions({
     title: noteId ? "Cập nhật ghi chú" : "Tạo ghi chú",
   });
-
-  const [selectedItemObjects, setSelectedItemObjects] = useState<
-    RenderUserProfileProps[]
-  >([]);
 
   function renderSelectText() {
     const selectedUserIds = getValues("userIds");
@@ -97,7 +183,7 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.fullScreen}>
       <View style={{ paddingHorizontal: 16 }}>
         <View style={styles.fieldContainer}>
           <View>
@@ -127,32 +213,24 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
             }}
           />
         </View>
-        <View style={styles.fieldContainer}>
-          <View>
-            <SizedBox height={16} />
-            <ParagraphIcon width={24} height={24} />
-          </View>
-          <SizedBox width={16} />
-          <Controller
-            name="content"
-            control={control}
-            rules={{ required: "Nội dung ghi chú không được để trống" }}
-            render={({ field: { onChange, ...rest } }) => {
-              return (
-                <MUITextInput
-                  label="Nội dung ghi chú *"
-                  keyboardType={"default"}
-                  multiline
-                  numberOfLines={10}
-                  style={{ textAlignVertical: "top" }}
-                  onChangeText={onChange}
-                  {...rest}
-                  errorText={errors?.content?.message}
-                />
-              );
-            }}
-          />
+
+        <View
+          style={[
+            styles.fieldContainer,
+            {
+              width: "100%",
+              minHeight: 200,
+              paddingHorizontal: 12,
+              marginTop: 8,
+              backgroundColor: Color.white,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: errors?.content ? "red" : "#e0e0e0",
+            },
+          ]}>
+          <RichText editor={editor} />
         </View>
+        <Text style={{ color: "red" }}>{errors?.content?.message}</Text>
 
         <View style={{ marginTop: 12 }}>
           <Controller
@@ -286,21 +364,27 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
           </View>
         </View>
       </View>
+
       <Button
         containerStyle={styles.submitButtonContainer}
         buttonStyle={styles.submitButton}
         title={noteId ? "Cập nhật ghi chú" : "Tạo ghi chú"}
         onPress={() => handleSubmit(onSubmit)()}
       />
-      {/* <Snackbar
-        testID="network-snackbar"
-        wrapperStyle={{
-          marginBottom: 48,
-        }}
-        // wrapperStyle={styles.wrapperStyle}
-        visible>
-        <Text>{}</Text>
-      </Snackbar> */}
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}>
+        <Toolbar editor={editor} />
+      </KeyboardAvoidingView>
+
+      <AppLoadingIndicator />
+      <AppErrorModal
+        hasError={isError}
+        error={error}
+        onPress={resetCreateOrUpdateNote}
+        onRequestClose={resetCreateOrUpdateNote}
+      />
     </SafeAreaView>
   );
 };

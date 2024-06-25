@@ -17,12 +17,13 @@ import { NoteUserProfile } from "~/models/note";
 import { BorderlessButton } from "react-native-gesture-handler";
 import { Fontisto } from "@expo/vector-icons";
 import { MentorUsRoutes } from "~/types/navigation";
-import { useGetNotedUsersQuery } from "~/app/server/notes/queries";
+import { useGetNotedUsersInfinityQuery } from "~/app/server/notes/queries";
 import { DefaultUserAvatar } from "~/assets/images";
 import { Skeleton } from "@rneui/themed";
 import LinearGradient from "react-native-linear-gradient";
 import { screenWidth } from "~/constants";
 import { useEffect } from "react";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function StudentNote({
   navigation,
@@ -32,6 +33,15 @@ function StudentNote({
   route: RouteProp<MentorUsRoutes.StudentNoteStack, "studentNote">;
 }) {
   const { searchOn, searchQuery } = route.params;
+  const onChangeSearch = query => navigation.setParams({ searchQuery: query });
+  const {
+    data: notedUsersList,
+    isLoading,
+    isRefetching,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetNotedUsersInfinityQuery(searchQuery);
 
   useEffect(() => {
     navigation.setOptions({
@@ -39,19 +49,45 @@ function StudentNote({
         ? "Danh sách sinh viên"
         : () => (
             <SearchBar
+              showLoading={isLoading}
               loadingProps={{
-                color: Color.primary,
+                color: Color.white,
               }}
               containerStyle={styles.searchBarContainerStyle}
               inputContainerStyle={styles.searchBarInputContainerStyle}
               inputStyle={styles.searchBarInputStyle}
               leftIconContainerStyle={styles.searchBarLeftIconContainerStyle}
+              searchIcon={{
+                Component: MaterialIcons,
+                iconProps: {
+                  name: "search",
+                  color: Color.white,
+                },
+              }}
+              cancelIcon={{
+                Component: MaterialIcons,
+                iconProps: {
+                  name: "arrow-back",
+                  color: Color.white,
+                },
+              }}
+              placeholderTextColor={Color.white}
               onCancel={() =>
                 navigation.setParams({ searchOn: false, searchQuery: "" })
               }
               onClear={() => navigation.setParams({ searchQuery: "" })}
+              clearIcon={{
+                Component: MaterialIcons,
+                iconProps: {
+                  name: "close",
+                  color: Color.white,
+                },
+              }}
               platform={"android"}
               placeholder="Tìm bằng tên hoặc email"
+              style={{
+                color: Color.white,
+              }}
               onChangeText={onChangeSearch}
               value={searchQuery}
             />
@@ -68,15 +104,7 @@ function StudentNote({
           </BorderlessButton>
         ),
     });
-  }, [navigation, route]);
-
-  const onChangeSearch = query => navigation.setParams({ searchQuery: query });
-  const {
-    data: notedUsersList,
-    isLoading,
-    isRefetching,
-    refetch,
-  } = useGetNotedUsersQuery(searchQuery);
+  }, [navigation, route, isLoading]);
 
   const onUserPress = (userId: string, userName: string) => {
     navigation.navigate("userNotes", {
@@ -129,7 +157,7 @@ function StudentNote({
   };
 
   const renderEmpty = () => {
-    if (searchQuery === "" && notedUsersList?.length === 0) {
+    if (searchQuery === "" && notedUsersList?.pages?.length === 0) {
       return (
         <View style={styles.emptyContainer}>
           <View style={styles.empty}>
@@ -218,12 +246,13 @@ function StudentNote({
   return (
     <SafeAreaView style={styles.container}>
       <FlatList<NoteUserProfile>
-        data={notedUsersList ?? []}
+        data={notedUsersList?.pages || []}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         refreshing={isRefetching}
         onRefresh={refetch}
         ListEmptyComponent={isLoading ? LoadingComponent : renderEmpty}
+        onEndReached={hasNextPage ? fetchNextPage : undefined}
       />
 
       <FAB

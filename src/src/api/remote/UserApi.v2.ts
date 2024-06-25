@@ -32,6 +32,15 @@ const UserApiV2 = {
       params: { query, page, pageSize },
     });
   },
+
+  findByEmail: async (email: string): Promise<UserProfileModel[]> => {
+    const response = await axiosClient.get(`api/users/allByEmail`, {
+      params: {
+        email: email,
+      },
+    });
+    return response.data;
+  },
 };
 
 export default TryCatchWrapper(UserApiV2, "UserApiV2");

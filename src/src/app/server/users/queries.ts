@@ -3,7 +3,11 @@ import { useMobxStore } from "~/mobx/store";
 import { PaginationData } from "~/models/commonTypes";
 import { ShortProfileUserModel, UserProfileModel } from "~/models/user";
 import UserServiceV2 from "~/services/user.v2";
-import { CurrentUserQueryKey } from "./keys";
+import {
+  CurrentUserQueryKey,
+  SearchAllUsersByEmailQueryKey,
+  SearchMenteesQueryKey,
+} from "./keys";
 
 export const useCurrentUser = <TData = UserProfileModel>(
   select?: (data: UserProfileModel) => TData,
@@ -18,7 +22,19 @@ export const useCurrentUser = <TData = UserProfileModel>(
   });
 };
 
-export const SearchMenteesQueryKey = query => ["searchMentees", query];
+export const useSearchAllUsersByEmail = <TData = UserProfileModel>(
+  select?: (data: UserProfileModel) => TData,
+) => {
+  const { authStore } = useMobxStore();
+  return useQuery({
+    queryKey: SearchAllUsersByEmailQueryKey(""),
+    queryFn: () => {
+      return UserServiceV2.findByEmail("");
+    },
+    enabled: !!authStore.userToken,
+    select,
+  });
+};
 
 export const useInfinitySearchMentees = (query: string) => {
   const { authStore } = useMobxStore();

@@ -93,16 +93,18 @@ export default StyleSheet.create({
     margin: 0,
   },
   searchBarInputContainerStyle: {
-    backgroundColor: Color.white,
+    borderRadius: 12,
     padding: 0,
     margin: 0,
   },
   searchBarInputStyle: {
-    padding: 0,
-    marginLeft: 4,
+    // backgroundColor: "red",
+    paddingHorizontal: 12,
+    marginLeft: 0,
     margin: 0,
   },
   searchBarLeftIconContainerStyle: {
+    // display: "none",
     padding: 0,
     margin: 0,
   },
