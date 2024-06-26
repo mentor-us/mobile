@@ -5,9 +5,11 @@ import { ShortProfileUserModel, UserProfileModel } from "~/models/user";
 import UserServiceV2 from "~/services/user.v2";
 import {
   CurrentUserQueryKey,
+  GetUserDetailQueryKey,
   SearchAllUsersByEmailQueryKey,
   SearchMenteesQueryKey,
 } from "./keys";
+import UserService from "~/services/user";
 
 export const useCurrentUser = <TData = UserProfileModel>(
   select?: (data: UserProfileModel) => TData,
@@ -19,6 +21,18 @@ export const useCurrentUser = <TData = UserProfileModel>(
     enabled: !!authStore.userToken,
     select,
     staleTime: 60 * 1000,
+  });
+};
+
+export const useGetUserDetail = <TData = UserProfileModel>(
+  userId: string,
+  select?: (data: UserProfileModel) => TData,
+) => {
+  return useQuery({
+    queryKey: GetUserDetailQueryKey(userId),
+    queryFn: () => UserService.findById(userId),
+    enabled: !!userId,
+    select,
   });
 };
 

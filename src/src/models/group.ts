@@ -52,6 +52,9 @@ export interface GroupModel {
   marked?: boolean;
   timeEnd?: string;
   defaultChannelId?: string;
+  members?: string[];
+  mentees?: string[];
+  mentors?: string[];
 }
 
 export interface GroupMemberModel {

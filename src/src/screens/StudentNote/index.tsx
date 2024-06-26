@@ -22,7 +22,7 @@ import { DefaultUserAvatar } from "~/assets/images";
 import { Skeleton } from "@rneui/themed";
 import LinearGradient from "react-native-linear-gradient";
 import { screenWidth } from "~/constants";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function StudentNote({
@@ -33,6 +33,7 @@ function StudentNote({
   route: RouteProp<MentorUsRoutes.StudentNoteStack, "studentNote">;
 }) {
   const { searchOn, searchQuery } = route.params;
+  const searchBarRef = useRef<any>();
   const onChangeSearch = query => navigation.setParams({ searchQuery: query });
   const {
     data: notedUsersList,
@@ -49,6 +50,7 @@ function StudentNote({
         ? "Danh sách sinh viên"
         : () => (
             <SearchBar
+              ref={searchBarRef}
               showLoading={isLoading}
               loadingProps={{
                 color: Color.white,
@@ -105,6 +107,15 @@ function StudentNote({
         ),
     });
   }, [navigation, route, isLoading]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("focus", searchBarRef?.current);
+      if (searchOn && searchBarRef?.current) {
+        searchBarRef?.current?.focus();
+      }
+    }, 500);
+  }, [searchOn, searchBarRef]);
 
   const onUserPress = (userId: string, userName: string) => {
     navigation.navigate("userNotes", {

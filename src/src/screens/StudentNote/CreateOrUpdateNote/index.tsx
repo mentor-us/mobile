@@ -58,7 +58,7 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
   navigation,
   route,
 }) => {
-  const { noteId } = route.params;
+  const { noteId, userIds } = route.params;
   const { data: noteDetail, isInitialLoading: isNoteDetailInitialLoading } =
     useGetNoteDetailQuery(noteId);
   const { setIsLoading } = useContext(AppContext);
@@ -80,7 +80,7 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
     defaultValues: {
       title: "",
       content: "",
-      userIds: [],
+      userIds: userIds ?? [],
     },
   });
   register("content", {
@@ -119,16 +119,10 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
     ],
     onChange: async () => {
       const text = await editor.getText();
-      console.log("text", text, await editor.getHTML());
       setValue(
         "content",
         text.trim().length === 0 ? "" : await editor.getHTML(),
       );
-      // onContentChange({
-      //   target: {
-      //     value: text.trim().length === 0 ? "" : await editor.getHTML(),
-      //   },
-      // });
     },
   });
 
@@ -137,7 +131,9 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
     reset({
       title: noteDetail?.title ?? "",
       content: noteDetail?.content ?? "",
-      userIds: noteDetail?.users.map(user => user.id) ?? [],
+      userIds: !noteId
+        ? userIds ?? []
+        : noteDetail?.users.map(user => user.id) ?? [],
     });
     if (editor.editable) {
       editor.setContent(noteDetail?.content ?? "");

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -18,7 +19,7 @@ import CacheImage from "~/components/CacheImage";
 import Helper from "~/utils/Helper";
 import { Color } from "~/constants/Color";
 import { Chase } from "react-native-animated-spinkit";
-import { NotiFailed } from "~/assets/svgs";
+import { EditIcon, NotiFailed } from "~/assets/svgs";
 import { Avatar, Button, Card, Colors, IconButton } from "react-native-paper";
 import RenderHTML from "react-native-render-html";
 import {
@@ -50,6 +51,7 @@ import GlobalStyles from "~/constants/GlobalStyles";
 import { DefaultUserAvatar } from "~/assets/images";
 import SharePermissionBottomSheet from "../SharePermissionBottomSheet";
 import { RefreshControl } from "react-native";
+import { HeaderBackButton, HeaderIconRight } from "~/components/Header";
 
 interface ViewNoteUserAccess {
   id: string;
@@ -87,79 +89,94 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
             handleCloseModalPress();
             navigation.navigate("noteDetail", { noteId: note.id });
           },
-          title: ({ styles }) => (
-            <>
-              <View>
-                <Text
-                  style={[
-                    styles,
-                    { color: "#333", fontSize: 14, fontWeight: "bold" },
-                  ]}
-                  numberOfLines={1}>
-                  {note.title}
-                </Text>
-              </View>
-              <View
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: 0,
-                  display: "flex",
-                  flexDirection: "row",
-                }}>
-                {note.isEditable && (
-                  <IconButton
-                    icon="note-edit-outline"
-                    color={Color.primary}
-                    style={
-                      (note.owner.id === myId || note.creator.id === myId) && {
-                        marginRight: 0,
-                      }
-                    }
-                    size={20}
-                    onPress={() => {
-                      handleCloseModalPress();
-                      navigation.navigate("createOrUpdateNote", {
-                        noteId: note.id,
-                      });
-                    }}
-                  />
-                )}
-
-                {
-                  // Only show share button if the user is the owner of the note
-                  note.owner.id === myId && (
+          title: ({ styles }) => {
+            const isVisibledOptions =
+              note.isEditable ||
+              note.owner.id === myId ||
+              note.creator.id === myId;
+            return (
+              <>
+                <View>
+                  <Text
+                    style={[
+                      styles,
+                      { color: "#333", fontSize: 14, fontWeight: "bold" },
+                    ]}
+                    numberOfLines={1}>
+                    {note.title}
+                  </Text>
+                </View>
+                <View
+                  style={
+                    isVisibledOptions
+                      ? {
+                          position: "absolute",
+                          right: 0,
+                          bottom: 0,
+                          display: "flex",
+                          flexDirection: "row",
+                        }
+                      : { display: "none" }
+                  }>
+                  {note.isEditable && (
                     <IconButton
-                      icon="share-variant-outline"
+                      icon="note-edit-outline"
                       color={Color.primary}
-                      style={note.creator.id === myId && { marginRight: 0 }}
+                      style={
+                        (note.owner.id === myId ||
+                          note.creator.id === myId) && {
+                          marginRight: 0,
+                        }
+                      }
                       size={20}
                       onPress={() => {
-                        console.log("Share note", note.id);
-                        setSelectedNoteId(note.id);
-                        handlePresentModalPress();
+                        handleCloseModalPress();
+                        navigation.navigate("createOrUpdateNote", {
+                          noteId: note.id,
+                        });
                       }}
                     />
-                  )
-                }
+                  )}
 
-                {
-                  // Only show delete button if the user is the owner or creator of the note
-                  (note.owner.id === myId || note.creator.id === myId) && (
-                    <IconButton
-                      icon="trash-can-outline"
-                      color={Colors.red500}
-                      size={20}
-                      onPress={() => onDeleteNoteClick(note.id)}
-                    />
-                  )
-                }
-              </View>
-            </>
-          ),
+                  {
+                    // Only show share button if the user is the owner of the note
+                    note.owner.id === myId && (
+                      <IconButton
+                        icon="share-variant-outline"
+                        color={Color.primary}
+                        style={note.creator.id === myId && { marginRight: 0 }}
+                        size={20}
+                        onPress={() => {
+                          console.log("Share note", note.id);
+                          setSelectedNoteId(note.id);
+                          handlePresentModalPress();
+                        }}
+                      />
+                    )
+                  }
+
+                  {
+                    // Only show delete button if the user is the owner or creator of the note
+                    (note.owner.id === myId || note.creator.id === myId) && (
+                      <IconButton
+                        icon="trash-can-outline"
+                        color={Colors.red500}
+                        size={20}
+                        onPress={() => onDeleteNoteClick(note.id)}
+                      />
+                    )
+                  }
+                </View>
+              </>
+            );
+          },
           description: () => {
+            const isVisibledOptions =
+              note.isEditable ||
+              note.owner.id === myId ||
+              note.creator.id === myId;
             return (
-              <View>
+              <View style={isVisibledOptions ? { marginBottom: 26 } : {}}>
                 <RenderHTML
                   contentWidth={width}
                   source={{
@@ -220,7 +237,7 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
     return null;
   };
 
-  const onDeleteNoteClick = (noteId: string) => {
+  const onDeleteNoteClick = useCallback((noteId: string) => {
     const deleteNote = async () => {
       setIsLoading(true);
       mutateAsync({ noteId }).finally(() => {
@@ -244,7 +261,7 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
         cancelable: true,
       },
     );
-  };
+  }, []);
 
   const generalShareData = [
     {
@@ -281,6 +298,20 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
     },
   ];
 
+  navigation.setOptions({
+    headerRight: () => {
+      return (
+        <HeaderIconRight
+          text="add"
+          onPress={() => {
+            navigation.navigate("createOrUpdateNote", { userIds: [userId] });
+          }}
+        />
+      );
+    },
+  });
+
+  // Bottom Sheet Modal - Share Note
   const { control, handleSubmit } = useForm<ShareNoteRequest>({
     defaultValues: {
       shareType: NoteShareType.PUBLIC,
@@ -353,12 +384,11 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
       //     })),
       //   },
       // });
-      handleCloseModalPress();
+      // handleCloseModalPress();
     },
     [selectedNoteId],
   );
 
-  // Bottom Sheet Modal
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const handlePresentModalPress = useCallback(() => {
@@ -507,6 +537,7 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
         GlobalStyles.fullFlex,
         {
           backgroundColor: Color.backgroundGray,
+          paddingBottom: 12,
         },
       ]}>
       <ScrollView
@@ -536,7 +567,7 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
-          snapPoints={["80%"]}
+          snapPoints={["68%"]}
           backdropComponent={CustomBackdrop}
           enableOverDrag={true}
           style={styles.bottomSheetModal}>
@@ -775,7 +806,7 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
-  timelineContentContainerStyle: { flex: 1, paddingBottom: 36 },
+  timelineContentContainerStyle: { flex: 1 },
   timelineAvatarStyle: {
     borderColor: "#fff",
     borderRadius: 25,

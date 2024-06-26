@@ -17,6 +17,7 @@ import {
   PlaceholderBridge,
   RichText,
   TenTapStartKit,
+  useBridgeState,
   useEditorBridge,
 } from "@10play/tentap-editor";
 import { ActivityIndicator } from "react-native-paper";
@@ -31,6 +32,7 @@ import CacheImage from "~/components/CacheImage";
 import Helper from "~/utils/Helper";
 import dayjs from "dayjs";
 import RenderHTML from "react-native-render-html";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const editorCss = `
  * {
@@ -192,6 +194,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
     () => (
       <View style={styles.timelineHeadingContainer}>
         <Text style={styles.timelineHeadingTitleText}>Lịch sử ghi chú</Text>
+        <MaterialIcons name="history" size={28} color={Color.primary} />
       </View>
     ),
     [],
@@ -201,7 +204,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
     autofocus: false,
     avoidIosKeyboard: true,
     editable: false,
-    initialContent: data?.content || "",
+    initialContent: data?.content,
     bridgeExtensions: [
       ...TenTapStartKit,
       CoreBridge.configureCSS(editorCss),
@@ -211,10 +214,6 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
       }),
     ],
   });
-
-  useEffect(() => {
-    editor.setContent(data?.content || "");
-  }, [data]);
 
   const noteHistoryData = useMemo(() => {
     return buildViewHistoryData(data?.noteHistories || [], width);
@@ -226,7 +225,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
         <View style={{ padding: 12 }}>
           <Text
             style={{ fontSize: 18, fontWeight: "bold", color: Color.primary }}>
-            Nội dung ghi chú:
+            Nội dung ghi chú
           </Text>
           <View
             style={[
@@ -246,7 +245,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
           <SizedBox height={20} />
           <Text
             style={{ fontSize: 18, fontWeight: "bold", color: Color.primary }}>
-            Sinh viên được ghi chú:
+            Sinh viên được ghi chú
           </Text>
           <SizedBox height={8} />
 
@@ -329,13 +328,27 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 12,
           }}>
-          <Timeline
-            data={noteHistoryData}
-            lineStyle={{ backgroundColor: Color.primary }}
-            timeContainerStyle={styles.timelineTimeContainerStyle}
-            contentContainerStyle={styles.timelineContentContainerStyle}
-            renderHeader={TimelineHeader}
-          />
+          {noteHistoryData.length === 0 ? (
+            <View>
+              <SizedBox height={4} />
+              <Text
+                style={{
+                  color: Color.black,
+                  fontSize: 14,
+                  textAlign: "left",
+                }}>
+                Chưa ghi nhận được thay đổi nào
+              </Text>
+            </View>
+          ) : (
+            <Timeline
+              data={noteHistoryData}
+              lineStyle={{ backgroundColor: Color.primary }}
+              timeContainerStyle={styles.timelineTimeContainerStyle}
+              contentContainerStyle={styles.timelineContentContainerStyle}
+              renderHeader={TimelineHeader}
+            />
+          )}
         </View>
       </ScrollView>
     );
@@ -355,11 +368,17 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   timelineContentContainerStyle: { flex: 1 },
-  timelineHeadingContainer: { paddingHorizontal: 12, paddingVertical: 0 },
+  timelineHeadingContainer: {
+    paddingHorizontal: 12,
+    paddingVertical: 0,
+    flexDirection: "row",
+    alignItems: "center",
+  },
   timelineHeadingTitleText: {
     color: Color.primary,
     fontSize: 18,
     fontWeight: "bold",
+    marginRight: 8,
   },
   timelineAvatarStyle: {
     borderColor: "#fff",

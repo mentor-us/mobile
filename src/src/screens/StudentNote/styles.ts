@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { screenWidth } from "~/constants";
-import { Color } from "~/constants/Color";
 
 export default StyleSheet.create({
   itemAvatar: {
@@ -15,7 +14,7 @@ export default StyleSheet.create({
   userCard: { backgroundColor: "white", elevation: 2, margin: 5 },
   userCardIcon: { backgroundColor: "white" },
   emptyContainer: {
-    marginTop: 50,
+    marginTop: 20,
     paddingBottom: 24,
     paddingHorizontal: 24,
   },
@@ -31,7 +30,7 @@ export default StyleSheet.create({
     justifyContent: "center",
   },
   emptyTitle: {
-    fontSize: 19,
+    fontSize: 16,
     fontWeight: "700",
     color: "#222",
     marginBottom: 8,

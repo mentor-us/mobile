@@ -72,7 +72,7 @@ export namespace MentorUsRoutes {
     importFaq: { fromGroupId: string; toGroupId: string };
 
     // Student note
-    createOrUpdateNote: { noteId?: string };
+    createOrUpdateNote: { noteId?: string; userIds?: string[] };
   };
 
   export type BottomTab = {

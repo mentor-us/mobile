@@ -6,6 +6,7 @@ import { HeaderBackButtonProps } from "@react-navigation/native-stack/lib/typesc
 import { useNavigation } from "@react-navigation/native";
 import { Color } from "~/constants/Color";
 import { HeaderRightProps } from "./types";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export const HeaderBackButton: React.FC<HeaderBackButtonProps> = props => {
   const navigation = useNavigation();
@@ -50,6 +51,14 @@ export const HeaderLeft = ({ text, onPress }: HeaderRightProps) => {
   return (
     <TouchableOpacity style={styles.headerRightContainer} onPress={onPress}>
       <CloseIcon stroke={Color.white} />
+    </TouchableOpacity>
+  );
+};
+
+export const HeaderIconRight = ({ text, onPress }: HeaderRightProps) => {
+  return (
+    <TouchableOpacity style={styles.headerRightContainer} onPress={onPress}>
+      <MaterialIcons name={text} size={24} color="white" />
     </TouchableOpacity>
   );
 };
