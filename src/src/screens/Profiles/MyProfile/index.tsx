@@ -33,6 +33,7 @@ import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import CacheImage from "~/components/CacheImage";
 import FastImage from "react-native-fast-image";
+import GradeBoard from "../GradeBoard";
 
 const MyProfile = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -198,6 +199,10 @@ const MyProfile = () => {
           {infoItems.map(item => {
             return <InfoItem data={item} key={item.type} />;
           })}
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Bảng điểm</Text>
+          </View>
+          <GradeBoard user={myProfile} />
           <View style={styles.infoHeader}>
             <Text style={styles.infoText}>Liên kết email</Text>
             <TouchableOpacity onPress={editLinkEmail}>
