@@ -5,7 +5,7 @@ import { Text } from "react-native-paper";
 import { LayoutDimensions } from "~/constants/GlobalStyles";
 import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
-import { EducationCap } from "~/assets/svgs";
+import { EducationCapBlue, EducationCapRed } from "~/assets/svgs";
 interface Props {
   grade: any;
 }
@@ -46,10 +46,17 @@ export default function GradeItem({ grade }: Props) {
     <View style={styles.container}>
       <View>
         <View style={styles.icon}>
-          <EducationCap
-            width={LayoutDimensions.Large}
-            height={LayoutDimensions.Large}
-          />
+          {isDangerous ? (
+            <EducationCapRed
+              width={LayoutDimensions.Large}
+              height={LayoutDimensions.Large}
+            />
+          ) : (
+            <EducationCapBlue
+              width={LayoutDimensions.Large}
+              height={LayoutDimensions.Large}
+            />
+          )}
         </View>
       </View>
       <View style={styles.courseView}>
