@@ -24,6 +24,7 @@ import GroupApi from "~/api/remote/GroupApi";
 import {useAppSelector} from "~/redux";
 import {Color} from "~/constants/Color";
 import EventEmitterNames from "~/constants/EventEmitterNames";
+import GradeBoard from "../GradeBoard";
 
 const OtherProfile: ScreenProps<"otherProfile"> = ({route}) => {
   const userId = route.params.userId;
@@ -129,6 +130,10 @@ const OtherProfile: ScreenProps<"otherProfile"> = ({route}) => {
           {infoItems.map(item => {
             return <InfoItem data={item} key={item.type} />;
           })}
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Bảng điểm</Text>
+          </View>
+          <GradeBoard user={profileData} />
         </View>
       </ScrollView>
 
