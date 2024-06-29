@@ -138,7 +138,7 @@ const MyProfile = () => {
     return (
       <View
         style={{
-          paddingVertical: 8,
+          padding: 7,
         }}>
         <FlatList
           data={listData}
@@ -196,9 +196,11 @@ const MyProfile = () => {
             </TouchableOpacity>
           </View>
           <SizedBox height={LayoutDimensions.Small} />
-          {infoItems.map(item => {
-            return <InfoItem data={item} key={item.type} />;
-          })}
+          <View style={{ padding: 7 }}>
+            {infoItems.map(item => {
+              return <InfoItem data={item} key={item.type} />;
+            })}
+          </View>
           <View style={styles.infoHeader}>
             <Text style={styles.infoText}>Bảng điểm</Text>
           </View>
