@@ -46,12 +46,15 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import FontSize from "~/constants/FontSize";
 import CustomBackdrop from "../CustomBottomSheet/CustomBackdrop";
 import ShareTypeBottomSheet from "../ShareTypeBottomSheet";
-import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import GlobalStyles from "~/constants/GlobalStyles";
 import { DefaultUserAvatar } from "~/assets/images";
 import SharePermissionBottomSheet from "../SharePermissionBottomSheet";
 import { RefreshControl } from "react-native";
 import { HeaderBackButton, HeaderIconRight } from "~/components/Header";
+import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { Note } from "~/models/note";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
 interface ViewNoteUserAccess {
   id: string;
@@ -79,142 +82,12 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
     isSuccess,
     isLoading,
     isFetchingNextPage,
-    refetch,
   } = useGetAllNoteOfUserInfinityQuery(userId, result => {
     return {
-      pages: result.pages
-        .flatMap(page => page.data)
-        .map(note => ({
-          pressAction: () => {
-            handleCloseModalPress();
-            navigation.navigate("noteDetail", { noteId: note.id });
-          },
-          title: ({ styles }) => {
-            const isVisibledOptions =
-              note.isEditable ||
-              note.owner.id === myId ||
-              note.creator.id === myId;
-            return (
-              <>
-                <View>
-                  <Text
-                    style={[
-                      styles,
-                      { color: "#333", fontSize: 14, fontWeight: "bold" },
-                    ]}
-                    numberOfLines={1}>
-                    {note.title}
-                  </Text>
-                </View>
-                <View
-                  style={
-                    isVisibledOptions
-                      ? {
-                          position: "absolute",
-                          right: 0,
-                          bottom: 0,
-                          display: "flex",
-                          flexDirection: "row",
-                        }
-                      : { display: "none" }
-                  }>
-                  {note.isEditable && (
-                    <IconButton
-                      icon="note-edit-outline"
-                      color={Color.primary}
-                      style={
-                        (note.owner.id === myId ||
-                          note.creator.id === myId) && {
-                          marginRight: 0,
-                        }
-                      }
-                      size={20}
-                      onPress={() => {
-                        handleCloseModalPress();
-                        navigation.navigate("createOrUpdateNote", {
-                          noteId: note.id,
-                        });
-                      }}
-                    />
-                  )}
-
-                  {
-                    // Only show share button if the user is the owner of the note
-                    note.owner.id === myId && (
-                      <IconButton
-                        icon="share-variant-outline"
-                        color={Color.primary}
-                        style={note.creator.id === myId && { marginRight: 0 }}
-                        size={20}
-                        onPress={() => {
-                          console.log("Share note", note.id);
-                          setSelectedNoteId(note.id);
-                          handlePresentModalPress();
-                        }}
-                      />
-                    )
-                  }
-
-                  {
-                    // Only show delete button if the user is the owner or creator of the note
-                    (note.owner.id === myId || note.creator.id === myId) && (
-                      <IconButton
-                        icon="trash-can-outline"
-                        color={Colors.red500}
-                        size={20}
-                        onPress={() => onDeleteNoteClick(note.id)}
-                      />
-                    )
-                  }
-                </View>
-              </>
-            );
-          },
-          description: () => {
-            const isVisibledOptions =
-              note.isEditable ||
-              note.owner.id === myId ||
-              note.creator.id === myId;
-            return (
-              <View style={isVisibledOptions ? { marginBottom: 26 } : {}}>
-                <RenderHTML
-                  contentWidth={width}
-                  source={{
-                    html: note.content,
-                  }}
-                />
-              </View>
-            );
-          },
-          time: {
-            content: dayjs(note.createdDate).format("DD/MM/YYYY"),
-            style: {
-              paddingTop: 8,
-              color: "#666",
-              fontSize: 13,
-            },
-          },
-          icon: () => (
-            <View>
-              <CacheImage
-                url={Helper.getImageUrl(note.creator.imageUrl)}
-                style={styles.timelineAvatarStyle}
-              />
-            </View>
-          ),
-        })),
+      pages: result.pages.flatMap(page => page.data),
       pageParams: result.pageParams,
     } as any;
   });
-
-  const TimelineHeader = () => (
-    <View style={styles.timelineHeadingContainer}>
-      <Text style={styles.timelineHeadingTitleText}>
-        Danh sách ghi chú về sinh viên
-      </Text>
-      <View style={styles.underline} />
-    </View>
-  );
 
   const LoadingComponent = () => (
     <View style={styles.centerContainer}>
@@ -240,9 +113,14 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
   const onDeleteNoteClick = useCallback((noteId: string) => {
     const deleteNote = async () => {
       setIsLoading(true);
-      mutateAsync({ noteId }).finally(() => {
-        setIsLoading(false);
-      });
+      mutateAsync(
+        { noteId },
+        {
+          onSettled: () => {
+            setIsLoading(false);
+          },
+        },
+      );
     };
     Alert.alert(
       "Xác nhận",
@@ -441,6 +319,7 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
   const renderItem = useCallback(
     ({ item, index }) => (
       <Swipeable
+        key={index.toString()}
         renderRightActions={(progress, dragAnimatedValue) =>
           renderRightActions(progress, dragAnimatedValue, index)
         }
@@ -453,7 +332,6 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
           leftStyle={styles.userCardLeft}
           titleNumberOfLines={1}
           subtitle={item.email}
-          subtitleNumberOfLines={1}
           left={props => {
             return (
               <Avatar.Image
@@ -531,6 +409,144 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
     bottomSheetSharePermissionModalRef.current?.dismiss();
   }, []);
 
+  const renderRightNoteActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragAnimatedValue: Animated.AnimatedInterpolation<number>,
+    noteId: string,
+  ) => {
+    const opacity = dragAnimatedValue.interpolate({
+      inputRange: [-50, 0],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+    return (
+      <View
+        style={{
+          marginVertical: 5,
+          marginRight: 5,
+        }}>
+        <TouchableOpacity onPress={() => onDeleteNoteClick(noteId)}>
+          <Animated.View style={[styles.deleteButton, { opacity }]}>
+            <Text style={styles.deleteButtonText}>Xoá</Text>
+          </Animated.View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderNoteItem: ListRenderItem<Note> = ({ item }) => {
+    return (
+      <Swipeable
+        key={item.id}
+        dragOffsetFromRightEdge={
+          item.owner.id === myId || item.creator.id === myId
+            ? 10
+            : Number.MAX_VALUE
+        }
+        renderRightActions={(progress, dragAnimatedValue) =>
+          renderRightNoteActions(progress, dragAnimatedValue, item.id)
+        }
+        overshootLeft={false}
+        overshootRight={true}>
+        <Card style={styles.noteCard}>
+          <Card.Title
+            title={item.title}
+            titleStyle={styles.userCardTitle}
+            leftStyle={styles.userCardLeft}
+            subtitle={
+              "Ngày tạo: " + dayjs(item.createdDate).format("DD/MM/YYYY")
+            }
+            subtitleStyle={styles.userCardSubtitle}
+            titleNumberOfLines={1}
+            left={props => {
+              return (
+                <Avatar.Image
+                  {...props}
+                  style={styles.userCardAvatar}
+                  source={() => (
+                    <CacheImage
+                      url={Helper.getImageUrl(item.creator.imageUrl)}
+                      defaultSource={DefaultUserAvatar}
+                      style={styles.userCardAvatar}
+                    />
+                  )}
+                />
+              );
+            }}
+            right={() => {
+              const isVisibledOptions =
+                item.isEditable ||
+                item.owner.id === myId ||
+                item.creator.id === myId;
+              return (
+                <View
+                  style={
+                    isVisibledOptions
+                      ? {
+                          display: "flex",
+                          flexDirection: "row",
+                        }
+                      : {
+                          display: "none",
+                        }
+                  }>
+                  {item.isEditable && (
+                    <IconButton
+                      icon="note-edit-outline"
+                      color={Color.primary}
+                      style={
+                        (item.owner.id === myId ||
+                          item.creator.id === myId) && {
+                          marginRight: 0,
+                        }
+                      }
+                      size={20}
+                      onPress={() => {
+                        handleCloseModalPress();
+                        navigation.navigate("createOrUpdateNote", {
+                          noteId: item.id,
+                        });
+                      }}
+                    />
+                  )}
+
+                  {
+                    // Only show share button if the user is the owner of the note
+                    item.owner.id === myId && (
+                      <IconButton
+                        icon="share-variant-outline"
+                        color={Color.primary}
+                        style={{ marginRight: 8 }}
+                        size={20}
+                        onPress={() => {
+                          setSelectedNoteId(item.id);
+                          handlePresentModalPress();
+                        }}
+                      />
+                    )
+                  }
+                </View>
+              );
+            }}
+          />
+          <Card.Content>
+            <View>
+              <RenderHTML
+                contentWidth={width}
+                source={{
+                  html: item.content,
+                }}
+                baseStyle={{
+                  fontSize: 16,
+                }}
+              />
+            </View>
+          </Card.Content>
+        </Card>
+      </Swipeable>
+    );
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -540,29 +556,21 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
           paddingBottom: 12,
         },
       ]}>
-      <ScrollView
-        style={styles.container}
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refetch} />
-        }>
-        <Timeline
-          data={data?.pages || []}
-          lineStyle={{ backgroundColor: Color.primary }}
-          timeContainerStyle={styles.timelineTimeContainerStyle}
-          contentContainerStyle={styles.timelineContentContainerStyle}
-          TimelineHeader={TimelineHeader}
-          TimelineFooter={() =>
-            isLoading || isFetchingNextPage ? (
-              <LoadingComponent />
-            ) : (
-              <EmptyComponent />
-            )
-          }
-          onEndReachedThreshold={0.8}
-          onEndReached={hasNextPage ? fetchNextPage : undefined}
-        />
-      </ScrollView>
-
+      <FlashList<Note>
+        data={(data?.pages as Note[]) || []}
+        renderItem={renderNoteItem}
+        estimatedItemSize={200}
+        ListEmptyComponent={EmptyComponent}
+        ListFooterComponent={
+          isLoading || isFetchingNextPage ? (
+            <LoadingComponent />
+          ) : (
+            <EmptyComponent />
+          )
+        }
+        onEndReachedThreshold={0.8}
+        onEndReached={hasNextPage ? fetchNextPage : undefined}
+      />
       <BottomSheetModalProvider>
         <BottomSheetModal
           ref={bottomSheetModalRef}
@@ -771,6 +779,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 
+  noteCard: { backgroundColor: "white", margin: 5 },
+
   userCard: {
     margin: 0,
     minHeight: 50,
@@ -781,13 +791,18 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
+  userCardSubtitle: {
+    fontSize: 12,
+    margin: 0,
+    padding: 0,
+  },
   userCardLeft: {
-    marginRight: 12,
+    marginRight: 16,
   },
   userCardAvatar: {
     borderRadius: 99,
-    height: 40,
-    width: 40,
+    height: 42,
+    width: 42,
   },
 
   sectionHeaderText: {
@@ -829,13 +844,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#b60000",
     flexDirection: "column",
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     height: "100%",
   },
   deleteButtonText: {
     color: "#fcfcfc",
     fontWeight: "bold",
-    padding: 3,
+    fontSize: 16,
   },
 
   marginRight: {

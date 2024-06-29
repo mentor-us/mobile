@@ -98,7 +98,7 @@
     "react-native-fast-image": "^8.6.3",
     "react-native-floating-action": "^1.22.0",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "~2.8.0",
+    "react-native-gesture-handler": "^2.17.1",
     "react-native-gifted-chat": "^1.1.0",
     "react-native-image-picker": "^7.1.2",
     "react-native-image-slider": "^2.0.3",
