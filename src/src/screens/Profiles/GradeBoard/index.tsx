@@ -1,27 +1,33 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import {
   getAllSemesterOfYear,
   useGetAllGrade,
   useGetAllYears,
 } from "~/app/server/grades/queries";
 import GradeItem from "./GradeItem";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Text } from "react-native-paper";
+import { Colors, Text } from "react-native-paper";
 import FontSize from "~/constants/FontSize";
 import { useQueryClient } from "@tanstack/react-query";
-interface Props {
-  user: any;
+import { Dropdown } from "react-native-element-dropdown";
+import { Color } from "~/constants/Color";
+import { UserProfileModel } from "~/models/user";
+
+interface GradeBoardProps {
+  user: UserProfileModel;
 }
 
-export default function GradeBoard({ user }: Props) {
+export default function GradeBoard({ user }: GradeBoardProps) {
   const { data: years } = useGetAllYears("");
   const [year, setYear] = useState(null);
   const [semester, setSemester] = useState(null);
   const queryClient = useQueryClient();
+  const [isYearFocus, setIsYearFocus] = useState(false);
+  const [isSemesterFocus, setIsSemesterFocus] = useState(false);
 
   const { data: semesters } = getAllSemesterOfYear("");
+
   const { data: grades } = useGetAllGrade({
     userId: user?.id ?? null,
     yearId: year,
@@ -29,61 +35,72 @@ export default function GradeBoard({ user }: Props) {
     pageSize: 25,
     page: 0,
   });
-  const [open, setOpen] = useState(false);
-  const [openSemester, setOpenSemester] = useState(false);
-  useMemo(() => {
+
+  useEffect(() => {
     queryClient.refetchQueries({
       queryKey: ["grades"],
     });
   }, [year, semester]);
+
   return (
     <View>
       <View style={{ marginLeft: 7, paddingVertical: 8 }}>
         <Text style={{ fontSize: FontSize.large }}>Năm học:</Text>
       </View>
-      <View
-        style={{
-          backgroundColor: "transparent",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: open ? 1000 : 100,
-          paddingLeft: 7,
-        }}>
-        <DropDownPicker
-          placeholder="Chọn năm học"
-          open={open}
+      <View style={styles.container}>
+        <Dropdown
+          data={years ?? []}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          onChange={item => {
+            setYear(item.value);
+            setIsYearFocus(false);
+          }}
+          placeholder={!isYearFocus ? "Chọn năm học" : "..."}
           value={year}
-          items={years ?? []}
-          setOpen={setOpen}
-          setValue={setYear}
-          theme="LIGHT"
-          multiple={false}
-          mode="SIMPLE"
+          onFocus={() => setIsYearFocus(true)}
+          onBlur={() => setIsYearFocus(false)}
+          style={[
+            styles.dropdown,
+            isYearFocus && { borderColor: Color.primary },
+          ]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          activeColor={Colors.grey300}
         />
       </View>
+
       <View style={{ marginLeft: 7, paddingVertical: 8 }}>
         <Text style={{ fontSize: FontSize.large }}>Học kì:</Text>
       </View>
-      <View
-        style={{
-          backgroundColor: "transparent",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: openSemester ? 1000 : 100,
-          paddingLeft: 7,
-        }}>
-        <DropDownPicker
-          placeholder="Chọn học kì"
-          open={openSemester}
+      <View style={styles.container}>
+        <Dropdown
+          style={[
+            styles.dropdown,
+            isSemesterFocus && { borderColor: Color.primary },
+          ]}
+          data={semesters ?? []}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          onChange={item => {
+            setSemester(item.value);
+            setIsSemesterFocus(false);
+          }}
+          placeholder={!isSemesterFocus ? "Chọn học kì" : "..."}
           value={semester}
-          items={semesters ?? []}
-          setOpen={setOpenSemester}
-          setValue={setSemester}
-          theme="LIGHT"
-          multiple={false}
-          mode="SIMPLE"
+          onFocus={() => setIsSemesterFocus(true)}
+          onBlur={() => setIsSemesterFocus(false)}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
         />
       </View>
+
       <View style={{ padding: 7 }}>
         {grades?.data &&
           [...grades?.data].map(grade => {
@@ -93,3 +110,42 @@ export default function GradeBoard({ user }: Props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+  },
+  dropdown: {
+    height: 50,
+    borderColor: Colors.black,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+});
