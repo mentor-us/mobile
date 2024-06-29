@@ -23,6 +23,7 @@ import GroupApi from "~/api/remote/GroupApi";
 import { useAppSelector } from "~/redux";
 import { Color } from "~/constants/Color";
 import EventEmitterNames from "~/constants/EventEmitterNames";
+import GradeBoard from "../GradeBoard";
 import { RoleType } from "~/models/commonTypes";
 import { useGetGroupDetail } from "~/app/server/groups/queries";
 import { useCurrentUser, useGetUserDetail } from "~/app/server/users/queries";
@@ -290,6 +291,10 @@ const OtherProfile: ScreenProps<"otherProfile"> = ({ route }) => {
           {infoItems.map(item => {
             return <InfoItem data={item} key={item.type} />;
           })}
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Bảng điểm</Text>
+          </View>
+          <GradeBoard user={profileData} />
         </View>
 
         {/* <View style={{ marginHorizontal: 16, marginTop: 8 }}>
