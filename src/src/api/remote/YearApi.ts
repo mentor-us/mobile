@@ -1,20 +1,19 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "./AxiosClient";
 
-const GradeApi = {
-  getAllGrade: async params => {
-    const URL = "/api/grades";
+const YearApi = {
+  getAllYears: async params => {
+    const URL = "/api/years";
     try {
       const response: AxiosResponse = await axiosClient.get(URL, {
         params,
       });
-      console.log("params");
-      console.log(params);
       return response;
     } catch (error) {
       console.log("@API_ERROR_getHomePageData: ", error);
     }
   },
+  getAllSemesterOfYear: params => axiosClient.get(`/api/semesters`, { params }),
 };
 
-export default GradeApi;
+export default YearApi;
