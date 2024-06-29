@@ -55,6 +55,9 @@ import { HeaderBackButton, HeaderIconRight } from "~/components/Header";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Note } from "~/models/note";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+import { Skeleton } from "@rneui/themed";
+import LinearGradient from "react-native-linear-gradient";
+import { screenWidth } from "~/constants";
 
 interface ViewNoteUserAccess {
   id: string;
@@ -82,6 +85,8 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
     isSuccess,
     isLoading,
     isFetchingNextPage,
+    isRefetching,
+    refetch,
   } = useGetAllNoteOfUserInfinityQuery(userId, result => {
     return {
       pages: result.pages.flatMap(page => page.data),
@@ -89,9 +94,62 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
     } as any;
   });
 
+  const SkeletonCard = () => (
+    <Card style={{ width: "100%", marginHorizontal: 8, marginVertical: 4 }}>
+      <Card.Title
+        title={
+          <Skeleton
+            width={100}
+            LinearGradientComponent={LinearGradient}
+            animation="wave"
+          />
+        }
+        titleStyle={styles.userCardTitle}
+        leftStyle={styles.userCardLeft}
+        subtitle={
+          <Skeleton
+            width={screenWidth * 0.5}
+            LinearGradientComponent={LinearGradient}
+            animation="wave"
+          />
+        }
+        subtitleStyle={styles.userCardSubtitle}
+        titleNumberOfLines={1}
+        left={props => {
+          return (
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              circle
+              width={props.size}
+              height={props.size}
+            />
+          );
+        }}
+      />
+      <Card.Content>
+        <View>
+          <Skeleton
+            width={"100%"}
+            height={150}
+            LinearGradientComponent={LinearGradient}
+            animation="wave"
+          />
+        </View>
+      </Card.Content>
+    </Card>
+  );
+
   const LoadingComponent = () => (
-    <View style={styles.centerContainer}>
-      <Chase color={Color.primary} />
+    <View
+      style={{
+        paddingHorizontal: 8,
+        alignItems: "center",
+      }}>
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
     </View>
   );
 
@@ -568,6 +626,9 @@ const UserNotes: ScreenProps<"userNotes"> = ({ navigation, route }) => {
             <EmptyComponent />
           )
         }
+        keyExtractor={item => item.id}
+        refreshing={isRefetching}
+        onRefresh={refetch}
         onEndReachedThreshold={0.8}
         onEndReached={hasNextPage ? fetchNextPage : undefined}
       />
@@ -779,7 +840,11 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 
-  noteCard: { backgroundColor: "white", margin: 5 },
+  noteCard: {
+    backgroundColor: "white",
+    marginHorizontal: 8,
+    marginVertical: 4,
+  },
 
   userCard: {
     margin: 0,
