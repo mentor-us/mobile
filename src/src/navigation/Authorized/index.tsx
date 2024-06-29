@@ -42,7 +42,10 @@ import Workspace from "~/screens/Groups/Workspace";
 import AddChannel from "~/screens/Groups/Workspace/AddChannel";
 import ForwardMessage from "~/screens/Groups/ForwardMessage";
 import LinkEmail from "~/screens/Profiles/LinkEmail";
-import { View } from "react-native-animatable";
+import CreateOrUpdateNote from "~/screens/StudentNote/CreateOrUpdateNote";
+import NoteDetail from "~/screens/StudentNote/NoteDetail";
+import UserNotes from "~/screens/StudentNote/UserNotes";
+
 const AuthorizedStack = createStackNavigator<MentorUsRoutes.Authorized>();
 
 const Authorized = () => {
@@ -394,6 +397,42 @@ const Authorized = () => {
             ...TransitionPresets.SlideFromRightIOS,
             headerTitleAlign: "center",
             title: "Chọn câu hỏi",
+          };
+        }}
+      />
+
+      <AuthorizedStack.Screen
+        name="createOrUpdateNote"
+        component={CreateOrUpdateNote}
+        options={({}) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: "Tạo ghi chú",
+          };
+        }}
+      />
+
+      <AuthorizedStack.Screen
+        name="noteDetail"
+        component={NoteDetail}
+        options={({}) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: "Chi tiết ghi chú",
+          };
+        }}
+      />
+
+      <AuthorizedStack.Screen
+        name="userNotes"
+        component={UserNotes}
+        options={({ route }) => {
+          return {
+            ...TransitionPresets.SlideFromRightIOS,
+            headerTitleAlign: "center",
+            title: route.params.userName,
           };
         }}
       />

@@ -12,9 +12,25 @@ import { ShortProfileUserModel } from "~/models/user";
 import { MyMarkedDate, MyMarkingProps, ScheduleModel } from "~/models/schedule";
 import { BASE_URL } from "@env";
 import { Asset } from "react-native-image-picker";
+import { VIDEO_EXT } from "~/constants";
 
 const MOV_REG = RegExp(/(.*).mov/i);
+
 export default class Helper {
+  static isIos = Platform.OS === "ios";
+  static isAndroid = Platform.OS === "android";
+
+  static isVideoFile = (fileName: string) => {
+    let status = false;
+    for (let i = 0; i < VIDEO_EXT.length; i++) {
+      if (fileName.toLowerCase().includes(VIDEO_EXT[i])) {
+        status = true;
+        break;
+      }
+    }
+
+    return status;
+  };
   static isBlank(str) {
     return !str || /^\s*$/.test(str);
   }

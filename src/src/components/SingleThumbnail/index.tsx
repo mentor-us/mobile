@@ -108,12 +108,6 @@ const SingleThumbnail: FC<Props> = ({ ...props }) => {
       disabled={!props.onPress}
       style={[styles.imageView, props.style]}
       onPress={props.onPress}>
-      {/* <IMGBase64
-        useSkeleton
-        resizeMode={props.resizeMode ?? "cover"}
-        style={{ height: props.height, width: props.width }}
-        url={(props.media.url || props.media.assetLocal) ?? ""}
-      /> */}
       <CacheImage
         resizeMode={props.resizeMode ?? FastImage.resizeMode.cover}
         style={{ height: props.height, width: props.width }}

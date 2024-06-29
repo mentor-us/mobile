@@ -52,6 +52,11 @@ export namespace MentorUsRoutes {
     };
     taskAssignees: { taskId: string; groupId: string };
 
+    // Student Note
+    studentNote: { searchOn: boolean; searchQuery: string };
+    userNotes: { userId: string; userName: string };
+    noteDetail: { noteId: string };
+
     // Profile
     otherProfile: { userId: string; groupId: string };
     editProfile: undefined;
@@ -65,12 +70,16 @@ export namespace MentorUsRoutes {
     createFaq: { groupId: string; faqId?: string };
     selectGroup: { groupId: string };
     importFaq: { fromGroupId: string; toGroupId: string };
+
+    // Student note
+    createOrUpdateNote: { noteId?: string; userIds?: string[] };
   };
 
   export type BottomTab = {
     homeStack: undefined;
     profileStack: undefined;
     scheduleStack: undefined;
+    studentNoteStack: undefined;
   };
 
   export type HomeStack = {
@@ -85,6 +94,10 @@ export namespace MentorUsRoutes {
 
   export type ProfileStack = {
     myProfile: undefined;
+  };
+
+  export type StudentNoteStack = {
+    studentNote: { searchOn: boolean; searchQuery: string };
   };
 
   export type AllRoute = UnAuthorized &

@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -22,22 +23,28 @@ import styles, { AVATAR_SIZE } from "./styles";
 import GroupApi from "~/api/remote/GroupApi";
 import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 import { CameraIcon } from "~/assets/svgs";
-import { handleReadStoragePermission } from "~/utils/Permission";
-import { BottomSheetModalRef } from "~/components/BottomSheetModal/index.props";
-import { StorageMediaAttachemt } from "~/models/media";
 import ToolApi from "~/api/remote/ToolApi";
 import SingleThumbnail from "~/components/SingleThumbnail";
-import CacheImage from "~/components/CacheImage";
 import Helper from "~/utils/Helper";
-import FastImage from "react-native-fast-image";
-import { useGetGroupDetail } from "~/app/server/groups/queries";
+import {
+  GetGroupDetailQueryKey,
+  useGetGroupDetail,
+} from "~/app/server/groups/queries";
 import Permission from "~/utils/PermissionStrategies";
+import {
+  ImageLibraryOptions,
+  ImagePickerResponse,
+  launchImageLibrary,
+} from "react-native-image-picker";
+import { MAX_SIZE_IMG } from "~/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
   const navigation = useNavigation();
   const { groupId, type } = route.params;
 
   // State
+  const [isFetchGroupData, setIsFetchGroupData] = useState<boolean>(false);
   const [groupData, setGroupData] = useState<GroupModel>(GROUP_SAMPLE);
   const queryAction = useUpdateQueryGroupList();
   const [loadingAvatar, setLoadingAvatar] = useState<boolean>(false);
@@ -47,6 +54,7 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
     isSuccess: isSuccessParentDetail,
     refetch: refetchParentDetail,
   } = useGetGroupDetail(groupData.parentId ?? "");
+  const queryClient = useQueryClient();
 
   const infoItems: InfoItemModel[] = useMemo(() => {
     return [
@@ -114,7 +122,9 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
 
   const fetchGroupData = async (groupId: string) => {
     try {
+      setIsFetchGroupData(true);
       const data: GroupModel = await GroupService.findById(groupId);
+      setIsFetchGroupData(false);
       setGroupData(data);
     } catch (error) {
       console.log("@SCREEN_GroupDetail: ", error);
@@ -123,19 +133,50 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
 
   const updateAvatar = async () => {
     try {
-      setLoadingAvatar(true);
       const hasPermission = await Permission.handleWriteStoragePermission();
       if (hasPermission) {
-        BottomSheetModalRef.current?.show("gallery", false, {
-          run: async (image: StorageMediaAttachemt) => {
-            const data = await ToolApi.updateGroupAvatar(image, groupData.id);
-            setGroupData(prev => ({ ...prev, imageUrl: data }));
-            queryAction.updateGroupAvatar(groupData.id, data);
+        const options: ImageLibraryOptions = {
+          mediaType: "photo",
+          includeBase64: false,
+          maxHeight: 2000,
+          maxWidth: 2000,
+          selectionLimit: 1,
+          presentationStyle: "fullScreen",
+        };
+
+        launchImageLibrary(options, (response: ImagePickerResponse) => {
+          if (response.didCancel) {
             setLoadingAvatar(false);
-          },
-          cancel: () => {
+            console.log("User cancelled image picker");
+          } else if (response.errorMessage) {
             setLoadingAvatar(false);
-          },
+            console.error("Image picker error: ", response.errorMessage);
+          } else {
+            const selectedMedia = Helper.formatMediaListMirage(
+              response.assets || [],
+            );
+
+            if (
+              selectedMedia.some(item => item.size && item.size > MAX_SIZE_IMG)
+            ) {
+              Alert.alert(
+                "Cảnh báo",
+                `Kích thước ảnh vượt quá ${Helper.formatFileSize(
+                  MAX_SIZE_IMG,
+                )}`,
+              );
+              return;
+            }
+
+            setLoadingAvatar(true);
+            ToolApi.updateGroupAvatar(selectedMedia[0], groupData.id).then(
+              data => {
+                setGroupData(prev => ({ ...prev, imageUrl: data }));
+                queryAction.updateGroupAvatar(groupData.id, data);
+                setLoadingAvatar(false);
+              },
+            );
+          }
         });
       }
     } catch (error) {
@@ -162,12 +203,17 @@ const GroupDetail: ScreenProps<"groupDetail"> = ({ route }) => {
         <View style={styles.avatar_coverphoto_ctn}>
           <View style={styles.avatar_ctn}>
             <View style={styles.avatar}>
-              <CacheImage
-                url={Helper.getImageUrl(
-                  groupData.imageUrl ?? parentDetail?.imageUrl,
-                )}
-                defaultSource={DefaultGroupAvatar}
-                style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}
+              <SingleThumbnail
+                media={{
+                  type: "IMAGE",
+                  url: Helper.getImageUrl(
+                    groupData.imageUrl ?? parentDetail?.imageUrl,
+                  ),
+                  assetLocal: DefaultGroupAvatar,
+                  isLoading: loadingAvatar || isFetchGroupData,
+                }}
+                width={AVATAR_SIZE}
+                height={AVATAR_SIZE}
               />
             </View>
 

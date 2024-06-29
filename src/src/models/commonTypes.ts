@@ -33,3 +33,13 @@ export type PermissionType =
   | "GROUP_SETTINGS";
 
 export type CheckBoxType = "checked" | "unchecked" | "indeterminate";
+
+export type PaginationData<T> = {
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalCounts: number;
+  first: boolean;
+  last: boolean;
+  data: T[];
+};

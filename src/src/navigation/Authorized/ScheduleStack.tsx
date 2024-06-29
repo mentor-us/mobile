@@ -1,26 +1,26 @@
 import React from "react";
-import {MentorUsRoutes} from "~/types/navigation";
-import {createStackNavigator} from "@react-navigation/stack";
-import {Color} from "~/constants/Color";
+import { MentorUsRoutes } from "~/types/navigation";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Color } from "~/constants/Color";
 import Schedules from "~/screens/Schedules";
 
-const ProfileNav = createStackNavigator<MentorUsRoutes.ScheduleStack>();
+const ScheduleStackNav = createStackNavigator<MentorUsRoutes.ScheduleStack>();
 
 const ScheduleStack = () => {
   return (
-    <ProfileNav.Navigator
+    <ScheduleStackNav.Navigator
       screenOptions={{
         headerShown: true,
         headerTintColor: Color.white,
-        headerStyle: {backgroundColor: Color.primary},
+        headerStyle: { backgroundColor: Color.primary },
         headerTitleAlign: "center",
       }}>
-      <ProfileNav.Screen
+      <ScheduleStackNav.Screen
         name="scheduleList"
-        options={{title: ""}}
+        options={{ title: "" }}
         component={Schedules}
       />
-    </ProfileNav.Navigator>
+    </ScheduleStackNav.Navigator>
   );
 };
 
