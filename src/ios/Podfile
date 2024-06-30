@@ -23,7 +23,7 @@ target 'MentorUS' do
     end
   end
   config = use_native_modules!
-  
+
   $RNVideoUseVideoCaching = true
 
   # Flags change depending on the env values.
@@ -35,6 +35,9 @@ target 'MentorUS' do
   pod 'GoogleDataTransport', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'nanopb', :modular_headers => true
+  pod 'DVAssetLoaderDelegate', :modular_headers => true
+  pod 'SPTPersistentCache', :modular_headers => true
+  pod 'react-native-video', :path => '../node_modules/react-native-video', :modular_headers => true
 
   pod 'SDWebImagePhotosPlugin'
 
