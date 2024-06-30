@@ -1,11 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  FlatList,
-  ListRenderItemInfo,
-  TouchableOpacity,
-  View,
-  Text,
-} from "react-native";
+import { FlatList, ListRenderItemInfo, View, Text } from "react-native";
 import { Avatar, Card } from "react-native-paper";
 import CacheImage from "~/components/CacheImage";
 import Helper from "~/utils/Helper";
@@ -14,7 +8,10 @@ import { FAB, SearchBar } from "@rneui/themed";
 import { Color } from "~/constants/Color";
 import { RouteProp } from "@react-navigation/native";
 import { NoteUserProfile } from "~/models/note";
-import { BorderlessButton } from "react-native-gesture-handler";
+import {
+  BorderlessButton,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import { Fontisto } from "@expo/vector-icons";
 import { MentorUsRoutes } from "~/types/navigation";
 import { useGetNotedUsersInfinityQuery } from "~/app/server/notes/queries";

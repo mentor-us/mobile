@@ -36,8 +36,8 @@ export const useGetUserDetail = <TData = UserProfileModel>(
   });
 };
 
-export const useSearchAllUsersByEmail = <TData = UserProfileModel>(
-  select?: (data: UserProfileModel) => TData,
+export const useSearchAllUsersByEmail = <TData = UserProfileModel[]>(
+  select?: (data: UserProfileModel[]) => TData,
 ) => {
   const { authStore } = useMobxStore();
   return useQuery({

@@ -71,6 +71,7 @@ export const useShareNoteMutation = (userId: string) => {
       noteId: string;
       shareNoteRequest: ShareNoteRequest;
     }) => {
+      console.log("shareNoteRequest", noteId, shareNoteRequest);
       return await NoteService.shareNote(noteId, shareNoteRequest);
     },
     onSuccess() {

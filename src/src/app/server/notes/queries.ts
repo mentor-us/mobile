@@ -86,7 +86,7 @@ export const useGetNoteDetailQuery = <TData = NoteDetail>(
   useQuery({
     queryKey: GetNoteDetailQueryKey(noteId),
     queryFn: async () => {
-      return NoteService.getNoteDetail(noteId!);
+      return NoteService.getNoteDetail(noteId || "");
     },
     select,
     enabled: !!noteId,

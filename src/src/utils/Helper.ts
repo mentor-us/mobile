@@ -16,6 +16,28 @@ import { VIDEO_EXT } from "~/constants";
 
 const MOV_REG = RegExp(/(.*).mov/i);
 
+export function fromValuetoNumber<T>(
+  o: T,
+  value: string | number,
+): { [P in keyof T]: T[P] } {
+  if (typeof value === "string") {
+    return (o as T)[value];
+  } else if (typeof value === "number") {
+    return (o as T)[o[value]];
+  }
+}
+
+export function fromValueToString<T>(
+  o: T,
+  value: string | number,
+): { [P in keyof T]: T[P] } {
+  if (typeof value === "string") {
+    return (o as T)[o[value]];
+  } else if (typeof value === "number") {
+    return (o as T)[value];
+  }
+}
+
 export default class Helper {
   static isIos = Platform.OS === "ios";
   static isAndroid = Platform.OS === "android";

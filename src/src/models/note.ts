@@ -1,3 +1,5 @@
+import { UserProfileModel } from "./user";
+
 export interface NoteUserProfile {
   id: string;
   name: string;
@@ -52,17 +54,23 @@ export interface NoteDetail {
   isEditable: boolean;
   noteHistories: NoteHistory[] | null;
   users: NoteUserProfile[];
+  shareType: NoteShareType;
   userAccesses: NoteUserAccess[];
 }
 
 export interface NoteUserAccess {
+  user: UserProfileModel;
+  notePermission: NotePermission;
+}
+
+export interface NoteUserAccessRequest {
   userId: string;
-  permission: NotePermission;
+  accessType: NotePermission;
 }
 
 export interface ShareNoteRequest {
   shareType: NoteShareType;
-  users: NoteUserAccess[];
+  users: NoteUserAccessRequest[];
 }
 
 export enum NoteShareType {
