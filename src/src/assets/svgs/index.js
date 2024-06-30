@@ -116,6 +116,9 @@ import AddNode from "./_raw/add-node.svg";
 import CheckBoxInactiveIcon from "./_raw/checkbox-blank-circle-svgrepo-com.svg";
 import CheckBoxActiveIcon from "./_raw/checkbox-circle-svgrepo-com.svg";
 import PencilBlack from "./_raw/pencil-svgrepo-com.svg";
+import EducationCap from "./_raw/education-cap-svgrepo-com.svg";
+import EducationCapRed from "./_raw/education-cap-red.svg";
+import EducationCapBlue from "./_raw/education-cap-blue.svg";
 
 // Custom icon
 import HomeIcon from "./HomeIcon";
@@ -224,7 +227,9 @@ export {
   CheckBoxInactiveIcon,
   CheckBoxActiveIcon,
   PencilBlack,
-
+  EducationCap,
+  EducationCapRed,
+  EducationCapBlue,
   // custom
   HomeIcon,
   ChatIcon,

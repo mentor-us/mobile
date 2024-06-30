@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.white,
+    paddingBottom: 60,
   },
   avatar_coverphoto_ctn: {
     flexDirection: "row",

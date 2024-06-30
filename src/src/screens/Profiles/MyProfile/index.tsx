@@ -5,6 +5,7 @@ import {
   ScrollView,
   Text,
   FlatList,
+  Alert,
 } from "react-native";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -33,6 +34,17 @@ import { observer } from "mobx-react-lite";
 import { useMobxStore } from "~/mobx/store";
 import CacheImage from "~/components/CacheImage";
 import FastImage from "react-native-fast-image";
+import GradeBoard from "../GradeBoard";
+import { MAX_SIZE_IMG } from "~/constants";
+import {
+  ImageLibraryOptions,
+  ImagePickerResponse,
+  launchImageLibrary,
+} from "react-native-image-picker";
+import SingleThumbnail from "~/components/SingleThumbnail";
+import { CurrentUserQueryKey } from "~/app/server/users/keys";
+import { UserProfileModel } from "~/models/user";
+
 
 const MyProfile = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -74,21 +86,54 @@ const MyProfile = () => {
   const editLinkEmail = () => navigation.navigate("linkEmail");
 
   const updateAvatar = async () => {
-    setLoadingAvatar(true);
     const hasPermission = await Permission.handleReadStoragePermission();
     if (hasPermission) {
-      BottomSheetModalRef.current?.show("gallery", false, {
-        run: async (image: StorageMediaAttachemt) => {
-          const data = await ToolApi.updateAvatar(image);
-          if (data) {
-            await refetchMyProfile();
-            dispatcher(UserActions.updateAvatar(data));
+      const options: ImageLibraryOptions = {
+        mediaType: "photo",
+        includeBase64: false,
+        maxHeight: 2000,
+        maxWidth: 2000,
+        selectionLimit: 1,
+        presentationStyle: "fullScreen",
+      };
+
+      launchImageLibrary(options, (response: ImagePickerResponse) => {
+        if (response.didCancel) {
+          setLoadingAvatar(false);
+          console.log("User cancelled image picker");
+        } else if (response.errorMessage) {
+          setLoadingAvatar(false);
+          console.error("Image picker error: ", response.errorMessage);
+        } else {
+          const selectedMedia = Helper.formatMediaListMirage(
+            response.assets || [],
+          );
+
+          if (
+            selectedMedia.some(item => item.size && item.size > MAX_SIZE_IMG)
+          ) {
+            Alert.alert(
+              "Cảnh báo",
+              `Kích thước ảnh vượt quá ${Helper.formatFileSize(MAX_SIZE_IMG)}`,
+            );
+            return;
           }
-          setLoadingAvatar(false);
-        },
-        cancel: () => {
-          setLoadingAvatar(false);
-        },
+
+          setLoadingAvatar(true);
+          ToolApi.updateAvatar(selectedMedia[0]).then(async data => {
+            if (data) {
+              await refetchMyProfile();
+              dispatcher(UserActions.updateAvatar(data));
+              queryClient.setQueryData<UserProfileModel>(
+                CurrentUserQueryKey,
+                oldData => {
+                  return { ...oldData, imageUrl: data };
+                },
+              );
+            }
+            setLoadingAvatar(false);
+          });
+        }
       });
     }
   };
@@ -137,7 +182,7 @@ const MyProfile = () => {
     return (
       <View
         style={{
-          paddingVertical: 8,
+          padding: 7,
         }}>
         <FlatList
           data={listData}
@@ -171,14 +216,15 @@ const MyProfile = () => {
           {/* Avatar */}
           <View style={styles.avatar_ctn}>
             <View style={styles.avatar}>
-              <CacheImage
-                style={{
-                  width: AVATAR_SIZE,
-                  height: AVATAR_SIZE,
+              <SingleThumbnail
+                media={{
+                  type: "IMAGE",
+                  url: Helper.getImageUrl(myProfile.imageUrl),
+                  assetLocal: DefaultUserAvatar,
+                  isLoading: loadingAvatar,
                 }}
-                url={Helper.getImageUrl(myProfile.imageUrl)}
-                defaultSource={DefaultUserAvatar}
-                resizeMode={FastImage.resizeMode.cover}
+                width={AVATAR_SIZE}
+                height={AVATAR_SIZE}
               />
             </View>
             <TouchableOpacity style={styles.cameraIcon} onPress={updateAvatar}>
@@ -195,9 +241,15 @@ const MyProfile = () => {
             </TouchableOpacity>
           </View>
           <SizedBox height={LayoutDimensions.Small} />
-          {infoItems.map(item => {
-            return <InfoItem data={item} key={item.type} />;
-          })}
+          <View style={{ padding: 7 }}>
+            {infoItems.map(item => {
+              return <InfoItem data={item} key={item.type} />;
+            })}
+          </View>
+          <View style={styles.infoHeader}>
+            <Text style={styles.infoText}>Bảng điểm</Text>
+          </View>
+          <GradeBoard user={myProfile} />
           <View style={styles.infoHeader}>
             <Text style={styles.infoText}>Liên kết email</Text>
             <TouchableOpacity onPress={editLinkEmail}>

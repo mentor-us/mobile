@@ -40,4 +40,7 @@ export const SOCKET_EVENT = {
   RECEIVE_VOTING: "receive_voting",
 };
 
-export const MAX_SIZE_IMG = 5 * 1000 * 1000;
+export const IMAGE_EXT = [".gif", ".jpg", ".jpeg", ".png"];
+export const VIDEO_EXT = [".mpg", ".mp2", ".mpeg", ".mpe", ".mpv", ".mp4"];
+
+export const MAX_SIZE_IMG = 10 * 1000 * 1000;

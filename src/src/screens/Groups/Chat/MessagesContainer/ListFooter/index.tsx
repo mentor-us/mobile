@@ -44,9 +44,9 @@ const ListFooter = ({ type }: Props) => {
   }
 
   const renderNoContent = () => {
-    if (type === "PRIVATE_MESSAGE") {
-      return <></>;
-    }
+    // if (type === "PRIVATE_MESSAGE") {
+    //   return <></>;
+    // }
 
     return (
       <View style={styles.container}>
@@ -60,8 +60,8 @@ const ListFooter = ({ type }: Props) => {
     );
   };
 
-  if (!state.loadingMoreMessage && state.page < 1 ) {
-      return renderNoContent();
+  if (!state.loadingMoreMessage && state.page < 1) {
+    return renderNoContent();
   }
 
   if (state._messageList && state._messageList.length < 15) {

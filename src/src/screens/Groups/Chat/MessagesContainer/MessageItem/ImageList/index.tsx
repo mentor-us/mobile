@@ -1,5 +1,5 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { commonStyles, ownerStyle, otherStyle } from "./styles";
 import { DefaultUserAvatar } from "~/assets/images";
 import { useNavigation } from "@react-navigation/native";
@@ -23,6 +23,8 @@ import { useChatScreenState } from "~/context/chat";
 import { ForwardMessageIcon, NotiFailed } from "~/assets/svgs";
 import GroupApi from "~/api/remote/GroupApi";
 import CacheImage from "~/components/CacheImage";
+import VideoPlayer from "~/components/VideoPlayer";
+import { VideoRef } from "react-native-video";
 
 interface Props {
   message: MessageModel;
@@ -32,6 +34,7 @@ const ImageList = ({ message }: Props) => {
   const userData = useAppSelector(state => state.user.data);
   const state = useChatScreenState();
   const navigation = useNavigation();
+  const videoRef = useRef<VideoRef>(null);
 
   const isOwner = useMemo(() => {
     return userData.id === message.sender.id;
@@ -144,6 +147,10 @@ const ImageList = ({ message }: Props) => {
     });
   };
 
+  const isVideoCheck = message.images?.some(
+    image => image.url?.endsWith(".mp4") || image.url?.endsWith(".mov"),
+  );
+
   return (
     <Animated.View style={[styles.root, commonStyles.root]} entering={entering}>
       {!isOwner && (
@@ -183,7 +190,13 @@ const ImageList = ({ message }: Props) => {
         <TouchableOpacity
           style={[commonStyles.container, styles.container]}
           disabled={message.uploadFailed}
-          onPress={showImageSlider}
+          onPress={
+            isVideoCheck
+              ? () => {
+                  videoRef.current?.presentFullscreenPlayer();
+                }
+              : showImageSlider
+          }
           onLongPress={onLongPress}>
           {!isOwner && (
             <View style={GlobalStyles.flexRow}>
@@ -192,11 +205,25 @@ const ImageList = ({ message }: Props) => {
           )}
           <SizedBox height={4} />
           <View>
-            <GridThumbnail
-              useSkeletonWhenLoad
-              maxWidth={screenWidth * 0.8}
-              mediaData={message.images || []}
-            />
+            {isVideoCheck && message.images?.length === 1 ? (
+              <VideoPlayer
+                video={{ uri: Helper.getImageUrl(message.images[0].url) }}
+                containerStyle={{
+                  width: screenWidth * 0.8,
+                  height: screenWidth * 0.5,
+                }}
+                videoProps={{
+                  ref: videoRef,
+                  poster: Helper.getImageUrl(message.images[0].url),
+                }}
+              />
+            ) : (
+              <GridThumbnail
+                useSkeletonWhenLoad
+                maxWidth={screenWidth * 0.8}
+                mediaData={message.images || []}
+              />
+            )}
           </View>
           <SizedBox height={4} />
           <Text style={otherStyle.sentTime}>
