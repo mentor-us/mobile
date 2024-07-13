@@ -96,6 +96,7 @@ export interface TaskModel {
   };
   description: string;
   group: ShortGroupModel;
+  channel: ShortGroupModel;
   assigner: ShortProfileUserModel;
   assignees: Assignee[];
   role: RoleType;
