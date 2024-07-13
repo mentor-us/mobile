@@ -11,22 +11,54 @@ export const useGetAllGrade = params => {
     // enabled: !params,
   });
 };
+interface DropDownDataFormat {
+  label: string;
+  value: string;
+  parent: null;
+}
 export const useGetAllYears = yearInfo =>
   useQuery({
     queryKey: ["years", yearInfo],
     queryFn: async () => {
       try {
-        const res = await YearApi.getAllYears({
-          yearInfo,
-        });
-        const yearsFormat = [...res?.data].map(year => {
+        // const res = await YearApi.getAllYears({
+        //   yearInfo,
+        // });
+        // const yearsFormat = [...res?.data].map(year => {
+        //   return {
+        //     label: year.name,
+        //     value: year.id,
+        //     parent: null,
+        //   };
+        // });
+        // return yearsFormat;
+        const params = {
+          pageSize: 999,
+        };
+        const gradeRes = await GradeApi.getAllGrade({ ...params });
+        const formatData = [...gradeRes?.data].map(grade => {
           return {
-            label: year.name,
-            value: year.id,
-            parent: null,
+            ...grade,
+            year: grade?.year?.name,
+            semester: grade?.semester?.name,
+            courseName: grade?.course?.name,
+            courseCode: grade?.course?.code,
           };
         });
-        return yearsFormat;
+        const DropDownDataFormat: DropDownDataFormat[] = formatData.map(
+          grade => {
+            return {
+              label: grade.year,
+              value: grade.year,
+              parent: null,
+            };
+          },
+        );
+        const uniqueValues = Array.from(
+          new Set(DropDownDataFormat.map(item => item.value)),
+        ).map(value => DropDownDataFormat.find(item => item.value === value));
+
+        return uniqueValues;
       } catch (error) {
         return [];
       }
@@ -39,17 +71,42 @@ export const getAllSemesterOfYear = semesterInfo =>
     queryKey: ["years/semester", semesterInfo],
     queryFn: async () => {
       try {
-        const res = await YearApi.getAllSemesterOfYear({
-          query: semesterInfo,
-        });
-        const semesterFormat = [...res?.data].map(semester => {
+        // const res = await YearApi.getAllSemesterOfYear({
+        //   query: semesterInfo,
+        // });
+        // const semesterFormat = [...res?.data].map(semester => {
+        //   return {
+        //     label: semester.name,
+        //     value: semester.id,
+        //     parent: null,
+        //   };
+        // });
+        // return semesterFormat;
+        const params = {
+          pageSize: 999,
+        };
+        const gradeRes = await GradeApi.getAllGrade({ ...params });
+        const formatData = [...gradeRes?.data].map(grade => {
           return {
-            label: semester.name,
-            value: semester.id,
+            ...grade,
+            year: grade?.year?.name,
+            semester: grade?.semester?.name,
+            courseName: grade?.course?.name,
+            courseCode: grade?.course?.code,
+          };
+        });
+        const semesterFormat: DropDownDataFormat[] = formatData.map(grade => {
+          return {
+            label: grade.semester,
+            value: grade.semester,
             parent: null,
           };
         });
-        return semesterFormat;
+        const uniqueValues = Array.from(
+          new Set(semesterFormat.map(item => item.value)),
+        ).map(value => semesterFormat.find(item => item.value === value));
+
+        return uniqueValues;
       } catch (error) {
         return [];
       }
