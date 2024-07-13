@@ -18,8 +18,6 @@ const TaskItem = ({ data = TASK_SAMPLE, isIncomming = false }: Props) => {
   const styles = useMemo(() => {
     return isIncomming ? incommingStyles : normalStyles;
   }, [isIncomming]);
-  console.log("Task");
-  console.log(data);
   return (
     <View style={styles.root}>
       <TouchableOpacity style={styles.container} onPress={onPress}>
