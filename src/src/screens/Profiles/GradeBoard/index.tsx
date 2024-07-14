@@ -13,7 +13,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Dropdown } from "react-native-element-dropdown";
 import { Color } from "~/constants/Color";
 import { UserProfileModel } from "~/models/user";
-
 interface GradeBoardProps {
   user: UserProfileModel;
 }
@@ -27,7 +26,7 @@ export default function GradeBoard({ user }: GradeBoardProps) {
   const [isSemesterFocus, setIsSemesterFocus] = useState(false);
   const { data: semesters } = getAllSemesterOfYear("");
 
-  const { data: grades } = useGetAllGrade({
+  const { data: grades, isFetching: isLoadingGrade } = useGetAllGrade({
     userId: user?.id ?? null,
     year: year,
     semester: semester,
@@ -46,7 +45,7 @@ export default function GradeBoard({ user }: GradeBoardProps) {
       <View style={{ marginLeft: 7, paddingVertical: 8 }}>
         <Text style={{ fontSize: FontSize.large }}>Năm học:</Text>
       </View>
-      <View style={styles.container}>
+      <View style={[styles.container, { marginLeft: 7 }]}>
         <Dropdown
           data={years ?? []}
           maxHeight={300}
@@ -75,7 +74,7 @@ export default function GradeBoard({ user }: GradeBoardProps) {
       <View style={{ marginLeft: 7, paddingVertical: 8 }}>
         <Text style={{ fontSize: FontSize.large }}>Học kì:</Text>
       </View>
-      <View style={styles.container}>
+      <View style={[styles.container, { marginLeft: 7 }]}>
         <Dropdown
           style={[
             styles.dropdown,
@@ -101,6 +100,16 @@ export default function GradeBoard({ user }: GradeBoardProps) {
       </View>
 
       <View style={{ padding: 7 }}>
+        {grades && !isLoadingGrade && !grades?.totalCounts && (
+          <Text
+            style={{
+              alignSelf: "center",
+              padding: 5,
+              fontSize: FontSize.large,
+            }}>
+            Không có thông tin điểm số
+          </Text>
+        )}
         {grades?.data &&
           [...grades?.data].map(grade => {
             return <GradeItem key={`grade-${grade.id}`} grade={grade} />;
