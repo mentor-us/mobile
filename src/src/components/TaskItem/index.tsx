@@ -18,7 +18,6 @@ const TaskItem = ({ data = TASK_SAMPLE, isIncomming = false }: Props) => {
   const styles = useMemo(() => {
     return isIncomming ? incommingStyles : normalStyles;
   }, [isIncomming]);
-
   return (
     <View style={styles.root}>
       <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -32,7 +31,7 @@ const TaskItem = ({ data = TASK_SAMPLE, isIncomming = false }: Props) => {
           {data.title}
         </Text>
         <View style={styles.descCtn}>
-          <Text style={styles.group}>{`Nhóm: ${data.title}`}</Text>
+          <Text style={styles.group}>{`Kênh: ${data?.channel?.name}`}</Text>
           <Text
             style={[
               styles.status,
