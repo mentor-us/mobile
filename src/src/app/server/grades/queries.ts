@@ -36,15 +36,7 @@ export const useGetAllYears = yearInfo =>
           pageSize: 999,
         };
         const gradeRes = await GradeApi.getAllGrade({ ...params });
-        const formatData = [...gradeRes?.data].map(grade => {
-          return {
-            ...grade,
-            year: grade?.year?.name,
-            semester: grade?.semester?.name,
-            courseName: grade?.course?.name,
-            courseCode: grade?.course?.code,
-          };
-        });
+        const formatData = [...gradeRes?.data].filter(e => e.year);
         const DropDownDataFormat: DropDownDataFormat[] = formatData.map(
           grade => {
             return {
@@ -57,7 +49,6 @@ export const useGetAllYears = yearInfo =>
         const uniqueValues = Array.from(
           new Set(DropDownDataFormat.map(item => item.value)),
         ).map(value => DropDownDataFormat.find(item => item.value === value));
-
         return uniqueValues;
       } catch (error) {
         return [];
@@ -86,26 +77,19 @@ export const getAllSemesterOfYear = semesterInfo =>
           pageSize: 999,
         };
         const gradeRes = await GradeApi.getAllGrade({ ...params });
-        const formatData = [...gradeRes?.data].map(grade => {
-          return {
-            ...grade,
-            year: grade?.year?.name,
-            semester: grade?.semester?.name,
-            courseName: grade?.course?.name,
-            courseCode: grade?.course?.code,
-          };
-        });
-        const semesterFormat: DropDownDataFormat[] = formatData.map(grade => {
-          return {
-            label: grade.semester,
-            value: grade.semester,
-            parent: null,
-          };
-        });
+        const formatData = [...gradeRes?.data].filter(e => e.semester);
+        const DropDownDataFormat: DropDownDataFormat[] = formatData.map(
+          grade => {
+            return {
+              label: grade.semester?.toString(),
+              value: grade.semester?.toString(),
+              parent: null,
+            };
+          },
+        );
         const uniqueValues = Array.from(
-          new Set(semesterFormat.map(item => item.value)),
-        ).map(value => semesterFormat.find(item => item.value === value));
-
+          new Set(DropDownDataFormat.map(item => item.value)),
+        ).map(value => DropDownDataFormat.find(item => item.value === value));
         return uniqueValues;
       } catch (error) {
         return [];

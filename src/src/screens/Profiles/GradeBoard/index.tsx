@@ -25,7 +25,6 @@ export default function GradeBoard({ user }: GradeBoardProps) {
   const queryClient = useQueryClient();
   const [isYearFocus, setIsYearFocus] = useState(false);
   const [isSemesterFocus, setIsSemesterFocus] = useState(false);
-  console.log("Test")
   const { data: semesters } = getAllSemesterOfYear("");
 
   const { data: grades } = useGetAllGrade({
