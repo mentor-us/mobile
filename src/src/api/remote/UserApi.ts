@@ -1,5 +1,5 @@
-import {AxiosResponse} from "axios";
-import {UserProfileModel} from "~/models/user";
+import { Axios, AxiosResponse } from "axios";
+import { UserProfileModel } from "~/models/user";
 import axiosClient from "./AxiosClient";
 import { ToastEmail } from "~/constants/AddEmail";
 
@@ -33,24 +33,26 @@ const UserApi = {
       return error;
     }
   },
-  updateLinkMail: async (id : string,email: string) => {
+  updateLinkMail: async (id: string, email: string) => {
     try {
       const URL = `api/users/${id}/email/add`;
-      const response : any = await axiosClient.post(URL, {additionalEmail:email});
-    
+      const response: any = await axiosClient.post(URL, {
+        additionalEmail: email,
+      });
+
       return ToastEmail[response.returnCode];
     } catch (error) {
       console.log("@API_USER_updateLinkMail_ERROR: ", error);
       return ToastEmail["error"];
     }
   },
-  deleteLinkMail: async (id : string,email: string) => {
+  deleteLinkMail: async (id: string, email: string) => {
     try {
       const URL = `api/users/${id}/email/remove`;
-      const response : any = await axiosClient.delete(URL,{
-        data: { additionalEmail: email }
+      const response: any = await axiosClient.delete(URL, {
+        data: { additionalEmail: email },
       });
-      return response.message
+      return response.message;
     } catch (error) {
       console.log("@API_USER_updateLinkMail_ERROR: ", error);
       return "Xóa email liên kết thất bại!";

@@ -1,5 +1,5 @@
-import {StyleSheet} from "react-native";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
@@ -9,16 +9,17 @@ const styles = StyleSheet.create({
   },
   titleCtn: {
     marginHorizontal: 16,
-    marginTop: 16,
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
   },
   title: {
     fontSize: FontSize.medium,
     marginLeft: 20,
     color: Color.text[0],
     fontWeight: "500",
-    marginRight: 5
+    marginRight: 5,
   },
   infoCtn: {
     marginHorizontal: 16,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   statusCtn: {
     flex: 1,
     backgroundColor: Color.white,
-    marginBottom: 20
+    marginBottom: 16,
   },
   statusTitle: {
     fontSize: FontSize.large,
@@ -53,11 +54,11 @@ const styles = StyleSheet.create({
   },
   buttonCtn: {
     alignSelf: "flex-start",
-    marginTop: 8
+    marginTop: 8,
   },
   error: {
-    color: Color.black
-  }
+    color: Color.black,
+  },
 });
 
 export default styles;

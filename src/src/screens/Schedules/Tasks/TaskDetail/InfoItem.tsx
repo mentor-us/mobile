@@ -5,8 +5,8 @@ import {
   TextStyle,
   DeviceEventEmitter,
 } from "react-native";
-import React, {memo, useMemo, useRef} from "react";
-import {StyleSheet} from "react-native";
+import React, { memo, useMemo, useRef } from "react";
+import { StyleSheet } from "react-native";
 import FontSize from "~/constants/FontSize";
 import {
   ClockGrayIcon,
@@ -18,12 +18,12 @@ import {
 
 import SizedBox from "~/components/SizedBox";
 import GlobalStyles from "~/constants/GlobalStyles";
-import {Color} from "~/constants/Color";
+import { Color } from "~/constants/Color";
 import isEqual from "react-fast-compare";
-import {InfoItemModel} from "./index.props";
-import {useNavigation} from "@react-navigation/native";
+import { InfoItemModel } from "./index.props";
+import { useNavigation } from "@react-navigation/native";
 import ModalDropdown from "react-native-modal-dropdown";
-import {TaskStatusKeyIndex, TaskTextOptions} from "~/models/task";
+import { TaskStatusKeyIndex, TaskTextOptions } from "~/models/task";
 import TaskApi from "~/api/remote/TaskApi";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 
@@ -35,7 +35,13 @@ interface Props {
   groupId: string;
 }
 
-const InfoItem = ({data, assingerId, taskId, groupId, textStyle = {}}: Props) => {
+const InfoItem = ({
+  data,
+  assingerId,
+  taskId,
+  groupId,
+  textStyle = {},
+}: Props) => {
   const navigation = useNavigation();
   const statusBox = useRef<any>();
   const ITEM_TOOL = useMemo(() => {
@@ -73,7 +79,10 @@ const InfoItem = ({data, assingerId, taskId, groupId, textStyle = {}}: Props) =>
         },
         textAction: "Chi tiết",
         action: () => {
-          navigation.navigate("otherProfile", {userId: assingerId, groupId: groupId});
+          navigation.navigate("otherProfile", {
+            userId: assingerId,
+            groupId: groupId,
+          });
         },
       },
 
@@ -84,7 +93,10 @@ const InfoItem = ({data, assingerId, taskId, groupId, textStyle = {}}: Props) =>
         },
         textAction: "Chi tiết",
         action: async () => {
-          navigation.navigate("taskAssignees", {taskId: taskId, groupId: groupId});
+          navigation.navigate("taskAssignees", {
+            taskId: taskId,
+            groupId: groupId,
+          });
         },
       },
     };
@@ -100,7 +112,7 @@ const InfoItem = ({data, assingerId, taskId, groupId, textStyle = {}}: Props) =>
 
   return (
     <View style={styles.container}>
-      <View style={[GlobalStyles.flexRow, {alignItems: "flex-start"}]}>
+      <View style={[GlobalStyles.flexRow, { alignItems: "flex-start" }]}>
         <View style={styles.icon}>{ITEM_TOOL[data.type].renderIcon()}</View>
         <SizedBox width={12} />
         <View style={styles.textCtn}>

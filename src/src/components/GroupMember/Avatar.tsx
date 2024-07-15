@@ -13,7 +13,6 @@ interface Props {
   role?: RoleType;
 }
 const Avatar = ({ avatar, online = true, role = RoleType.MENTEE }: Props) => {
-  console.log("avatar: ", Helper.getImageUrl(avatar));
   return (
     <View style={styles.infoCtn}>
       <View style={styles.avatarCtn}>

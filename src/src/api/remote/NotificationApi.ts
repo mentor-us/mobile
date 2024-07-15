@@ -1,20 +1,15 @@
-import {AxiosError, AxiosResponse} from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import AxiosClient from "./AxiosClient";
-import {Notification} from "~/models/notification";
+import { Notification } from "~/models/notification";
 
 export default class NotificationApi {
-  
-  static async all(
-    page: number = 0,
-    pageSize: number = 25,
-  ): Promise<Notification[]> {
+  static async all(page = 0, pageSize = 25): Promise<Notification[]> {
     const URL = `api/notifications?page=${page}&pageSize=${pageSize}`;
 
-    let notifications: any = [];
+    let notifications = [];
     try {
-      const response: any = await AxiosClient.get(URL);
-      notifications = response.data;
-    } catch (err: any) {
+      notifications = await AxiosClient.get(URL);
+    } catch (err) {
       const error = err as AxiosError;
       console.log(error);
     }
@@ -29,7 +24,7 @@ export default class NotificationApi {
     try {
       const response: AxiosResponse = await AxiosClient.get<Notification>(URL);
       notification = response.data;
-    } catch (err: any) {
+    } catch (err) {
       const error = err as AxiosError;
       console.log(error);
       return null;
@@ -41,7 +36,7 @@ export default class NotificationApi {
   static async updateToken(userId: string, token: string) {
     const URL = `/api/notifications/subscribe`;
     try {
-      const response = await AxiosClient.post(URL, {userId, token});
+      const response = await AxiosClient.post(URL, { userId, token });
     } catch (error) {
       console.log("@DUKE_ NotificationApi_ updateToken: ", error);
     }

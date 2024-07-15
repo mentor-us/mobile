@@ -30,7 +30,6 @@ axiosClient.interceptors.request.use(
 const createAxiosResponseInterceptor = onUnauthorizeCallback => {
   const interceptor = axiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
-      console.log(response.data);
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
       return response.data;
@@ -64,11 +63,10 @@ const setupAxiosResponseInterceptor = onUnauthenticated => {
       return response.data;
     },
     async (error: AxiosError) => {
-      console.log(error);
+      console.error(error);
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       if (error?.response?.status === 401) {
-        console.log("remove");
         // Auto Remove Token
         await SecureStore.removeToken();
 

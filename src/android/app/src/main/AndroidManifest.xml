@@ -23,6 +23,7 @@
     android:allowBackup="false"
     android:theme="@style/BootTheme"
     android:requestLegacyExternalStorage="true"
+    android:screenOrientation="portrait"
   >
 
     <activity android:name=".MainActivity"

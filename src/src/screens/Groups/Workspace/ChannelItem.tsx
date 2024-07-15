@@ -31,7 +31,6 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
     });
   };
 
-  console.log("CHANNEL_ITEM: ", channel);
   const updateChannel = () =>
     navigation.navigate("addChannel", {
       groupId: channel.parentId || "",
@@ -56,7 +55,6 @@ const ChannelItem = ({ channel, selected, chooseChannel, role }: Props) => {
   };
 
   if (!channel) {
-    console.log("CHANNEL_ITEM: Error channel");
     return <></>;
   }
 

@@ -70,7 +70,7 @@ export class CreateTaskScreenState {
       case "form":
         return this.taskId ? "Chỉnh sửa công việc" : "Công việc mới";
       case "select_group":
-        return "Chọn nhóm";
+        return "Chọn kênh";
       case "select_assignee":
         return "Chọn thành viên";
       default:

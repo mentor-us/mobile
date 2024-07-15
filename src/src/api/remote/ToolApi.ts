@@ -250,7 +250,7 @@ const ToolApi = {
         },
       });
       if (res) {
-        return res.data;
+        return (res as any).key;
       }
       return "";
     } catch (error) {
