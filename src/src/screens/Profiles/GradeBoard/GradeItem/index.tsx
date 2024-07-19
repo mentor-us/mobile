@@ -64,7 +64,7 @@ export default function GradeItem({ grade }: Props) {
           style={[styles.text, { color: textColor }]}
           ellipsizeMode="tail"
           numberOfLines={2}>
-          {grade?.course?.name ?? "11"}
+          {grade?.courseName ?? ""}
         </Text>
       </View>
       <View style={{ marginLeft: "auto" }}>

@@ -44,3 +44,4 @@ export const IMAGE_EXT = [".gif", ".jpg", ".jpeg", ".png"];
 export const VIDEO_EXT = [".mpg", ".mp2", ".mpeg", ".mpe", ".mpv", ".mp4"];
 
 export const MAX_SIZE_IMG = 10 * 1000 * 1000;
+export const MAX_SIZE_VIDEO = 100 * 1000 * 1000;

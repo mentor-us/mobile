@@ -40,7 +40,7 @@ import LOG from "~/utils/Logger";
 import Permission from "~/utils/PermissionStrategies";
 import MentionListPopup from "../MentionListPopup";
 import { GroupMemberModel } from "~/models/group";
-import { SOCKET_EVENT } from "~/constants";
+import { MAX_SIZE_VIDEO, SOCKET_EVENT } from "~/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { GetGroupDetailQueryKey } from "~/app/server/groups/queries";
 import {
@@ -265,14 +265,15 @@ const TextEditor = () => {
               return;
             }
 
+            const maxSizeAllow = isHasVideo ? MAX_SIZE_VIDEO : MAX_SIZE_IMG;
             if (
-              selectedMedia.some(item => item.size && item.size > MAX_SIZE_IMG)
+              selectedMedia.some(item => item.size && item.size > maxSizeAllow)
             ) {
               Alert.alert(
                 "Cảnh báo",
                 `Kích thước ${
                   isHasVideo ? "video" : "ảnh"
-                } vượt quá ${Helper.formatFileSize(MAX_SIZE_IMG)}`,
+                } vượt quá ${Helper.formatFileSize(maxSizeAllow)}`,
               );
               return;
             }
