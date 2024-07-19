@@ -34,7 +34,8 @@
     "dx:test": "detox test --configuration android.emu.debug",
     "android:fastlane:buildRelease": "bundle exec fastlane android release_aab",
     "android:fastlane:uploadRelease": "bundle exec fastlane android deploy",
-    "android:fastlane:uploadInternal": "bundle exec fastlane android internal"
+    "android:fastlane:uploadInternal": "bundle exec fastlane android internal",
+    "postversion": "npx react-native-version --never-amend"
   },
   "dependencies": {
     "@10play/tentap-editor": "^0.5.6",
