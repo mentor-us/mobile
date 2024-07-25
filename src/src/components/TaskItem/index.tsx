@@ -7,9 +7,14 @@ import { useNavigation } from "@react-navigation/native";
 interface Props {
   data?: TaskModel;
   isIncomming?: boolean;
+  isInChannel?: boolean;
 }
 
-const TaskItem = ({ data = TASK_SAMPLE, isIncomming = false }: Props) => {
+const TaskItem = ({
+  data = TASK_SAMPLE,
+  isIncomming = false,
+  isInChannel = false,
+}: Props) => {
   const navigation = useNavigation();
 
   const onPress = () => {
@@ -31,7 +36,9 @@ const TaskItem = ({ data = TASK_SAMPLE, isIncomming = false }: Props) => {
           {data.title}
         </Text>
         <View style={styles.descCtn}>
-          <Text style={styles.group}>{`Kênh: ${data?.channel?.name}`}</Text>
+          <Text style={styles.group}>{`Kênh: ${
+            isInChannel ? data?.channel?.name : data?.group?.name
+          }`}</Text>
           <Text
             style={[
               styles.status,

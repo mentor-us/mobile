@@ -144,7 +144,7 @@ android {
         applicationId "com.mentorus"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
+        versionCode 10
         versionName "0.5.3"
 
         testBuildType System.getProperty('testBuildType', 'debug')
