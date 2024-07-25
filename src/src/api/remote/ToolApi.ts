@@ -102,7 +102,8 @@ const ToolApi = {
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
     const { config, fs } = RNFetchBlob;
-    const RootDir = fs.dirs.DownloadDir;
+    const RootDir =
+      Platform.OS === "ios" ? fs.dirs.DocumentDir : fs.dirs.DownloadDir;
     const options = {
       fileCache: true,
       addAndroidDownloads: {
