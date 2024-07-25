@@ -33,7 +33,7 @@ export default function CustomTabView({
     return mode === "meeting" ? (
       <MeetingItem key={item.id} data={item} />
     ) : (
-      <TaskItem key={item.id} data={item} />
+      <TaskItem key={item.id} data={item} isInChannel />
     );
   };
 
