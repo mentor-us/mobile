@@ -238,18 +238,19 @@ const TextContent = ({ message }: Props) => {
                   </Text>
                 </View>
               )}
-              {message.reply && (
-                <View style={commonStyles.card}>
-                  <Text style={commonStyles.name} numberOfLines={1}>
-                    {message.reply.senderName}
-                  </Text>
-                  <TextFormatRenderer
-                    text={message.reply.content || ""}
-                    style={commonStyles.replyMessage}
-                    numberOfLines={1}
-                  />
-                </View>
-              )}
+              {message?.reply?.content !== "Tin nhắn đã được xóa" &&
+                message.reply && (
+                  <View style={commonStyles.card}>
+                    <Text style={commonStyles.name} numberOfLines={1}>
+                      {message.reply.senderName}
+                    </Text>
+                    <TextFormatRenderer
+                      text={message.reply.content || ""}
+                      style={commonStyles.replyMessage}
+                      numberOfLines={1}
+                    />
+                  </View>
+                )}
 
               {message.status === "DELETED" ? (
                 <TextFormatRenderer

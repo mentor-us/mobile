@@ -11,7 +11,10 @@ import GlobalStyles from "~/constants/GlobalStyles";
 import { Timeline } from "react-native-just-timeline";
 import { Color } from "~/constants/Color";
 import { StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import {
   CoreBridge,
   PlaceholderBridge,
@@ -221,7 +224,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
 
   const Body = () => {
     return (
-      <ScrollView>
+      <>
         <View style={{ padding: 12 }}>
           <Text
             style={{ fontSize: 18, fontWeight: "bold", color: Color.primary }}>
@@ -327,6 +330,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
         <View
           style={{
             paddingHorizontal: 12,
+            flex: 1,
           }}>
           {noteHistoryData.length === 0 ? (
             <View>
@@ -350,7 +354,7 @@ const NoteDetail: ScreenProps<"noteDetail"> = ({ navigation, route }) => {
             />
           )}
         </View>
-      </ScrollView>
+      </>
     );
   };
 

@@ -190,7 +190,12 @@ const CreateOrUpdateNote: ScreenProps<"createOrUpdateNote"> = ({
           <Controller
             name="title"
             control={control}
-            rules={{ required: "Tiêu đề không được để trống" }}
+            rules={{
+              required: "Tiêu đề không được để trống",
+              validate: value => {
+                return !!value.trim() || "Tiêu đề không được để trống";
+              },
+            }}
             render={({ field: { onChange, onBlur, value } }) => {
               return (
                 <MUITextInput
