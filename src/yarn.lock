@@ -7086,10 +7086,10 @@ __metadata:
     react-native-timeline-flatlist: ^0.8.0
     react-native-ui-lib: ^7.23.5
     react-native-uuid: ^2.0.1
-    react-native-vector-icons: ^9.2.0
+    react-native-vector-icons: ^10.1.0
     react-native-version: ^4.0.0
     react-native-video: ^6.2.0
-    react-native-video-cache: ^2.7.3
+    react-native-video-cache: 2.7.4
     react-native-video-player: ^0.14.0
     react-native-webview: 13.8.6
     react-query-native-devtools: ^4.0.0
@@ -17896,6 +17896,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-vector-icons@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "react-native-vector-icons@npm:10.1.0"
+  dependencies:
+    prop-types: ^15.7.2
+    yargs: ^16.1.1
+  bin:
+    fa-upgrade.sh: bin/fa-upgrade.sh
+    fa5-upgrade: bin/fa5-upgrade.sh
+    fa6-upgrade: bin/fa6-upgrade.sh
+    generate-icon: bin/generate-icon.js
+  checksum: c1e1d7c7ccc110e99caaed4d57324d5331dfa91817183350d2fd4df16d2302e7363da1f7a2b87011da3936b77aac3a7bf8ee11844dd8786b8b7dbc6553494866
+  languageName: node
+  linkType: hard
+
 "react-native-vector-icons@npm:^6.3.0":
   version: 6.7.0
   resolution: "react-native-vector-icons@npm:6.7.0"
@@ -17909,19 +17924,6 @@ __metadata:
     fa5-upgrade: bin/fa5-upgrade.sh
     generate-icon: bin/generate-icon.js
   checksum: 7dde88f441d3486efd473ac0ee5ce57a8ad70b2ebf8ff18adbc98cb941d5a2106747c6bb431d65ef4745c5f0e76c8e166ef3d07f42962c37d802c7be03afc340
-  languageName: node
-  linkType: hard
-
-"react-native-vector-icons@npm:^9.2.0":
-  version: 9.2.0
-  resolution: "react-native-vector-icons@npm:9.2.0"
-  dependencies:
-    prop-types: ^15.7.2
-    yargs: ^16.1.1
-  bin:
-    fa5-upgrade: bin/fa5-upgrade.sh
-    generate-icon: bin/generate-icon.js
-  checksum: 222baf88c3f269234c08a41680e6400a4bf1f4c170f7c2ffac34b2c1c089cdb1084223db2a7d9cc54ee212eec20ff1478f3f482df19062e3057c328642da0be2
   languageName: node
   linkType: hard
 
@@ -17948,7 +17950,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-video-cache@npm:^2.7.3":
+"react-native-video-cache@npm:2.7.4":
   version: 2.7.4
   resolution: "react-native-video-cache@npm:2.7.4"
   peerDependencies:

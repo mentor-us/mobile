@@ -98,14 +98,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        // release {
-        //     if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-        //         storeFile file(MYAPP_RELEASE_STORE_FILE)
-        //         storePassword MYAPP_RELEASE_STORE_PASSWORD
-        //         keyAlias MYAPP_RELEASE_KEY_ALIAS
-        //         keyPassword MYAPP_RELEASE_KEY_PASSWORD
-        //     }
-        // }
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -123,13 +123,13 @@ android {
 
 dependencies {
     androidTestImplementation('com.wix:detox:+')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "androidx.appcompat:appcompat:1.0.0"
+    // implementation 'androidx.appcompat:appcompat:1.1.0'
+    // implementation "androidx.appcompat:appcompat:1.0.0"
    
     implementation "androidx.core:core-splashscreen:1.0.0"
 
     //implementation 'com.facebook.fresco:animated-gif:1.12.0' //instead of
-    implementation 'com.facebook.fresco:animated-gif:2.0.0'   //use
+    // implementation 'com.facebook.fresco:animated-gif:2.0.0'   //use
 
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.5.0')

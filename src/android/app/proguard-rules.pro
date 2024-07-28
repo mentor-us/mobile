@@ -21,3 +21,5 @@
   **[] $VALUES;
   public *;
 }
+-dontwarn org.slf4j.Logger
+-dontwarn org.slf4j.LoggerFactory
