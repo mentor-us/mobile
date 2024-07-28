@@ -27,7 +27,7 @@ import {
   ReplyIcon,
 } from "~/assets/svgs";
 import { RichTextRef } from "~/screens/Groups/Chat/TextEditor/index.props";
-import Clipboard from "@react-native-clipboard/clipboard";
+// import Clipboard from "@react-native-community/clipboard";
 import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
 import TextMessage from "./TextMessage";
@@ -118,7 +118,7 @@ const EmojiReation = ({ message, action }: Props) => {
   };
   const onCopy = () => {
     // Copy Text only
-    Clipboard.setString(Helper.extractTextOnlyFromHTML(message.content));
+    // Clipboard.setString(Helper.extractTextOnlyFromHTML(message.content));
 
     BottomSheetModalRef.current?.hide();
 

@@ -21,7 +21,7 @@ jobs:
         with:
           distribution: "zulu"
           java-version: "17"
-          cache: "gradle"
+          cache: gradle
 
       - name: Clear gem
         run: |
@@ -35,9 +35,9 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> "$GITHUB_OUTPUT"
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "dir=$(yarn cache dir)" >> "$GITHUB_OUTPUT"
 
       # - name: Get Cache node_modules
       #   uses: actions/cache@v2
@@ -57,7 +57,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Make Gradlew Executable
-        run: cd android && chmod +x ./gradlew
+        run: cd android && chmod +x ./gradlew && ./gradlew clean
 
       - name: Decode Google Services JSON File
         uses: timheuer/base64-to-file@v1
@@ -89,21 +89,12 @@ jobs:
         run: |
             export OP_SERVICE_ACCOUNT_TOKEN=${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
             op read --out-file ./android/app/google-services.json op://mentorus/firebase-credential/google.com.mentorus/google-services.json
-            APP_ENV=dev op inject -i ./.env.tpl -o ./.env
+            APP_ENV=prod op inject -i ./.env.tpl -o ./.env
 
       - name: Update Bundle
         run: |
             bundle install
             bundle update fastlane
-
-      - name: Set up Fastlane
-        run: |
-            cd android
-            echo "MYAPP_RELEASE_STORE_FILE=${{ steps.android_keystore.outputs.filePath }}" >> gradle.properties
-            echo "MYAPP_RELEASE_STORE_PASSWORD=${{secrets.KEY_PASSWORD }}" >> gradle.properties
-            echo "MYAPP_RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> gradle.properties
-            echo "MYAPP_RELEASE_KEY_PASSWORD=${{secrets.KEY_PASSWORD }}" >> gradle.properties
-            cd ..
 
       - name: Build Android App Bundle Release
         run: yarn android:fastlane:buildRelease
@@ -118,9 +109,9 @@ jobs:
           name: aab
           path: src/android/app/build/outputs/bundle/release/app-release.aab
 
-      # - name: Upload AAB to Google Play Internal Test
+      # - name: Upload AAB to Google Play
       #   id: deploy
-      #   run: yarn android:fastlane:uploadInternal
+      #   run: yarn android:fastlane:uploadRelease
       #   env:
       #     PLAY_STORE_JSON_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
       #     PLAY_STORE_PACKAGE_NAME: com.mentorus

@@ -38,7 +38,7 @@ const createAxiosResponseInterceptor = onUnauthorizeCallback => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       if (error?.response?.status === 401) {
-        console.log("ERROR 401");
+        console.log("ERROR 401", JSON.stringify(error));
         axiosClient.interceptors.response.eject(interceptor);
         if (onUnauthorizeCallback) {
           onUnauthorizeCallback();
@@ -71,7 +71,11 @@ const setupAxiosResponseInterceptor = onUnauthenticated => {
         await SecureStore.removeToken();
 
         // Dispatch event
-        if (onUnauthenticated) {
+        if (
+          onUnauthenticated &&
+          ((await SecureStore.getToken()) !== null ||
+            (await SecureStore.getToken()) !== "")
+        ) {
           onUnauthenticated();
         }
       }

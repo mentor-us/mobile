@@ -1,15 +1,11 @@
-import SInfo from "react-native-sensitive-info";
+// import SInfo from "react-native-sensitive-info";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageKey } from "~/constants/AppKey";
-
-const secureStoreOptions = {
-  sharedPreferencesName: StorageKey.sharedPreferencesName,
-  keychainService: StorageKey.keychainService,
-};
 
 export const SecureStore = {
   async saveItem(key: string, value: string): Promise<boolean> {
     try {
-      await SInfo.setItem(key, value, secureStoreOptions);
+      await AsyncStorage.setItem(key, value);
       return true;
     } catch (error) {
       return false;
@@ -18,8 +14,8 @@ export const SecureStore = {
 
   async getItem(key: string): Promise<string> {
     try {
-      const value = await SInfo.getItem(key, secureStoreOptions);
-      return value;
+      const value = await AsyncStorage.getItem(key);
+      return value ?? "";
     } catch (error) {
       return "";
     }
@@ -27,18 +23,10 @@ export const SecureStore = {
 
   async deleteItem(key: string): Promise<boolean> {
     try {
-      await SInfo.deleteItem(key, secureStoreOptions);
+      await AsyncStorage.removeItem(key);
       return true;
     } catch (error) {
       return false;
-    }
-  },
-
-  async getAllKeys() {
-    try {
-      return await SInfo.getAllItems(secureStoreOptions);
-    } catch (error) {
-      return [];
     }
   },
 
