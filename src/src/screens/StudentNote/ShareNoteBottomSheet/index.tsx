@@ -635,9 +635,11 @@ const styles = StyleSheet.create({
 
   placeholderStyle: {
     fontSize: 16,
+    color: Colors.grey500,
   },
   selectedTextStyle: {
     fontSize: 16,
+    color: Colors.black,
   },
   inputSearchStyle: {
     height: 40,
@@ -652,6 +654,7 @@ const styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
+    color: Colors.black,
   },
   iconStyle: {
     width: 20,
