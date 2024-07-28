@@ -1,22 +1,22 @@
 module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
+  presets: ["module:@react-native/babel-preset"],
   plugins: [
-    ['@babel/plugin-proposal-decorators', { legacy: true }],
+    ["@babel/plugin-proposal-decorators", { legacy: true }],
     [
-      'module-resolver',
+      "module-resolver",
       {
-        root: ['.'],
-        extensions: ['.ts', '.tsx', '.js', '.json'],
+        root: ["."],
+        extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
-          '~': './src',
-          '~/*': ['./src/*'],
+          "~": "./src",
+          "~/*": ["./src/*"],
         },
       },
     ],
     [
-      'react-native-reanimated/plugin',
+      "react-native-reanimated/plugin",
       {
-        globals: ['__scanFaces'],
+        globals: ["__scanFaces"],
       },
     ],
   ],

@@ -17,7 +17,7 @@ import * as WebBrowser from "expo-web-browser";
 import { getVersion } from "react-native-device-info";
 import { CurrentUserQueryKey } from "~/app/server/users/keys";
 
-export const LoginScreen: ScreenProps<"loginScreen"> = () => {
+const LoginScreen: ScreenProps<"loginScreen"> = () => {
   const { authStore } = useMobxStore();
   const route = useRoute();
   const [snackBar, setSnackBar] = useState<boolean>(false);
@@ -143,3 +143,5 @@ export const LoginScreen: ScreenProps<"loginScreen"> = () => {
     </View>
   );
 };
+
+export default LoginScreen;

@@ -15,7 +15,7 @@ module.exports = {
     es6: true,
   },
   extends: [
-    "@react-native-community",
+    "@react-native",
     "eslint:recommended",
     "plugin:react-hooks/recommended",
     "plugin:import/typescript",
@@ -33,7 +33,7 @@ module.exports = {
     {
       files: ["*.ts", "*.tsx", "*.js"],
       rules: {
-        "prettier/prettier": ["error", {endOfLine: "auto"}],
+        "prettier/prettier": ["error", { endOfLine: "auto" }],
         "@typescript-eslint/no-shadow": ["error"],
         "no-shadow": "off",
         "@typescript-eslint/no-var-requires": "off",

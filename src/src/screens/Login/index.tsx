@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { LoginScreen } from "./LoginScreen";
+import LoginScreen from "./LoginScreen";
 
 export interface LoginRouteParamsProps extends Readonly<object> {
   token?: string;

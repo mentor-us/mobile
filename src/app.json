@@ -1,4 +1,26 @@
 {
   "name": "MentorUS",
-  "displayName": "MentorUS"
+  "displayName": "MentorUS",
+  "expo": {
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      [
+        "react-native-bootsplash",
+        {
+          "assetsDir": "assets/bootsplash"
+        }
+      ]
+    ],
+    "version": "0.5.3",
+    "android": {
+      "versionCode": 1
+    },
+    "ios": {
+      "buildNumber": "1"
+    }
+  }
 }
