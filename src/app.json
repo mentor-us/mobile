@@ -17,10 +17,10 @@
     ],
     "version": "0.5.3",
     "android": {
-      "versionCode": 1
+      "versionCode": 11
     },
     "ios": {
-      "buildNumber": "1"
+      "buildNumber": "11"
     }
   }
 }
