@@ -1,18 +1,18 @@
-import {View, Text, TouchableOpacity} from "react-native";
-import React, {memo, useMemo} from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { memo, useMemo } from "react";
 import styles from "./styles";
-import {TaskSquareIcon} from "~/assets/svgs";
-import {useNavigation} from "@react-navigation/native";
-import {TASK_SAMPLE, TaskModel, TaskStatusObject} from "~/models/task";
+import { TaskSquareIcon } from "~/assets/svgs";
+import { useNavigation } from "@react-navigation/native";
+import { TASK_SAMPLE, TaskModel, TaskStatusObject } from "~/models/task";
 import isEqual from "react-fast-compare";
-import {useAppSelector} from "~/redux";
-import {Button} from "react-native-paper";
+import { useAppSelector } from "~/redux";
+import { Button } from "react-native-paper";
 
 interface Props {
   data?: TaskModel;
 }
 
-const Task = ({data = TASK_SAMPLE}: Props) => {
+const Task = ({ data = TASK_SAMPLE }: Props) => {
   const navigation = useNavigation();
   const currentUser = useAppSelector(state => state.user.data);
 
@@ -31,7 +31,7 @@ const Task = ({data = TASK_SAMPLE}: Props) => {
   }, [data]);
 
   const openTask = () => {
-    navigation.navigate("taskDetail", {taskId: data.id});
+    navigation.navigate("taskDetail", { taskId: data.id });
   };
 
   return (
@@ -55,7 +55,7 @@ const Task = ({data = TASK_SAMPLE}: Props) => {
           {data.deadlineTimeModel.date}
         </Text>
 
-        {ownStatus && ownStatus != "NULL" && (
+        {ownStatus && ownStatus !== "NULL" && (
           <View>
             <Button
               onPress={openTask}

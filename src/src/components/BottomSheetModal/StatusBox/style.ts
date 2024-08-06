@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenHeight, screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenHeight, screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSize.larger,
     color: Color.text[1],
+    fontWeight: "bold",
   },
   row: {
     marginVertical: 10,

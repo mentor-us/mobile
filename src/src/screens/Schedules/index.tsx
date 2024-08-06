@@ -1,24 +1,24 @@
-import React, {useEffect, useCallback} from "react";
+import React, { useEffect, useCallback } from "react";
 import "dayjs/locale/vi";
 import styles from "./style";
-import {StackNavigationOptions} from "@react-navigation/stack";
-import {useNavigation} from "@react-navigation/core";
+import { StackNavigationOptions } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/core";
 
-import {CalendarIcon, TaskListIcon} from "~/assets/svgs";
-import {FloatingAction, IActionProps} from "react-native-floating-action";
-import {Color} from "~/constants/Color";
+import { CalendarIcon, TaskListIcon } from "~/assets/svgs";
+import { FloatingAction, IActionProps } from "react-native-floating-action";
+import { Color } from "~/constants/Color";
 import HeaderRight from "./Header/HeaderRight";
 import HeaderLeft from "./Header/HeaderLeft";
-import Animated, {withTiming} from "react-native-reanimated";
+import Animated, { withTiming } from "react-native-reanimated";
 import MonthCalendar from "./MonthCalendar";
-import {useAppDispatch, useAppSelector} from "~/redux";
+import { useAppDispatch, useAppSelector } from "~/redux";
 import TimelineEvent from "./TimelineEvent";
 import EventThunk from "~/redux/features/event/thunk";
 
 const Schedules = () => {
   const navigation = useNavigation();
   const dispatcher = useAppDispatch();
-  const {loading} = useAppSelector(state => state.event);
+  const { loading } = useAppSelector(state => state.event);
 
   const headerRight = useCallback(() => {
     return <HeaderRight />;
@@ -56,7 +56,7 @@ const Schedules = () => {
     "worklet";
     return {
       animations: {
-        height: withTiming(values.targetHeight, {duration: 500}),
+        height: withTiming(values.targetHeight, { duration: 500 }),
       },
       initialValues: {
         height: values.currentHeight,
@@ -95,11 +95,13 @@ const Actions: IActionProps[] = [
     icon: <CalendarIcon testID="createMeeting" />,
     color: "white",
     name: "meeting",
+    margin: 4,
   },
   {
     text: "Công việc mới",
     icon: <TaskListIcon testID="createTask" />,
     color: "white",
     name: "task",
+    margin: 4,
   },
 ];
