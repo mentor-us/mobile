@@ -125,6 +125,8 @@ const Form = () => {
             }}
             multiline
             numberOfLines={4}
+            errorText={state.descriptionError}
+            style={{ textAlignVertical: "top" }}
           />
         </View>
 

@@ -37,6 +37,8 @@ export class CreateTaskScreenState {
   titleError = "";
 
   description = "";
+  descriptionError = "";
+
   time = "22:45";
   date = "01/09/2023";
 
@@ -122,9 +124,14 @@ export class CreateTaskScreenState {
 
   @action
   setTitle(text: string) {
-    if (Boolean(text) && Boolean(this.titleError)) {
+    if (text && this.titleError) {
       this.setTitleError("");
     }
+
+    if (text.length > 100) {
+      this.setTitleError("Tiêu đề không được quá 100 ký tự");
+    }
+
     this.title = text;
   }
 
@@ -135,7 +142,20 @@ export class CreateTaskScreenState {
 
   @action
   setDescription(text: string) {
+    if (this.descriptionError) {
+      this.setDescriptionError("");
+    }
+
+    if (text.length > 250) {
+      this.setDescriptionError("Mô tả không được vượt quá 250 ký tự");
+    }
+
     this.description = text;
+  }
+
+  @action
+  setDescriptionError(text: string) {
+    this.descriptionError = text;
   }
 
   @action
@@ -216,9 +236,18 @@ export class CreateTaskScreenState {
   // }
 
   @action
-  submitForm() {
+  isValidData() {
     if (Helper.isBlank(this.title)) {
       this.setTitleError("Tiêu đề không được để trống");
+      return false;
+    }
+
+    return !this.titleError && !this.descriptionError;
+  }
+
+  @action
+  submitForm() {
+    if (!this.isValidData()) {
       return;
     }
 

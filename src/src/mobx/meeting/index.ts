@@ -13,7 +13,6 @@ import { UserProfileModel, USER_PROFILE_SAMPLE } from "~/models/user";
 import GroupService from "~/services/group";
 import MeetingServices from "~/services/meeting";
 import Helper from "~/utils/Helper";
-import LOG from "~/utils/Logger";
 
 interface Props {
   groupId: string;
@@ -38,7 +37,11 @@ export class CreateMeetingScreenState {
   titleError: string = "";
 
   description: string = "";
+  descriptionError: string = "";
+
   place: string = "";
+  placeError: string = "";
+
   fromTime: string = "00:00";
   toTime: string = "00:00";
   toTimeError: string = "";
@@ -124,9 +127,14 @@ export class CreateMeetingScreenState {
 
   @action
   setTitle(text: string) {
-    if (Boolean(text)) {
+    if (Boolean(text) && this.titleError) {
       this.setTitleError("");
     }
+
+    if (text.length > 100) {
+      this.setTitleError("Tiêu đề không được quá 100 ký tự");
+    }
+
     this.title = text;
   }
 
@@ -137,12 +145,38 @@ export class CreateMeetingScreenState {
 
   @action
   setDescription(text: string) {
+    if (this.descriptionError) {
+      this.setPlaceError("");
+    }
+
+    if (text.length > 250) {
+      this.setDescriptionError("Mô tả không được vượt quá 250 ký tự");
+    }
+
     this.description = text;
   }
 
   @action
+  setDescriptionError(text: string) {
+    this.descriptionError = text;
+  }
+
+  @action
   setPlace(text: string) {
+    if (this.placeError) {
+      this.setPlaceError("");
+    }
+
+    if (text.length > 150) {
+      this.setPlaceError("Địa điểm không được vượt quá 150 ký tự");
+    }
+
     this.place = text;
+  }
+
+  @action
+  setPlaceError(text: string) {
+    this.placeError = text;
   }
 
   @action
@@ -251,6 +285,14 @@ export class CreateMeetingScreenState {
       Helper.isValidMeetingTime(this.fromTime, this.toTime);
     if (Helper.isBlank(this.title)) {
       this.setTitleError("Tiêu đề không được để trống");
+    }
+
+    if (
+      this.titleError !== "" ||
+      this.descriptionError !== "" ||
+      this.placeError !== ""
+    ) {
+      return;
     }
 
     if (!Helper.isValidMeetingTime(this.fromTime, this.toTime)) {
