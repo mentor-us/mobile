@@ -45,7 +45,6 @@ import SingleThumbnail from "~/components/SingleThumbnail";
 import { CurrentUserQueryKey } from "~/app/server/users/keys";
 import { UserProfileModel } from "~/models/user";
 
-
 const MyProfile = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { authStore } = useMobxStore();
@@ -63,7 +62,6 @@ const MyProfile = () => {
     return [
       { type: "fullname", text: myProfile?.name },
       { type: "email", text: myProfile?.email },
-      // { type: "personal_email", text: myProfile?.personalEmail },
       {
         type: "year_born",
         text: Helper.formatDate(myProfile?.birthDate ?? ""),
@@ -141,6 +139,7 @@ const MyProfile = () => {
   const updateWallpaper = async () => {
     setLoadingWallpaper(true);
     const hasPermission = await Permission.handleReadStoragePermission();
+
     if (hasPermission) {
       BottomSheetModalRef.current?.show("gallery", false, {
         run: async (image: StorageMediaAttachemt) => {

@@ -55,7 +55,7 @@ export default function GradeBoard({ user }: GradeBoardProps) {
             setYear(item.value);
             setIsYearFocus(false);
           }}
-          placeholder={!isYearFocus ? "Chọn năm học" : "..."}
+          placeholder={!isYearFocus ? "Chọn năm học" : "Đang chọn năm học..."}
           value={year}
           onFocus={() => setIsYearFocus(true)}
           onBlur={() => setIsYearFocus(false)}
@@ -66,6 +66,7 @@ export default function GradeBoard({ user }: GradeBoardProps) {
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
+          itemTextStyle={styles.itemTextStyle}
           iconStyle={styles.iconStyle}
           activeColor={Colors.grey300}
         />
@@ -88,13 +89,14 @@ export default function GradeBoard({ user }: GradeBoardProps) {
             setSemester(item.value);
             setIsSemesterFocus(false);
           }}
-          placeholder={!isSemesterFocus ? "Chọn học kì" : "..."}
+          placeholder={!isSemesterFocus ? "Chọn học kì" : "Đang chọn học kì..."}
           value={semester}
           onFocus={() => setIsSemesterFocus(true)}
           onBlur={() => setIsSemesterFocus(false)}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
+          itemTextStyle={styles.itemTextStyle}
           iconStyle={styles.iconStyle}
         />
       </View>
@@ -144,9 +146,15 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    color: Colors.grey500,
   },
   selectedTextStyle: {
     fontSize: 16,
+    color: Colors.black,
+  },
+  itemTextStyle: {
+    fontSize: 16,
+    color: Colors.black,
   },
   iconStyle: {
     width: 20,
