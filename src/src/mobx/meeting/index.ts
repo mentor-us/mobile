@@ -63,7 +63,7 @@ export class CreateMeetingScreenState {
   constructor(props: Props) {
     makeAutoObservable(this);
     if (props.groupId === "") {
-      this.setScreenType("select_group");
+      this.setScreenType("select_channel");
     }
     this.fetchGroupData(props.groupId);
     this.currentUser = props.currentUser;
@@ -81,7 +81,7 @@ export class CreateMeetingScreenState {
     switch (this.screenType) {
       case "form":
         return this.meetingId ? "Chỉnh sửa lịch hẹn" : "Lịch hẹn mới";
-      case "select_group":
+      case "select_channel":
         return "Chọn kênh";
       case "select_attendee":
         return "Chọn thành viên";
@@ -252,7 +252,7 @@ export class CreateMeetingScreenState {
       case "form":
         this.submitForm();
         break;
-      case "select_group":
+      case "select_channel":
         this.setActionDone("submit_group");
         break;
       case "select_attendee":

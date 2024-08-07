@@ -54,7 +54,7 @@ export class CreateTaskScreenState {
   constructor(props: Props) {
     makeAutoObservable(this);
     if (props.groupId === "") {
-      this.setScreenType("select_group");
+      this.setScreenType("select_channel");
     }
     this.fetchGroupData(props.groupId);
     this.currentUser = props.currentUser;
@@ -71,7 +71,7 @@ export class CreateTaskScreenState {
     switch (this.screenType) {
       case "form":
         return this.taskId ? "Chỉnh sửa công việc" : "Công việc mới";
-      case "select_group":
+      case "select_channel":
         return "Chọn kênh";
       case "select_assignee":
         return "Chọn thành viên";
@@ -213,7 +213,7 @@ export class CreateTaskScreenState {
       case "form":
         this.submitForm();
         break;
-      case "select_group":
+      case "select_channel":
         this.setActionDone("submit_group");
         break;
       case "select_assignee":

@@ -12,7 +12,7 @@ import { useAppSelector } from "~/redux";
 import { UserProfileModel } from "~/models/user";
 
 import Form from "./Form";
-import SelectGroup from "./SelectGroup";
+import SelectChannel from "./SelectChannel";
 import SelectAssingee from "./SelectAssingee";
 import CreateTaskScreenProvider, {
   useCreateTaskScreenState,
@@ -25,7 +25,7 @@ const Container = observer(() => {
   return (
     <>
       {state.screenType === "form" && <Form />}
-      {state.screenType === "select_group" && <SelectGroup />}
+      {state.screenType === "select_channel" && <SelectChannel />}
       {state.screenType === "select_assignee" && <SelectAssingee />}
     </>
   );
@@ -75,7 +75,7 @@ const CreateTask: ScreenProps<"createTask"> = ({ route }) => {
   }, []);
 
   const headerRight = useCallback(() => {
-    if (state.screenType === "select_group") return;
+    if (state.screenType === "select_channel") return;
 
     return <HeaderSubmitButton onPress={onRightPress} />;
   }, []);

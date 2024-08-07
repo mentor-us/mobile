@@ -23,6 +23,7 @@ export default StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    elevation: 4,
   },
   /** Empty */
   empty: {

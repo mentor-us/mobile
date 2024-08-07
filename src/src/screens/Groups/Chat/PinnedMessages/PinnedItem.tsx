@@ -183,7 +183,7 @@ const PinnedItem = ({
             onPress={() => {
               unpinMessage(message.id);
             }}>
-            <CloseRoundIcon width={18} height={18} />
+            <CloseRoundIcon width={24} height={24} />
           </TouchableOpacity>
         )}
       </View>
@@ -196,7 +196,7 @@ export default PinnedItem;
 const styles = StyleSheet.create({
   deleteBtn: {
     // position: "absolute",
-    // right: 12,
+    right: 8,
   },
 
   messageContent: {

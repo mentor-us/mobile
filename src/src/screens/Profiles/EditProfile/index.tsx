@@ -19,18 +19,16 @@ import { useCurrentUser } from "~/app/server/users/queries";
 import { Chase } from "react-native-animated-spinkit";
 import { Color } from "~/constants/Color";
 import { CurrentUserQueryKey } from "~/app/server/users/keys";
+import { PHONE_NUMBER_REGEX } from "~/constants";
 
 const EditProfile = () => {
   const { data: userData, isLoading } = useCurrentUser();
   const queryClient = useQueryClient();
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?/;
-  const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
 
   const schema = yup.object().shape({
     name: yup.string().required("Họ tên không được để trống"),
     personalEmail: yup.string().email("Email không hợp lệ"),
-    phone: yup.string().nullable().matches(regexPhoneNumber, {
+    phone: yup.string().nullable().matches(PHONE_NUMBER_REGEX, {
       message: "Số điện thoại không hợp lệ",
       excludeEmptyString: true,
     }),
