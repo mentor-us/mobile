@@ -21,7 +21,6 @@ import Form from "./Form";
 import SelectChannel from "./SelectChannel";
 import SelectAttendee from "./SelectAttendee";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import { MeetingModel } from "~/models/meeting";
 import { useUpdateQueryGroupList } from "~/screens/Home/queries";
 
 const Container = observer(() => {
@@ -52,6 +51,8 @@ const CreateMeeting: ScreenProps<"createMeeting"> = ({ route }) => {
   });
 
   const onRightPress = useCallback(() => {
+    if (state.isFormValid() === false) return;
+
     state.submit();
     if (state.screenType === "form") {
       DeviceEventEmitter.emit(EventEmitterNames.refreshScheduleList, {
@@ -59,7 +60,7 @@ const CreateMeeting: ScreenProps<"createMeeting"> = ({ route }) => {
         message: "Tạo lịch hẹn mới thành công",
       });
 
-      if (Boolean(state.meetingId)) {
+      if (state.meetingId) {
         DeviceEventEmitter.emit(EventEmitterNames.refreshMeetingDetail, {
           status: true,
           message: "Đã cập nhật lịch hẹn",

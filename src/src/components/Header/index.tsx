@@ -63,10 +63,17 @@ export const HeaderIconRight = ({ text, onPress }: HeaderRightProps) => {
   );
 };
 
-export const HeaderRight = ({ text, onPress }: HeaderRightProps) => {
+export const HeaderRight = ({
+  text,
+  onPress,
+  textStyles,
+  headerStyles,
+}: HeaderRightProps) => {
   return (
-    <TouchableOpacity style={styles.headerRightContainer} onPress={onPress}>
-      <Text style={styles.text}>{text}</Text>
+    <TouchableOpacity
+      style={[styles.headerRightContainer, headerStyles]}
+      onPress={onPress}>
+      <Text style={[styles.text, textStyles]}>{text}</Text>
     </TouchableOpacity>
   );
 };

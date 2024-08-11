@@ -140,6 +140,7 @@ const Form = () => {
               label="Lúc"
               onFocus={() => state.setDatePickerStatus("time")}
               value={state.time}
+              errorText={state.timeError}
               containerStyle={{ flex: 1 }}
             />
             <SizedBox width={16} />
@@ -147,6 +148,7 @@ const Form = () => {
               label="Ngày"
               onFocus={() => state.setDatePickerStatus("date")}
               value={state.date}
+              errorText={state.dateError}
               containerStyle={{ flex: 3 }}
             />
           </View>

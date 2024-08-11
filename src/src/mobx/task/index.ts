@@ -1,6 +1,8 @@
 import { TaskMobx } from "globals";
 import { action, computed, flow, makeAutoObservable } from "mobx";
+import Toast from "react-native-root-toast";
 import TaskApi from "~/api/remote/TaskApi";
+import { ToastMessage } from "~/constants/ToastMessage";
 import { CheckBoxType, RoleType } from "~/models/commonTypes";
 import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import { AssignedCheckList, Assignee, TaskModel } from "~/models/task";
@@ -40,7 +42,10 @@ export class CreateTaskScreenState {
   descriptionError = "";
 
   time = "22:45";
+  timeError = "";
+
   date = "01/09/2023";
+  dateError = "";
 
   // groups: string[] = [];
   assigner: ShortProfileUserModel = SHORT_PROFILE_USER_MODEL;
@@ -160,11 +165,38 @@ export class CreateTaskScreenState {
 
   @action
   setTime(date: Date) {
+    if (this.timeError) {
+      this.timeError = "";
+    }
+
+    console.log(
+      "date",
+      this.date,
+      Helper.createDate(this.date).toDateString(),
+      date,
+      new Date(),
+      date < new Date(),
+    );
+
+    if (date < new Date()) {
+      this.timeError = "Thời gian không được nhỏ hơn thời gian hiện tại";
+      return;
+    }
+
     this.time = Helper.formatDate(date.toString(), "time");
   }
 
   @action
   setDate(date: Date) {
+    if (this.dateError) {
+      this.dateError = "";
+    }
+
+    if (date < new Date()) {
+      this.dateError = "Ngày không được nhỏ hơn ngày hiện tại";
+      return;
+    }
+
     this.date = Helper.formatDate(date.toString(), "date");
   }
 
@@ -203,8 +235,13 @@ export class CreateTaskScreenState {
   }
 
   @action
-  setAssignee(data: AssignedCheckList) {
-    this.assignees = { ...data };
+  setAssignee(input: AssignedCheckList) {
+    this.assignees = {
+      ...input,
+      data: [...input.data].sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      }),
+    };
   }
 
   @action
@@ -223,17 +260,6 @@ export class CreateTaskScreenState {
         break;
     }
   }
-
-  // {
-  //   "deadline": "2023-03-18T14:21:45.871Z",
-  //   "description": "string",
-  //   "groupId": "string",
-  //   "parentTask": "string",
-  //   "title": "string",
-  //   "userIds": [
-  //     "string"
-  //   ]
-  // }
 
   @action
   isValidData() {
@@ -277,6 +303,15 @@ export class CreateTaskScreenState {
 
   @action
   submitAssignees(data: AssignedCheckList) {
+    if (data.totalChecked < 1) {
+      Toast.show(ToastMessage.taskMiniumAssign, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      this.setActionDone(undefined);
+      return;
+    }
+
     this.setAssignee(data);
     this.setScreenType("form");
     this.setActionDone(undefined);

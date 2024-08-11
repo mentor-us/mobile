@@ -1,6 +1,8 @@
 import { MeetingMobx } from "globals";
 import { action, computed, flow, makeAutoObservable } from "mobx";
+import Toast from "react-native-root-toast";
 import MeetingApi from "~/api/remote/Meeting";
+import { ToastMessage } from "~/constants/ToastMessage";
 import { CheckBoxType } from "~/models/commonTypes";
 import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import {
@@ -242,8 +244,13 @@ export class CreateMeetingScreenState {
   }
 
   @action
-  setAttendees(data: AttendeeCheckList) {
-    this.attendees = { ...data };
+  setAttendees(input: AttendeeCheckList) {
+    this.attendees = {
+      ...input,
+      data: [...input.data].sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      }),
+    };
   }
 
   @action
@@ -263,23 +270,7 @@ export class CreateMeetingScreenState {
     }
   }
 
-  /**
-   * 
-    "attendees":[
-      "*"
-   ],
-   "groupId":"63f74a7cfc73ec6683c2d227",
-   "organizerId":"640562155c787c20d83009fb",
-   "description":"Hôm nay bùn, lên tâm sự không ae!",
-   "place":"KHTN linh trung",
-   "repeated":"EVERY_DAY",
-   "timeEnd":"2023-03-18T15:57:28.133Z",
-   "timeStart":"2023-03-18T15:57:28.133Z",
-   "title":"Họp lớp thui nào"
-   */
-
-  @action
-  submitForm() {
+  checkForFormError() {
     const valid: boolean =
       !Helper.isBlank(this.title) &&
       Helper.isValidMeetingTime(this.fromTime, this.toTime);
@@ -292,19 +283,43 @@ export class CreateMeetingScreenState {
       this.descriptionError !== "" ||
       this.placeError !== ""
     ) {
-      return;
+      return false;
     }
 
     if (!Helper.isValidMeetingTime(this.fromTime, this.toTime)) {
-      this.setToTimeError("Lỗi");
+      Toast.show(ToastMessage.endTimeMustBeGreaterThanStartTime, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      this.setToTimeError(" ");
+      return false;
     } else {
       this.setToTimeError("");
     }
 
     if (!valid) {
-      return;
+      return false;
     }
 
+    return true;
+  }
+
+  @action
+  isFormValid(): boolean {
+    switch (this.screenType) {
+      case "form":
+        return this.checkForFormError();
+      case "select_channel":
+        return true;
+      case "select_attendee":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  @action
+  submitForm() {
     const requestData = {
       attendees: this.attendees.data
         .filter(item => item.status === "checked")
@@ -334,6 +349,15 @@ export class CreateMeetingScreenState {
 
   @action
   submitAttendee(data: AttendeeCheckList) {
+    if (data.totalChecked < 1) {
+      Toast.show(ToastMessage.meetingMiniumMember, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      this.setActionDone(undefined);
+      return;
+    }
+
     this.setAttendees(data);
     this.setScreenType("form");
     this.setActionDone(undefined);

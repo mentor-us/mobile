@@ -1,11 +1,11 @@
-import {FlatList} from "react-native";
-import React, {useCallback, useEffect, useState} from "react";
-import {observer} from "mobx-react-lite";
-import {useCreateMeetingScreenState} from "~/context/meeting";
-import {Checkbox} from "react-native-paper";
-import {CheckBoxType} from "~/models/commonTypes";
-import {Color} from "~/constants/Color";
-import {Attendee, AttendeeCheckList} from "~/models/meeting";
+import { FlatList } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useCreateMeetingScreenState } from "~/context/meeting";
+import { Checkbox } from "react-native-paper";
+import { CheckBoxType } from "~/models/commonTypes";
+import { Color } from "~/constants/Color";
+import { Attendee, AttendeeCheckList } from "~/models/meeting";
 
 const SelectAttendee = () => {
   const state = useCreateMeetingScreenState();
@@ -21,7 +21,7 @@ const SelectAttendee = () => {
       return {
         checkedAll: status,
         data: prev.data.map(item => {
-          return {...item, status: status} as Attendee;
+          return { ...item, status: status } as Attendee;
         }),
         totalChecked: status === "checked" ? prev.data.length : 0,
       };
@@ -68,13 +68,13 @@ const SelectAttendee = () => {
         label="Tất cả"
         status={attendees.checkedAll}
         color={Color.primary}
-        labelStyle={{fontWeight: "bold"}}
+        labelStyle={{ fontWeight: "bold" }}
       />
     );
   }, [attendees.checkedAll]);
 
   const renderItem = useCallback(
-    ({index, item}: {index: number; item: Attendee}) => {
+    ({ index, item }: { index: number; item: Attendee }) => {
       return (
         <Checkbox.Item
           onPress={() => pressItem(index)}
