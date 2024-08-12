@@ -1,6 +1,6 @@
-import {StyleSheet} from "react-native";
-import {screenWidth} from "~/constants";
-import {Color} from "~/constants/Color";
+import { StyleSheet } from "react-native";
+import { screenWidth } from "~/constants";
+import { Color } from "~/constants/Color";
 import FontSize from "~/constants/FontSize";
 
 const styles = StyleSheet.create({
@@ -14,23 +14,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Color.white,
     padding: 20,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
+    borderRadius: 8,
     maxWidth: screenWidth * 0.8,
     width: screenWidth * 0.8,
     justifyContent: "center",
     alignItems: "center",
-    // shadowColor: Color.black,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: -1,
-    // },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 1.5,
-    // elevation: 5,
-    // borderLeftWidth: 3,
-    // borderLeftColor: Color.red
-    
+    elevation: 1,
   },
   header: {
     flex: 1,
@@ -81,7 +70,7 @@ const styles = StyleSheet.create({
   textBtn: {
     fontSize: FontSize.large,
     color: Color.text[0],
-    textAlign: "center"
+    textAlign: "center",
   },
   timeDesc: {
     fontSize: FontSize.medium,

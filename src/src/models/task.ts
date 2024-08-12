@@ -36,7 +36,7 @@ export const TaskStatusObject = {
     displayName: "Mới",
     color: "#333",
     backgroundColor: Color.backgroundGray,
-    icon: "progress-close",
+    icon: "progress-pencil",
   },
   IN_PROGRESS: {
     key: "IN_PROGRESS",

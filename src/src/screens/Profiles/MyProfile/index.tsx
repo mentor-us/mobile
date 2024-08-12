@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Text,
   FlatList,
   Alert,
 } from "react-native";
@@ -44,6 +43,8 @@ import {
 import SingleThumbnail from "~/components/SingleThumbnail";
 import { CurrentUserQueryKey } from "~/app/server/users/keys";
 import { UserProfileModel } from "~/models/user";
+import FontSize from "~/constants/FontSize";
+import { Text } from "react-native-paper";
 
 const MyProfile = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -250,13 +251,28 @@ const MyProfile = () => {
           </View>
           <GradeBoard user={myProfile} />
           <View style={styles.infoHeader}>
-            <Text style={styles.infoText}>Liên kết email</Text>
+            <Text style={styles.infoText}>Email đã liên kết</Text>
             <TouchableOpacity onPress={editLinkEmail}>
               <Text style={styles.editText}>Thêm email</Text>
             </TouchableOpacity>
           </View>
 
-          {myProfile?.additionalEmails && viewPersonalEmails()}
+          {myProfile?.additionalEmails &&
+          myProfile.additionalEmails.length !== 0 ? (
+            viewPersonalEmails()
+          ) : (
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginVertical: 8,
+              }}>
+              <Text style={{ fontSize: FontSize.large }}>
+                Chưa cập nhật Email liên kết
+              </Text>
+            </View>
+          )}
 
           {/* <View style={[styles.infoHeader,{ }]}>
             <InfoItem data={{ type: "personal_email", text: "thong",userId: myProfile?.id}} key={"personal_email"} />

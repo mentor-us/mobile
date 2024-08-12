@@ -18,7 +18,7 @@ interface ChannelPage {
   expanded?: boolean;
 }
 
-const SelectGroup = () => {
+const SelectChannel = () => {
   const state = useCreateMeetingScreenState();
   const [chosenGroup, setChosenGroup] = useState<GroupChannel>();
   const { data, isSuccess, isLoading, isFetching, refetch } =
@@ -66,11 +66,15 @@ const SelectGroup = () => {
           .map(channelPage => {
             return {
               ...channelPage,
-              channels: channelPage.channels.filter(channel => {
-                return channel.name
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase());
-              }),
+              channels: channelPage.channels
+                .filter(channel => {
+                  return channel.name
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
+                })
+                .sort((a, b) => {
+                  return a.name.localeCompare(b.name);
+                }),
             };
           })
           .filter(channelPage => channelPage.channels.length > 0);
@@ -88,7 +92,6 @@ const SelectGroup = () => {
             expanded={item.expanded}
             onPress={() => {
               item.expanded = !item.expanded;
-              console.log(filteredChannelList);
               setFilteredChannelList([...filteredChannelList]);
             }}
             id={item.groupName}
@@ -169,6 +172,7 @@ const SelectGroup = () => {
         placeholder="Tìm kiếm kênh"
         onChangeText={onChangeSearch}
         value={searchQuery}
+        maxLength={100}
       />
       <FlatList
         data={filteredChannelList}
@@ -184,4 +188,4 @@ const SelectGroup = () => {
   );
 };
 
-export default observer(SelectGroup);
+export default observer(SelectChannel);

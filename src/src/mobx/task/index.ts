@@ -1,6 +1,8 @@
 import { TaskMobx } from "globals";
 import { action, computed, flow, makeAutoObservable } from "mobx";
+import Toast from "react-native-root-toast";
 import TaskApi from "~/api/remote/TaskApi";
+import { ToastMessage } from "~/constants/ToastMessage";
 import { CheckBoxType, RoleType } from "~/models/commonTypes";
 import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import { AssignedCheckList, Assignee, TaskModel } from "~/models/task";
@@ -37,8 +39,13 @@ export class CreateTaskScreenState {
   titleError = "";
 
   description = "";
+  descriptionError = "";
+
   time = "22:45";
+  timeError = "";
+
   date = "01/09/2023";
+  dateError = "";
 
   // groups: string[] = [];
   assigner: ShortProfileUserModel = SHORT_PROFILE_USER_MODEL;
@@ -52,7 +59,7 @@ export class CreateTaskScreenState {
   constructor(props: Props) {
     makeAutoObservable(this);
     if (props.groupId === "") {
-      this.setScreenType("select_group");
+      this.setScreenType("select_channel");
     }
     this.fetchGroupData(props.groupId);
     this.currentUser = props.currentUser;
@@ -69,7 +76,7 @@ export class CreateTaskScreenState {
     switch (this.screenType) {
       case "form":
         return this.taskId ? "Chỉnh sửa công việc" : "Công việc mới";
-      case "select_group":
+      case "select_channel":
         return "Chọn kênh";
       case "select_assignee":
         return "Chọn thành viên";
@@ -122,9 +129,14 @@ export class CreateTaskScreenState {
 
   @action
   setTitle(text: string) {
-    if (Boolean(text) && Boolean(this.titleError)) {
+    if (text && this.titleError) {
       this.setTitleError("");
     }
+
+    if (text.length > 100) {
+      this.setTitleError("Tiêu đề không được quá 100 ký tự");
+    }
+
     this.title = text;
   }
 
@@ -135,16 +147,56 @@ export class CreateTaskScreenState {
 
   @action
   setDescription(text: string) {
+    if (this.descriptionError) {
+      this.setDescriptionError("");
+    }
+
+    if (text.length > 250) {
+      this.setDescriptionError("Mô tả không được vượt quá 250 ký tự");
+    }
+
     this.description = text;
   }
 
   @action
+  setDescriptionError(text: string) {
+    this.descriptionError = text;
+  }
+
+  @action
   setTime(date: Date) {
+    if (this.timeError) {
+      this.timeError = "";
+    }
+
+    console.log(
+      "date",
+      this.date,
+      Helper.createDate(this.date).toDateString(),
+      date,
+      new Date(),
+      date < new Date(),
+    );
+
+    if (date < new Date()) {
+      this.timeError = "Thời gian không được nhỏ hơn thời gian hiện tại";
+      return;
+    }
+
     this.time = Helper.formatDate(date.toString(), "time");
   }
 
   @action
   setDate(date: Date) {
+    if (this.dateError) {
+      this.dateError = "";
+    }
+
+    if (date < new Date()) {
+      this.dateError = "Ngày không được nhỏ hơn ngày hiện tại";
+      return;
+    }
+
     this.date = Helper.formatDate(date.toString(), "date");
   }
 
@@ -183,8 +235,13 @@ export class CreateTaskScreenState {
   }
 
   @action
-  setAssignee(data: AssignedCheckList) {
-    this.assignees = { ...data };
+  setAssignee(input: AssignedCheckList) {
+    this.assignees = {
+      ...input,
+      data: [...input.data].sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      }),
+    };
   }
 
   @action
@@ -193,7 +250,7 @@ export class CreateTaskScreenState {
       case "form":
         this.submitForm();
         break;
-      case "select_group":
+      case "select_channel":
         this.setActionDone("submit_group");
         break;
       case "select_assignee":
@@ -204,21 +261,19 @@ export class CreateTaskScreenState {
     }
   }
 
-  // {
-  //   "deadline": "2023-03-18T14:21:45.871Z",
-  //   "description": "string",
-  //   "groupId": "string",
-  //   "parentTask": "string",
-  //   "title": "string",
-  //   "userIds": [
-  //     "string"
-  //   ]
-  // }
+  @action
+  isValidData() {
+    if (Helper.isBlank(this.title)) {
+      this.setTitleError("Tiêu đề không được để trống");
+      return false;
+    }
+
+    return !this.titleError && !this.descriptionError;
+  }
 
   @action
   submitForm() {
-    if (Helper.isBlank(this.title)) {
-      this.setTitleError("Tiêu đề không được để trống");
+    if (!this.isValidData()) {
       return;
     }
 
@@ -248,6 +303,15 @@ export class CreateTaskScreenState {
 
   @action
   submitAssignees(data: AssignedCheckList) {
+    if (data.totalChecked < 1) {
+      Toast.show(ToastMessage.taskMiniumAssign, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      this.setActionDone(undefined);
+      return;
+    }
+
     this.setAssignee(data);
     this.setScreenType("form");
     this.setActionDone(undefined);

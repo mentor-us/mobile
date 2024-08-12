@@ -1,6 +1,8 @@
 import { MeetingMobx } from "globals";
 import { action, computed, flow, makeAutoObservable } from "mobx";
+import Toast from "react-native-root-toast";
 import MeetingApi from "~/api/remote/Meeting";
+import { ToastMessage } from "~/constants/ToastMessage";
 import { CheckBoxType } from "~/models/commonTypes";
 import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import {
@@ -13,7 +15,6 @@ import { UserProfileModel, USER_PROFILE_SAMPLE } from "~/models/user";
 import GroupService from "~/services/group";
 import MeetingServices from "~/services/meeting";
 import Helper from "~/utils/Helper";
-import LOG from "~/utils/Logger";
 
 interface Props {
   groupId: string;
@@ -38,7 +39,11 @@ export class CreateMeetingScreenState {
   titleError: string = "";
 
   description: string = "";
+  descriptionError: string = "";
+
   place: string = "";
+  placeError: string = "";
+
   fromTime: string = "00:00";
   toTime: string = "00:00";
   toTimeError: string = "";
@@ -60,7 +65,7 @@ export class CreateMeetingScreenState {
   constructor(props: Props) {
     makeAutoObservable(this);
     if (props.groupId === "") {
-      this.setScreenType("select_group");
+      this.setScreenType("select_channel");
     }
     this.fetchGroupData(props.groupId);
     this.currentUser = props.currentUser;
@@ -78,7 +83,7 @@ export class CreateMeetingScreenState {
     switch (this.screenType) {
       case "form":
         return this.meetingId ? "Chỉnh sửa lịch hẹn" : "Lịch hẹn mới";
-      case "select_group":
+      case "select_channel":
         return "Chọn kênh";
       case "select_attendee":
         return "Chọn thành viên";
@@ -124,9 +129,14 @@ export class CreateMeetingScreenState {
 
   @action
   setTitle(text: string) {
-    if (Boolean(text)) {
+    if (Boolean(text) && this.titleError) {
       this.setTitleError("");
     }
+
+    if (text.length > 100) {
+      this.setTitleError("Tiêu đề không được quá 100 ký tự");
+    }
+
     this.title = text;
   }
 
@@ -137,12 +147,38 @@ export class CreateMeetingScreenState {
 
   @action
   setDescription(text: string) {
+    if (this.descriptionError) {
+      this.setPlaceError("");
+    }
+
+    if (text.length > 250) {
+      this.setDescriptionError("Mô tả không được vượt quá 250 ký tự");
+    }
+
     this.description = text;
   }
 
   @action
+  setDescriptionError(text: string) {
+    this.descriptionError = text;
+  }
+
+  @action
   setPlace(text: string) {
+    if (this.placeError) {
+      this.setPlaceError("");
+    }
+
+    if (text.length > 150) {
+      this.setPlaceError("Địa điểm không được vượt quá 150 ký tự");
+    }
+
     this.place = text;
+  }
+
+  @action
+  setPlaceError(text: string) {
+    this.placeError = text;
   }
 
   @action
@@ -208,8 +244,13 @@ export class CreateMeetingScreenState {
   }
 
   @action
-  setAttendees(data: AttendeeCheckList) {
-    this.attendees = { ...data };
+  setAttendees(input: AttendeeCheckList) {
+    this.attendees = {
+      ...input,
+      data: [...input.data].sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      }),
+    };
   }
 
   @action
@@ -218,7 +259,7 @@ export class CreateMeetingScreenState {
       case "form":
         this.submitForm();
         break;
-      case "select_group":
+      case "select_channel":
         this.setActionDone("submit_group");
         break;
       case "select_attendee":
@@ -229,23 +270,7 @@ export class CreateMeetingScreenState {
     }
   }
 
-  /**
-   * 
-    "attendees":[
-      "*"
-   ],
-   "groupId":"63f74a7cfc73ec6683c2d227",
-   "organizerId":"640562155c787c20d83009fb",
-   "description":"Hôm nay bùn, lên tâm sự không ae!",
-   "place":"KHTN linh trung",
-   "repeated":"EVERY_DAY",
-   "timeEnd":"2023-03-18T15:57:28.133Z",
-   "timeStart":"2023-03-18T15:57:28.133Z",
-   "title":"Họp lớp thui nào"
-   */
-
-  @action
-  submitForm() {
+  checkForFormError() {
     const valid: boolean =
       !Helper.isBlank(this.title) &&
       Helper.isValidMeetingTime(this.fromTime, this.toTime);
@@ -253,16 +278,48 @@ export class CreateMeetingScreenState {
       this.setTitleError("Tiêu đề không được để trống");
     }
 
+    if (
+      this.titleError !== "" ||
+      this.descriptionError !== "" ||
+      this.placeError !== ""
+    ) {
+      return false;
+    }
+
     if (!Helper.isValidMeetingTime(this.fromTime, this.toTime)) {
-      this.setToTimeError("Lỗi");
+      Toast.show(ToastMessage.endTimeMustBeGreaterThanStartTime, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      this.setToTimeError(" ");
+      return false;
     } else {
       this.setToTimeError("");
     }
 
     if (!valid) {
-      return;
+      return false;
     }
 
+    return true;
+  }
+
+  @action
+  isFormValid(): boolean {
+    switch (this.screenType) {
+      case "form":
+        return this.checkForFormError();
+      case "select_channel":
+        return true;
+      case "select_attendee":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  @action
+  submitForm() {
     const requestData = {
       attendees: this.attendees.data
         .filter(item => item.status === "checked")
@@ -292,6 +349,15 @@ export class CreateMeetingScreenState {
 
   @action
   submitAttendee(data: AttendeeCheckList) {
+    if (data.totalChecked < 1) {
+      Toast.show(ToastMessage.meetingMiniumMember, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+      this.setActionDone(undefined);
+      return;
+    }
+
     this.setAttendees(data);
     this.setScreenType("form");
     this.setActionDone(undefined);

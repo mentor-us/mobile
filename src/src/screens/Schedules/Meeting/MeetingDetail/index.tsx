@@ -6,7 +6,7 @@ import {
   DeviceEventEmitter,
   RefreshControl,
 } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./styles";
 import GlobalStyles from "~/constants/GlobalStyles";
 import InfoItem from "./InfoItem";
@@ -17,11 +17,7 @@ import { HeaderEditButton } from "~/components/Header";
 import { ScreenProps } from "~/types/navigation";
 import { MarkTitleIcon } from "~/assets/svgs";
 import { StackNavigationOptions } from "@react-navigation/stack";
-import {
-  MeetingModel,
-  MeetingRepeatedObject,
-  MEETING_SAMPLE,
-} from "~/models/meeting";
+import { MeetingModel, MEETING_SAMPLE } from "~/models/meeting";
 import MeetingServices from "~/services/meeting";
 import EventEmitterNames from "~/constants/EventEmitterNames";
 import { ActivityIndicator, Snackbar } from "react-native-paper";
@@ -43,10 +39,6 @@ const MeetingDetail: ScreenProps<"meetingDetail"> = ({ route }) => {
         text: meetingData.description || "",
       },
       { type: "meetingTime", text: meetingData.time.display },
-      // {
-      //   type: "repeated",
-      //   text: MeetingRepeatedObject[meetingData.repeated].value,
-      // },
       { type: "place", text: meetingData.place },
       { type: "organizer", text: meetingData.organizer.name },
       { type: "attendee", text: `${meetingData.totalAttendees} thành viên` },

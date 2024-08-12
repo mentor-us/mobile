@@ -11,15 +11,15 @@ import { Ionicons } from "@expo/vector-icons";
 interface AppErrorModalProps {
   hasError: boolean;
   error: any;
-  onPress: () => void;
-  onRequestClose: () => void;
+  onPress?: () => void;
+  onRequestClose?: () => void;
 }
 
 const AppErrorModal = ({
   hasError,
   error,
-  onRequestClose,
-  onPress,
+  onRequestClose = () => {},
+  onPress = () => {},
 }: AppErrorModalProps) => {
   const getErrorMessage = () => {
     if (error) {

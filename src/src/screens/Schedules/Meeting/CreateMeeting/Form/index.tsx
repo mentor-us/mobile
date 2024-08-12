@@ -10,20 +10,17 @@ import {
 } from "react-native";
 import React, { useMemo } from "react";
 import DatePicker from "react-native-date-picker";
-import ModalDropdown from "react-native-modal-dropdown";
 import styles from "./styles";
 
 import {
   ClockGrayIcon,
   GroupIcon,
-  LoopIcon,
   MarkerIcon,
   MarkTitleIcon,
   ParagraphIcon,
 } from "~/assets/svgs";
 import SizedBox from "~/components/SizedBox";
 import GlobalStyles from "~/constants/GlobalStyles";
-import { MeetingRepeatedOptions } from "~/models/meeting";
 import { observer } from "mobx-react-lite";
 import { useCreateMeetingScreenState } from "~/context/meeting";
 import MUITextInput from "~/components/MUITextInput";
@@ -31,7 +28,6 @@ import MeetingApi from "~/api/remote/Meeting";
 import { useNavigation } from "@react-navigation/native";
 import Helper from "~/utils/Helper";
 import EventEmitterNames from "~/constants/EventEmitterNames";
-import LOG from "~/utils/Logger";
 
 interface DatePickerToolModel {
   title: string;
@@ -114,6 +110,8 @@ const FormMeeting = () => {
               state.setTitle(text);
             }}
             errorText={state.titleError}
+            multiline
+            numberOfLines={4}
           />
         </View>
         {/* Description */}
@@ -130,7 +128,9 @@ const FormMeeting = () => {
             onChangeText={text => {
               state.setDescription(text);
             }}
-            multiline={true}
+            multiline
+            numberOfLines={4}
+            errorText={state.descriptionError}
           />
         </View>
 
@@ -199,6 +199,9 @@ const FormMeeting = () => {
             onChangeText={text => {
               state.setPlace(text);
             }}
+            multiline
+            numberOfLines={2}
+            errorText={state.placeError}
           />
         </View>
 
