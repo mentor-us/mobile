@@ -1,7 +1,7 @@
-import {StyleProp, TextInputProps, View, ViewStyle} from "react-native";
-import React, {memo} from "react";
+import { StyleProp, TextInputProps, View, ViewStyle } from "react-native";
+import React, { memo } from "react";
 
-import {TextField} from "rn-material-ui-textfield";
+import { TextField } from "rn-material-ui-textfield";
 
 interface Props extends TextInputProps {
   label: string;
@@ -25,14 +25,14 @@ const MUITextInput = ({
   editable = true,
 }: Props) => {
   return (
-    <View style={[{flexDirection: "row"}, containerStyle]}>
+    <View style={[{ flexDirection: "row" }, containerStyle]}>
       <TextField
         label={label}
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         value={value}
         onFocus={onFocus}
-        containerStyle={{width: "100%"}}
+        containerStyle={{ width: "100%" }}
         defaultValue={defaultValue}
         multiline={multiline}
         error={errorText}

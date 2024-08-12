@@ -85,15 +85,24 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
     setChoices(choices.filter(choice => choice.id != id));
   };
 
-  const changeQuestion = question => {
-    setQuestion(question);
+  const changeQuestion = questionInput => {
+    if (questionInput === "") {
+      setErrorQuestion("Không được rỗng");
+    } else if (questionInput.length > 100) {
+      setErrorQuestion("Câu hỏi không được quá 100 ký tự.");
+    } else {
+      setErrorQuestion("");
+    }
+
+    setQuestion(questionInput);
   };
 
   const changeName = (id, name) => {
     const newChoices: Choice[] = choices.map(choice => {
-      if (choice.id != id) {
+      if (choice.id !== id) {
         return choice;
       }
+
       return {
         ...choice,
         name: name,
@@ -105,6 +114,8 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
   const onSubmit = async () => {
     if (question === "") {
       setErrorQuestion("Không được rỗng");
+    } else if (question.length > 100) {
+      setErrorQuestion("Câu hỏi không được quá 100 ký tự.");
     } else {
       setErrorQuestion("");
     }
@@ -119,6 +130,12 @@ const CreateVoting: ScreenProps<"createVoting"> = ({ route }) => {
         hasErrorItems = true;
         return "Không được rỗng";
       }
+
+      if (choice.name.length > 100) {
+        hasErrorItems = true;
+        return "Lựa chọn không được quá 100 ký tự.";
+      }
+
       return "";
     });
     setErrors(errorItems);

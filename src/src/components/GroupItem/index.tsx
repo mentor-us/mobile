@@ -1,10 +1,10 @@
-import {View, Text, TouchableOpacity} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import {GroupModel, GROUP_SAMPLE} from "~/models/group";
+import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import styles from "./styles";
-import {Color} from "~/constants/Color";
+import { Color } from "~/constants/Color";
 import GroupAvatar from "./GroupAvatar";
-import {PinIcon} from "~/assets/svgs";
+import { PinIcon } from "~/assets/svgs";
 
 interface Props {
   group?: GroupModel;
@@ -26,6 +26,8 @@ export default function GroupItem({
         <View style={styles.flexRowBetween}>
           <View style={styles.detailCtn}>
             <Text
+              lineBreakMode="tail"
+              numberOfLines={2}
               style={[
                 styles.textInfo,
                 styles.displayName,
@@ -35,7 +37,7 @@ export default function GroupItem({
             </Text>
             <View style={styles.categoryCtn}>
               <Text style={styles.textInfo}>{group.groupCategory}</Text>
-              <Text style={[styles.textInfo, {textAlign: "right"}]}>
+              <Text style={[styles.textInfo, { textAlign: "right" }]}>
                 {`${group.totalMember} thành viên`}
               </Text>
             </View>

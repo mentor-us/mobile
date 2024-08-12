@@ -1,4 +1,4 @@
-import {MentorUsRoutes} from "~/types/navigation";
+import { MentorUsRoutes } from "~/types/navigation";
 
 declare global {
   namespace ReactNavigation {
@@ -13,7 +13,7 @@ declare global {
 
   namespace Caching {
     interface ImageItem {
-      size: {width: number; height: number};
+      size: { width: number; height: number };
       uri: string;
     }
   }
@@ -62,12 +62,12 @@ declare global {
 }
 
 export namespace MeetingMobx {
-  type ScreenType = "form" | "select_group" | "select_attendee";
+  type ScreenType = "form" | "select_channel" | "select_attendee";
   type DatePickerStatus = "from" | "to" | "date" | "hide";
 }
 
 export namespace TaskMobx {
-  type ScreenType = "form" | "select_group" | "select_assignee";
+  type ScreenType = "form" | "select_channel" | "select_assignee";
   type DatePickerStatus = "time" | "date" | "hide";
 }
 

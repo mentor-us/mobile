@@ -6,7 +6,6 @@ import { GroupModel, GROUP_SAMPLE } from "~/models/group";
 import { AssignedCheckList, Assignee } from "~/models/task";
 import { UserProfileModel, USER_PROFILE_SAMPLE } from "~/models/user";
 import GroupService from "~/services/group";
-import uuid from "react-native-uuid";
 import Toast from "react-native-root-toast";
 import { ToastMessage } from "~/constants/ToastMessage";
 
@@ -123,8 +122,13 @@ export class AddChannelScreenState {
   }
 
   @action
-  setAssignee(data: AssignedCheckList) {
-    this.assignees = { ...data };
+  setAssignee(input: AssignedCheckList) {
+    this.assignees = {
+      ...input,
+      data: [...input.data].sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      }),
+    };
   }
 
   setOldChannels(data: GroupModel[]) {

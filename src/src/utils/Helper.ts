@@ -236,6 +236,19 @@ export default class Helper {
     return date.toISOString();
   };
 
+  static createDateJS = (src: string): Date => {
+    const data = src.split("/");
+    if (data.length < 3) {
+      return new Date(src);
+    }
+    const day = parseInt(data[0], 10);
+    const month = parseInt(data[1], 10);
+    const year = parseInt(data[2], 0);
+
+    const date = new Date(year, month - 1, day);
+    return date;
+  };
+
   static getMomentTime = (src: string): string => {
     if (!src) {
       return "";

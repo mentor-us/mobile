@@ -4,7 +4,6 @@ import styles from "./styles";
 import { observer } from "mobx-react-lite";
 import { useCreateTaskScreenState } from "~/context/task";
 import { GroupModel, GROUP_SAMPLE, GroupChannel } from "~/models/group";
-import GroupService from "~/services/group";
 import { useQueryChannelList } from "~/queries/channels";
 import { ActivityIndicator, List, Searchbar } from "react-native-paper";
 import CacheImage from "~/components/CacheImage";
@@ -19,7 +18,7 @@ interface ChannelPage {
   expanded?: boolean;
 }
 
-const SelectGroup = () => {
+const SelectChannel = () => {
   const state = useCreateTaskScreenState();
   const [chosenGroup, setChosenGroup] = useState<GroupChannel>();
   const { data, isSuccess, isLoading, isFetching, refetch } =
@@ -170,6 +169,7 @@ const SelectGroup = () => {
         placeholder="Tìm kiếm kênh"
         onChangeText={onChangeSearch}
         value={searchQuery}
+        maxLength={100}
       />
       <FlatList
         data={filteredChannelList}
@@ -185,4 +185,4 @@ const SelectGroup = () => {
   );
 };
 
-export default observer(SelectGroup);
+export default observer(SelectChannel);
